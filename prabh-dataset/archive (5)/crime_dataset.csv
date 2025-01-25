@@ -1,0 +1,101 @@
+Location,Crime Type,Time,Date,Investigation Status,Case Number,Comments
+GULABIBAGH,assualt murders,12:51,2019-05-03,Closed,C2870,Lorem ipsum dolor sit amet
+MAYURVIHAR,robbery,05:44,2019-08-18,Closed,C7269,Lorem ipsum dolor sit amet
+GEETA COLONY,assualt murders,16:33,2019-08-17,Closed,C8521,Lorem ipsum dolor sit amet
+RANJIT NAGAR,rape,02:19,2018-12-16,Closed,C7390,Lorem ipsum dolor sit amet
+JAGATPURI,rape,16:03,2019-08-24,Unknown,C3640,Missing information
+I.P. ESTATE,gangrape,01:50,2020-03-05,Closed,C5190,Lorem ipsum dolor sit amet
+DARYA GANJ,robbery,03:31,2020-04-28,Closed,C9176,Lorem ipsum dolor sit amet
+BAWANA,theft,00:34,2019-10-01,Closed,C2380,Lorem ipsum dolor sit amet
+ASHOK VIHAR,assualt murders,14:36,2020-05-31,Under Investigation,C7954,Missing information
+NAJAFGARH,assualt murders,18:12,2020-01-15,Closed,C4816,Lorem ipsum dolor sit amet
+SAGARPUR,murder,17:50,2019-12-17,Open,C5390,Lorem ipsum dolor sit amet
+KANJHAWALA,murder,10:43,2020-05-27,Open,C7462,Lorem ipsum dolor sit amet
+MANGOLPURI,murder,09:57,2018-11-13,Under Investigation,C1803,Lorem ipsum dolor sit amet
+SAROJINI NAGAR,sexual harassement,04:14,2019-08-08,Closed,C8698,Lorem ipsum dolor sit amet
+DARYA GANJ,theft,19:06,2019-01-28,Under Investigation,C3105,Lorem ipsum dolor sit amet
+NANGLOI,sexual harassement,05:16,2019-03-15,Under Investigation,C2407,Lorem ipsum dolor sit amet
+SAKET,sexual harassement,23:25,2019-06-02,Under Investigation,C4048,Lorem ipsum dolor sit amet
+SUBZIMANDI,murder,00:51,2019-04-02,Unknown,Unknown,Missing information
+KAMLA MARKET,murder,06:17,2019-06-26,Under Investigation,C2016,Lorem ipsum dolor sit amet
+KHAJURIKHAS,murder,11:40,2019-01-14,Closed,C9377,Lorem ipsum dolor sit amet
+GANDHI NAGAR,rape,17:15,2018-11-10,Open,C5489,Lorem ipsum dolor sit amet
+ANANDVIHAR,rape,00:19,2019-05-11,Under Investigation,C7149,Lorem ipsum dolor sit amet
+DELHI CANTT,gangrape,10:48,2019-12-25,Open,C3627,Lorem ipsum dolor sit amet
+ALIPUR,murder,13:54,2020-06-19,Unknown,Unknown,Missing information
+DELHI CANTT,theft,04:05,2020-02-03,Closed,C2433,Lorem ipsum dolor sit amet
+MIANWALI NAGAR,assualt murders,22:39,2020-06-15,Closed,C2020,Lorem ipsum dolor sit amet
+NANGLOI,robbery,04:04,2018-07-03,Under Investigation,Unknown,Missing information
+MODEL TOWN,rape,00:54,2019-10-14,Unknown,Unknown,Missing information
+JYOTI NAGAR,assualt murders,20:57,2020-03-22,Under Investigation,C6761,Lorem ipsum dolor sit amet
+GANDHI NAGAR,theft,07:29,2020-03-03,Open,C8235,Lorem ipsum dolor sit amet
+DELHI CANTT,robbery,04:35,2019-08-13,Unknown,Unknown,Missing information
+BURARI,assualt murders,03:18,2018-12-25,Open,C7947,Lorem ipsum dolor sit amet
+BINDAPUR,theft,14:28,2019-03-30,Open,Unknown,Missing information
+HARSH VIHAR,robbery,00:10,2019-01-30,Closed,C2898,Lorem ipsum dolor sit amet
+KRISHNA NAGAR,sexual harassement,08:34,2020-02-14,Open,C9507,Lorem ipsum dolor sit amet
+PARLIAMENT STREET,assualt murders,18:55,2018-08-18,Open,C1361,Lorem ipsum dolor sit amet
+KIRTI NAGAR,murder,15:22,2020-04-30,Under Investigation,C9587,Lorem ipsum dolor sit amet
+FARASH BAZAR,rape,00:31,2019-10-19,Unknown,Unknown,Missing information
+DWARKA NORTH,theft,07:39,2020-06-02,Open,C4189,Lorem ipsum dolor sit amet
+HARI NAGAR,gangrape,23:55,2020-01-07,Closed,Unknown,Missing information
+DELHI CANTT,murder,02:48,2019-03-20,Under Investigation,C6644,Lorem ipsum dolor sit amet
+VIJAY VIHAR,gangrape,13:01,2019-02-27,Open,C3758,Lorem ipsum dolor sit amet
+KALYANPURI,sexual harassement,04:31,2020-02-06,Open,C2040,Lorem ipsum dolor sit amet
+KAMLA MARKET,rape,02:34,2019-07-12,Closed,C3659,Lorem ipsum dolor sit amet
+NARELA,rape,05:01,2018-09-04,Open,C5098,Lorem ipsum dolor sit amet
+DELHI CANTT,robbery,18:10,2018-09-12,Closed,C2924,Lorem ipsum dolor sit amet
+VIVEKVIHAR,theft,00:14,2019-11-19,Closed,C8200,Lorem ipsum dolor sit amet
+NARAINA,assualt murders,09:01,2019-04-29,Closed,C1118,Lorem ipsum dolor sit amet
+DABRI,gangrape,04:31,2019-09-02,Under Investigation,C1714,Lorem ipsum dolor sit amet
+NEW USMANPUR,robbery,00:40,2018-08-04,Open,C7360,Lorem ipsum dolor sit amet
+KALYANPURI,gangrape,22:16,2020-05-06,Open,C9025,Lorem ipsum dolor sit amet
+SHAKARPUR,theft,17:14,2019-08-22,Open,C1607,Lorem ipsum dolor sit amet
+NARELA,theft,09:16,2018-10-15,Under Investigation,Unknown,Missing information
+NEW FRIENDS COLONY,gangrape,23:02,2020-01-18,Under Investigation,C6667,Lorem ipsum dolor sit amet
+PASCHIM VIHAR,robbery,10:32,2020-04-19,Closed,C2664,Lorem ipsum dolor sit amet
+TILAK NAGAR,rape,07:53,2019-09-02,Closed,C5822,Lorem ipsum dolor sit amet
+TUGLAK ROAD,rape,19:49,2020-03-10,Closed,C8728,Lorem ipsum dolor sit amet
+GOVIND PURI,assualt murders,20:47,2019-01-01,Closed,C7283,Lorem ipsum dolor sit amet
+SHALIMAR BAGH,assualt murders,12:16,2019-05-14,Unknown,C3559,Missing information
+GOKULPURI,assualt murders,04:52,2020-06-02,Open,C5402,Lorem ipsum dolor sit amet
+SEEMAPURI,rape,19:30,2018-08-03,Under Investigation,C9656,Lorem ipsum dolor sit amet
+D.B.G ROAD,assualt murders,07:16,2018-12-28,Under Investigation,C4161,Lorem ipsum dolor sit amet
+D.B.G ROAD,murder,23:43,2019-04-10,Open,C3456,Lorem ipsum dolor sit amet
+KALKAJI,gangrape,04:01,2019-08-10,Open,C2352,Lorem ipsum dolor sit amet
+MAYURVIHAR,sexual harassement,05:58,2018-11-14,Under Investigation,C4692,Lorem ipsum dolor sit amet
+SAGARPUR,rape,02:04,2019-07-11,Open,C2494,Lorem ipsum dolor sit amet
+RANHOLA,gangrape,19:39,2020-05-25,Open,C8617,Lorem ipsum dolor sit amet
+DWARKA NORTH,sexual harassement,09:30,2019-05-07,Open,C3063,Lorem ipsum dolor sit amet
+NAJAFGARH,rape,03:06,2019-08-26,Open,C7715,Lorem ipsum dolor sit amet
+KASHMERE GATE,theft,14:59,2020-02-16,Open,C5184,Lorem ipsum dolor sit amet
+JAHANGIR PURI,sexual harassement,03:19,2018-11-02,Under Investigation,C4978,Lorem ipsum dolor sit amet
+SWARUP NAGAR,robbery,20:15,2018-07-13,Under Investigation,C5143,Lorem ipsum dolor sit amet
+AMAR COLONY,theft,06:03,2020-01-26,Unknown,C6354,Missing information
+PUNJABI BAGH,theft,23:28,2020-06-09,Under Investigation,C7277,Lorem ipsum dolor sit amet
+MAHENDRA PARK,gangrape,05:29,2019-09-20,Under Investigation,C3464,Lorem ipsum dolor sit amet
+SANGAM VIHAR,murder,00:23,2019-04-09,Under Investigation,C3404,Lorem ipsum dolor sit amet
+MAURICE NAGAR,gangrape,10:38,2018-07-11,Under Investigation,C3981,Lorem ipsum dolor sit amet
+BADAR PUR,assualt murders,16:06,2019-05-27,Closed,C3409,Lorem ipsum dolor sit amet
+MAURICE NAGAR,robbery,20:46,2019-09-06,Closed,C1257,Lorem ipsum dolor sit amet
+FATEHPUR BERI,gangrape,08:33,2019-09-02,Open,C6382,Lorem ipsum dolor sit amet
+VIKAS PURI,sexual harassement,14:05,2019-02-28,Open,C8834,Lorem ipsum dolor sit amet
+KAROL BAGH,gangrape,11:49,2019-08-05,Closed,C1248,Lorem ipsum dolor sit amet
+PRASHANT VIHAR,assualt murders,17:29,2020-03-01,Under Investigation,C8978,Lorem ipsum dolor sit amet
+MUKHERJI NAGAR,rape,11:34,2020-04-18,Open,C1183,Lorem ipsum dolor sit amet
+KALYANPURI,rape,01:41,2019-07-22,Closed,C5610,Missing information
+TILAK MARG,gangrape,03:41,2019-02-13,Under Investigation,C2950,Lorem ipsum dolor sit amet
+SARITA VIHAR,gangrape,14:23,2019-03-17,Open,C3039,Lorem ipsum dolor sit amet
+D.B.G ROAD,assualt murders,06:38,2019-11-20,Under Investigation,C7571,Lorem ipsum dolor sit amet
+HAUZ KHAS,robbery,20:46,2019-09-30,Open,C3904,Lorem ipsum dolor sit amet
+SARAI ROHILLA,sexual harassement,01:07,2020-01-06,Closed,C2485,Lorem ipsum dolor sit amet
+RANHOLA,gangrape,14:30,2018-10-28,Closed,C6561,Lorem ipsum dolor sit amet
+DELHI CANTT,murder,07:02,2018-08-25,Open,C1663,Lorem ipsum dolor sit amet
+INDERPURI,robbery,08:02,2020-04-13,Unknown,Unknown,Missing information
+JAGATPURI,sexual harassement,22:54,2019-09-22,Under Investigation,C3487,Lorem ipsum dolor sit amet
+PULPRAHLAD PUR,robbery,03:30,2019-05-13,Open,C6535,Lorem ipsum dolor sit amet
+JAGATPURI,gangrape,22:49,2020-05-27,Under Investigation,C9550,Lorem ipsum dolor sit amet
+JYOTI NAGAR,gangrape,12:28,2019-04-19,Closed,C7791,Lorem ipsum dolor sit amet
+SHAHBAD DAIRY,gangrape,13:39,2019-04-21,Open,C1692,Lorem ipsum dolor sit amet
+KALKAJI,sexual harassement,00:06,2019-06-24,Open,C1154,Missing information
+KALYANPURI,robbery,03:21,2018-08-25,Open,C5866,Lorem ipsum dolor sit amet
