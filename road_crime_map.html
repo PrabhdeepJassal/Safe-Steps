@@ -1,0 +1,3686 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_fd28d54d7335b40a6a07eb7e1b8ce90b {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_fd28d54d7335b40a6a07eb7e1b8ce90b" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_fd28d54d7335b40a6a07eb7e1b8ce90b = L.map(
+                "map_fd28d54d7335b40a6a07eb7e1b8ce90b",
+                {
+                    center: [28.6139, 77.209],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 11,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_667baf37d8d79abc1c898d76dabecc84 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_667baf37d8d79abc1c898d76dabecc84.addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var marker_f097506d6a378aede371b7a4a512bfcf = L.marker(
+                [28.625243237591008, 77.23189800964498],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_9d0e4fcdb7714b5cb7d773fb275ada6f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_f097506d6a378aede371b7a4a512bfcf.setIcon(icon_9d0e4fcdb7714b5cb7d773fb275ada6f);
+        
+    
+        var popup_23b49208614fec9c1670d34239db4319 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e2248bd1d351acad2a4cafa2cc22ffb7 = $(`<div id="html_e2248bd1d351acad2a4cafa2cc22ffb7" style="width: 100.0%; height: 100.0%;">             ID: ROA-220916-043<br>             Category: Vandalism<br>             Type: Road Sign Graffiti<br>             Date: 2022-09-16<br>             Time: 08:46:55<br>             Severity: 1             </div>`)[0];
+                popup_23b49208614fec9c1670d34239db4319.setContent(html_e2248bd1d351acad2a4cafa2cc22ffb7);
+            
+        
+
+        marker_f097506d6a378aede371b7a4a512bfcf.bindPopup(popup_23b49208614fec9c1670d34239db4319)
+        ;
+
+        
+    
+    
+            var marker_e688aee78d705bedfbe344688b6429a1 = L.marker(
+                [28.64893439666826, 77.24251747759075],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_3563ab6a1677b798f1d7108078892bcc = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_e688aee78d705bedfbe344688b6429a1.setIcon(icon_3563ab6a1677b798f1d7108078892bcc);
+        
+    
+        var popup_dcb35d0f959d249cf958d1f90e9bbe34 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a2661a4eb137501a899d3f66b8544cce = $(`<div id="html_a2661a4eb137501a899d3f66b8544cce" style="width: 100.0%; height: 100.0%;">             ID: STA-221227-002<br>             Category: Loitering and Harassment<br>             Type: Stalking<br>             Date: 2022-12-27<br>             Time: 16:46:51<br>             Severity: 4             </div>`)[0];
+                popup_dcb35d0f959d249cf958d1f90e9bbe34.setContent(html_a2661a4eb137501a899d3f66b8544cce);
+            
+        
+
+        marker_e688aee78d705bedfbe344688b6429a1.bindPopup(popup_dcb35d0f959d249cf958d1f90e9bbe34)
+        ;
+
+        
+    
+    
+            var marker_175af344405e4232307c9b08bc6649b7 = L.marker(
+                [28.64400641101614, 77.16456130975031],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_8ac6ed0dda67656e062cb9804569b72b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_175af344405e4232307c9b08bc6649b7.setIcon(icon_8ac6ed0dda67656e062cb9804569b72b);
+        
+    
+        var popup_e0bdbd8cd8fb773e241cb795cc804154 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a1b093480bab632c0d28d4665cfaa357 = $(`<div id="html_a1b093480bab632c0d28d4665cfaa357" style="width: 100.0%; height: 100.0%;">             ID: CAR-221207-472<br>             Category: Assault<br>             Type: Carjacking<br>             Date: 2022-12-07<br>             Time: 23:32:40<br>             Severity: 5             </div>`)[0];
+                popup_e0bdbd8cd8fb773e241cb795cc804154.setContent(html_a1b093480bab632c0d28d4665cfaa357);
+            
+        
+
+        marker_175af344405e4232307c9b08bc6649b7.bindPopup(popup_e0bdbd8cd8fb773e241cb795cc804154)
+        ;
+
+        
+    
+    
+            var marker_c132301ffc7deb1d4ee61ee721b1843a = L.marker(
+                [28.6203507553569, 77.17819860334708],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_e36e889b50358cc5c884d9403f35a45c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_c132301ffc7deb1d4ee61ee721b1843a.setIcon(icon_e36e889b50358cc5c884d9403f35a45c);
+        
+    
+        var popup_71d63cc7c916eb87068dceb4db8bf7fd = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_511473eaae21ac06f67288f673d08031 = $(`<div id="html_511473eaae21ac06f67288f673d08031" style="width: 100.0%; height: 100.0%;">             ID: PUB-230408-100<br>             Category: Drug Trafficking<br>             Type: Public Intoxication<br>             Date: 2023-04-08<br>             Time: 13:07:10<br>             Severity: 1             </div>`)[0];
+                popup_71d63cc7c916eb87068dceb4db8bf7fd.setContent(html_511473eaae21ac06f67288f673d08031);
+            
+        
+
+        marker_c132301ffc7deb1d4ee61ee721b1843a.bindPopup(popup_71d63cc7c916eb87068dceb4db8bf7fd)
+        ;
+
+        
+    
+    
+            var marker_6206308378af68e4bec2f77128c9e441 = L.marker(
+                [28.59049944280348, 77.25043599068023],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_10e724fb24167c16428d4725ee42e6b5 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_6206308378af68e4bec2f77128c9e441.setIcon(icon_10e724fb24167c16428d4725ee42e6b5);
+        
+    
+        var popup_78405fab6c0d8a1a38db543ce3dc012c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f713a926d766854118963278a6f08dc4 = $(`<div id="html_f713a926d766854118963278a6f08dc4" style="width: 100.0%; height: 100.0%;">             ID: ARM-230903-697<br>             Category: Robbery<br>             Type: Armed Robbery<br>             Date: 2023-09-03<br>             Time: 07:08:35<br>             Severity: 5             </div>`)[0];
+                popup_78405fab6c0d8a1a38db543ce3dc012c.setContent(html_f713a926d766854118963278a6f08dc4);
+            
+        
+
+        marker_6206308378af68e4bec2f77128c9e441.bindPopup(popup_78405fab6c0d8a1a38db543ce3dc012c)
+        ;
+
+        
+    
+    
+            var marker_bb68d6808998638bbf00a2e94ba5a127 = L.marker(
+                [28.653719938216497, 77.21288154651073],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_900db3096a511c91594794094b59f0d6 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_bb68d6808998638bbf00a2e94ba5a127.setIcon(icon_900db3096a511c91594794094b59f0d6);
+        
+    
+        var popup_6378a1d1056f53c40c66c40786bc24a3 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_da5f6e0da49819e689a493cab13597b2 = $(`<div id="html_da5f6e0da49819e689a493cab13597b2" style="width: 100.0%; height: 100.0%;">             ID: INJ-240316-415<br>             Category: Hit-and-Run<br>             Type: Injury Escape<br>             Date: 2024-03-16<br>             Time: 10:11:34<br>             Severity: 5             </div>`)[0];
+                popup_6378a1d1056f53c40c66c40786bc24a3.setContent(html_da5f6e0da49819e689a493cab13597b2);
+            
+        
+
+        marker_bb68d6808998638bbf00a2e94ba5a127.bindPopup(popup_6378a1d1056f53c40c66c40786bc24a3)
+        ;
+
+        
+    
+    
+            var marker_76cf6de6ccd806acd8389ff53e76d35e = L.marker(
+                [28.569267856819387, 77.22138459092271],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_08d47f09c581dd30a193cfa2621ac69a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_76cf6de6ccd806acd8389ff53e76d35e.setIcon(icon_08d47f09c581dd30a193cfa2621ac69a);
+        
+    
+        var popup_62f093859f9e726fb8ab0625171a42f5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b1bd15cef3a179ab051b8eb0f0dd4cff = $(`<div id="html_b1bd15cef3a179ab051b8eb0f0dd4cff" style="width: 100.0%; height: 100.0%;">             ID: HUM-240129-891<br>             Category: Drug Trafficking<br>             Type: Human Trafficking<br>             Date: 2024-01-29<br>             Time: 03:50:09<br>             Severity: 5             </div>`)[0];
+                popup_62f093859f9e726fb8ab0625171a42f5.setContent(html_b1bd15cef3a179ab051b8eb0f0dd4cff);
+            
+        
+
+        marker_76cf6de6ccd806acd8389ff53e76d35e.bindPopup(popup_62f093859f9e726fb8ab0625171a42f5)
+        ;
+
+        
+    
+    
+            var marker_8ea073138c15626c2539d27c55c357cb = L.marker(
+                [28.60162383111929, 77.20417358912962],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_83c0364c8d56e752a5b1fa7da911d58a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_8ea073138c15626c2539d27c55c357cb.setIcon(icon_83c0364c8d56e752a5b1fa7da911d58a);
+        
+    
+        var popup_8136c1e7f13bd74c092e0fbe462f9d2d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_659ced23de9f8872e82d6968b95115b3 = $(`<div id="html_659ced23de9f8872e82d6968b95115b3" style="width: 100.0%; height: 100.0%;">             ID: SPE-240721-455<br>             Category: Traffic Violation<br>             Type: Speeding<br>             Date: 2024-07-21<br>             Time: 04:48:13<br>             Severity: 2             </div>`)[0];
+                popup_8136c1e7f13bd74c092e0fbe462f9d2d.setContent(html_659ced23de9f8872e82d6968b95115b3);
+            
+        
+
+        marker_8ea073138c15626c2539d27c55c357cb.bindPopup(popup_8136c1e7f13bd74c092e0fbe462f9d2d)
+        ;
+
+        
+    
+    
+            var marker_3edde774875359e1e5abd1e8359ab97e = L.marker(
+                [28.647239429592172, 77.19117014904666],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_189c2b55e485a6ff32d8e92aad713160 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_3edde774875359e1e5abd1e8359ab97e.setIcon(icon_189c2b55e485a6ff32d8e92aad713160);
+        
+    
+        var popup_43f77629939014ce12fa4417ecb1bef4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8aed587a6d59869c6807b0ced1427333 = $(`<div id="html_8aed587a6d59869c6807b0ced1427333" style="width: 100.0%; height: 100.0%;">             ID: VER-220511-765<br>             Category: Hate Crimes<br>             Type: Verbal Abuse<br>             Date: 2022-05-11<br>             Time: 21:24:35<br>             Severity: 3             </div>`)[0];
+                popup_43f77629939014ce12fa4417ecb1bef4.setContent(html_8aed587a6d59869c6807b0ced1427333);
+            
+        
+
+        marker_3edde774875359e1e5abd1e8359ab97e.bindPopup(popup_43f77629939014ce12fa4417ecb1bef4)
+        ;
+
+        
+    
+    
+            var marker_d468def5a37f64d1b335fc8d65c36baa = L.marker(
+                [28.59154847512004, 77.17494866667852],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_77c867a1635c4569c2275dbf03b2fc68 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_d468def5a37f64d1b335fc8d65c36baa.setIcon(icon_77c867a1635c4569c2275dbf03b2fc68);
+        
+    
+        var popup_38ad93ff273b04f5f49695279b32dc89 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2886a1ba95c465f3748e33c875a5e962 = $(`<div id="html_2886a1ba95c465f3748e33c875a5e962" style="width: 100.0%; height: 100.0%;">             ID: INS-230412-819<br>             Category: Fraud<br>             Type: Insurance Scam<br>             Date: 2023-04-12<br>             Time: 20:00:54<br>             Severity: 3             </div>`)[0];
+                popup_38ad93ff273b04f5f49695279b32dc89.setContent(html_2886a1ba95c465f3748e33c875a5e962);
+            
+        
+
+        marker_d468def5a37f64d1b335fc8d65c36baa.bindPopup(popup_38ad93ff273b04f5f49695279b32dc89)
+        ;
+
+        
+    
+    
+            var marker_4298a15d4da09709c649669391d6f912 = L.marker(
+                [28.643735674892575, 77.24320270495127],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_f10390387dd661f69c42cc1756f3187b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_4298a15d4da09709c649669391d6f912.setIcon(icon_f10390387dd661f69c42cc1756f3187b);
+        
+    
+        var popup_f7eeac7ccfba33e7b267e3ad2e4a4161 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_31a91e8466dd0c1bd02a0be14902c4d5 = $(`<div id="html_31a91e8466dd0c1bd02a0be14902c4d5" style="width: 100.0%; height: 100.0%;">             ID: AGG-250113-019<br>             Category: Loitering and Harassment<br>             Type: Aggressive Panhandling<br>             Date: 2025-01-13<br>             Time: 13:24:43<br>             Severity: 2             </div>`)[0];
+                popup_f7eeac7ccfba33e7b267e3ad2e4a4161.setContent(html_31a91e8466dd0c1bd02a0be14902c4d5);
+            
+        
+
+        marker_4298a15d4da09709c649669391d6f912.bindPopup(popup_f7eeac7ccfba33e7b267e3ad2e4a4161)
+        ;
+
+        
+    
+    
+            var marker_085146ed2854e366d4f00be044bb5841 = L.marker(
+                [28.643013872260315, 77.21053412798211],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_fef652c416d8137205d211a72b97991f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_085146ed2854e366d4f00be044bb5841.setIcon(icon_fef652c416d8137205d211a72b97991f);
+        
+    
+        var popup_6f3d073f813be069db92116db8a5472b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5e0444ae56d39f2177de86a3425253fe = $(`<div id="html_5e0444ae56d39f2177de86a3425253fe" style="width: 100.0%; height: 100.0%;">             ID: CAR-231228-649<br>             Category: Assault<br>             Type: Carjacking<br>             Date: 2023-12-28<br>             Time: 11:09:48<br>             Severity: 5             </div>`)[0];
+                popup_6f3d073f813be069db92116db8a5472b.setContent(html_5e0444ae56d39f2177de86a3425253fe);
+            
+        
+
+        marker_085146ed2854e366d4f00be044bb5841.bindPopup(popup_6f3d073f813be069db92116db8a5472b)
+        ;
+
+        
+    
+    
+            var marker_45c44137401590f1bfc87950ae5639fb = L.marker(
+                [28.64962246914283, 77.1917440135181],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_3d3d74188de3987f3c1bd80b0520a162 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_45c44137401590f1bfc87950ae5639fb.setIcon(icon_3d3d74188de3987f3c1bd80b0520a162);
+        
+    
+        var popup_209fcf598571c6451cb20ab1fc182761 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_bb1405d89aa95501e0afdf1442c4c609 = $(`<div id="html_bb1405d89aa95501e0afdf1442c4c609" style="width: 100.0%; height: 100.0%;">             ID: AGG-230505-621<br>             Category: Loitering and Harassment<br>             Type: Aggressive Panhandling<br>             Date: 2023-05-05<br>             Time: 21:34:31<br>             Severity: 2             </div>`)[0];
+                popup_209fcf598571c6451cb20ab1fc182761.setContent(html_bb1405d89aa95501e0afdf1442c4c609);
+            
+        
+
+        marker_45c44137401590f1bfc87950ae5639fb.bindPopup(popup_209fcf598571c6451cb20ab1fc182761)
+        ;
+
+        
+    
+    
+            var marker_18d5e064b2b4eebccddbe3fbb8c744c7 = L.marker(
+                [28.63628775312901, 77.17955484737172],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_b5ab7109b43c6b99e2b5c6271d01aba5 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_18d5e064b2b4eebccddbe3fbb8c744c7.setIcon(icon_b5ab7109b43c6b99e2b5c6271d01aba5);
+        
+    
+        var popup_0ae99aa3a1c152db54ebc3a5545bb6a1 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0c581e3c04a26fc6a57af6c0c81b30a9 = $(`<div id="html_0c581e3c04a26fc6a57af6c0c81b30a9" style="width: 100.0%; height: 100.0%;">             ID: VEH-220821-963<br>             Category: Theft<br>             Type: Vehicle Theft<br>             Date: 2022-08-21<br>             Time: 10:33:48<br>             Severity: 4             </div>`)[0];
+                popup_0ae99aa3a1c152db54ebc3a5545bb6a1.setContent(html_0c581e3c04a26fc6a57af6c0c81b30a9);
+            
+        
+
+        marker_18d5e064b2b4eebccddbe3fbb8c744c7.bindPopup(popup_0ae99aa3a1c152db54ebc3a5545bb6a1)
+        ;
+
+        
+    
+    
+            var marker_e2bda6ccc15a920cfde2b0d4e1be7fc7 = L.marker(
+                [28.632339277524125, 77.1743557710306],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_cf5df7c457c54fa30c283a5730011270 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_e2bda6ccc15a920cfde2b0d4e1be7fc7.setIcon(icon_cf5df7c457c54fa30c283a5730011270);
+        
+    
+        var popup_111d7fc9992bde4391cb12be30b284ab = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_31555651c37721ce64bf571ad73eccdb = $(`<div id="html_31555651c37721ce64bf571ad73eccdb" style="width: 100.0%; height: 100.0%;">             ID: PUB-240827-533<br>             Category: Drug Trafficking<br>             Type: Public Intoxication<br>             Date: 2024-08-27<br>             Time: 22:47:58<br>             Severity: 1             </div>`)[0];
+                popup_111d7fc9992bde4391cb12be30b284ab.setContent(html_31555651c37721ce64bf571ad73eccdb);
+            
+        
+
+        marker_e2bda6ccc15a920cfde2b0d4e1be7fc7.bindPopup(popup_111d7fc9992bde4391cb12be30b284ab)
+        ;
+
+        
+    
+    
+            var marker_c0bd4044c599c3380b61c2276f8481cd = L.marker(
+                [28.581569708298744, 77.17693875299263],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_141ac0c84c58693845f2da1d31dc04fe = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_c0bd4044c599c3380b61c2276f8481cd.setIcon(icon_141ac0c84c58693845f2da1d31dc04fe);
+        
+    
+        var popup_bc0048042760731040d2e80ce7cfcea2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0bd196b0301d82f68c30ffaeeead9c2b = $(`<div id="html_0bd196b0301d82f68c30ffaeeead9c2b" style="width: 100.0%; height: 100.0%;">             ID: CAR-241220-832<br>             Category: Assault<br>             Type: Carjacking<br>             Date: 2024-12-20<br>             Time: 21:22:11<br>             Severity: 5             </div>`)[0];
+                popup_bc0048042760731040d2e80ce7cfcea2.setContent(html_0bd196b0301d82f68c30ffaeeead9c2b);
+            
+        
+
+        marker_c0bd4044c599c3380b61c2276f8481cd.bindPopup(popup_bc0048042760731040d2e80ce7cfcea2)
+        ;
+
+        
+    
+    
+            var marker_b71d2ef740b447a33685397833799b4c = L.marker(
+                [28.65717692989491, 77.20068426353897],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_e1c55b7e32b915524ac89502a99bbd35 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_b71d2ef740b447a33685397833799b4c.setIcon(icon_e1c55b7e32b915524ac89502a99bbd35);
+        
+    
+        var popup_624b14ba7f066c3fae0af18d409a5faa = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9b7644003117cf7ed0f7a7926e12d861 = $(`<div id="html_9b7644003117cf7ed0f7a7926e12d861" style="width: 100.0%; height: 100.0%;">             ID: PUB-240214-206<br>             Category: Vandalism<br>             Type: Public Property Destruction<br>             Date: 2024-02-14<br>             Time: 11:53:33<br>             Severity: 3             </div>`)[0];
+                popup_624b14ba7f066c3fae0af18d409a5faa.setContent(html_9b7644003117cf7ed0f7a7926e12d861);
+            
+        
+
+        marker_b71d2ef740b447a33685397833799b4c.bindPopup(popup_624b14ba7f066c3fae0af18d409a5faa)
+        ;
+
+        
+    
+    
+            var marker_934c0ee4a44263c4226da07c6c8aa5c0 = L.marker(
+                [28.610639633224856, 77.2387638859615],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_69b056d85a7e5ba7006d3dc853401a4a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_934c0ee4a44263c4226da07c6c8aa5c0.setIcon(icon_69b056d85a7e5ba7006d3dc853401a4a);
+        
+    
+        var popup_3b6b17d6d1c5b18bc1ad4efc0c96be2f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7ca67dc7e3d1660018274037369bf276 = $(`<div id="html_7ca67dc7e3d1660018274037369bf276" style="width: 100.0%; height: 100.0%;">             ID: HUM-221012-197<br>             Category: Drug Trafficking<br>             Type: Human Trafficking<br>             Date: 2022-10-12<br>             Time: 18:01:42<br>             Severity: 5             </div>`)[0];
+                popup_3b6b17d6d1c5b18bc1ad4efc0c96be2f.setContent(html_7ca67dc7e3d1660018274037369bf276);
+            
+        
+
+        marker_934c0ee4a44263c4226da07c6c8aa5c0.bindPopup(popup_3b6b17d6d1c5b18bc1ad4efc0c96be2f)
+        ;
+
+        
+    
+    
+            var marker_1c50e6bc5cc8ee57b16469088c1a4034 = L.marker(
+                [28.632620984185095, 77.17736305549236],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_4c58725d6729fbb765130eb0a882af14 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_1c50e6bc5cc8ee57b16469088c1a4034.setIcon(icon_4c58725d6729fbb765130eb0a882af14);
+        
+    
+        var popup_93db55a968f6f8b46f94493b384c8fef = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5c216ca70876916339241c52a7f4c8dc = $(`<div id="html_5c216ca70876916339241c52a7f4c8dc" style="width: 100.0%; height: 100.0%;">             ID: PUB-221123-218<br>             Category: Vandalism<br>             Type: Public Property Destruction<br>             Date: 2022-11-23<br>             Time: 16:54:58<br>             Severity: 3             </div>`)[0];
+                popup_93db55a968f6f8b46f94493b384c8fef.setContent(html_5c216ca70876916339241c52a7f4c8dc);
+            
+        
+
+        marker_1c50e6bc5cc8ee57b16469088c1a4034.bindPopup(popup_93db55a968f6f8b46f94493b384c8fef)
+        ;
+
+        
+    
+    
+            var marker_7a518f0aed4389bab969dde7630648b0 = L.marker(
+                [28.64351681644943, 77.17296122960674],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_3e8886be93a19bd629484c694a8b18a8 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_7a518f0aed4389bab969dde7630648b0.setIcon(icon_3e8886be93a19bd629484c694a8b18a8);
+        
+    
+        var popup_d7310930b34fae75e01ef66e595eb47e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d94c86574a90bfec847084c7377f0800 = $(`<div id="html_d94c86574a90bfec847084c7377f0800" style="width: 100.0%; height: 100.0%;">             ID: HIG-230305-394<br>             Category: Kidnapping<br>             Type: Highway Kidnapping<br>             Date: 2023-03-05<br>             Time: 08:34:26<br>             Severity: 5             </div>`)[0];
+                popup_d7310930b34fae75e01ef66e595eb47e.setContent(html_d94c86574a90bfec847084c7377f0800);
+            
+        
+
+        marker_7a518f0aed4389bab969dde7630648b0.bindPopup(popup_d7310930b34fae75e01ef66e595eb47e)
+        ;
+
+        
+    
+    
+            var marker_1469682918141c0d2b0908aa30a5a192 = L.marker(
+                [28.588278995547576, 77.16814692598253],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_71f37ab2e91473ad7864b02a8f4c0914 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_1469682918141c0d2b0908aa30a5a192.setIcon(icon_71f37ab2e91473ad7864b02a8f4c0914);
+        
+    
+        var popup_a0e7cc33d0588a86f8dcc7b319cb04dd = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e62d82828ce9e0fe36907bb63873db21 = $(`<div id="html_e62d82828ce9e0fe36907bb63873db21" style="width: 100.0%; height: 100.0%;">             ID: DAN-220602-359<br>             Category: Illegal Street Racing<br>             Type: Dangerous Driving<br>             Date: 2022-06-02<br>             Time: 04:25:54<br>             Severity: 4             </div>`)[0];
+                popup_a0e7cc33d0588a86f8dcc7b319cb04dd.setContent(html_e62d82828ce9e0fe36907bb63873db21);
+            
+        
+
+        marker_1469682918141c0d2b0908aa30a5a192.bindPopup(popup_a0e7cc33d0588a86f8dcc7b319cb04dd)
+        ;
+
+        
+    
+    
+            var marker_6f66dbecf7b532d245ed87d1e98c4f0d = L.marker(
+                [28.597203114658083, 77.22858323058722],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_c41da232b28cae0eb8ed58b422a53e05 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_6f66dbecf7b532d245ed87d1e98c4f0d.setIcon(icon_c41da232b28cae0eb8ed58b422a53e05);
+        
+    
+        var popup_cfcacfe9b4e97b69c06b7275f9eb318a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_171f45b13d01a54ebdb6813b28341c42 = $(`<div id="html_171f45b13d01a54ebdb6813b28341c42" style="width: 100.0%; height: 100.0%;">             ID: VER-241001-601<br>             Category: Assault<br>             Type: Verbal Altercation<br>             Date: 2024-10-01<br>             Time: 00:55:35<br>             Severity: 2             </div>`)[0];
+                popup_cfcacfe9b4e97b69c06b7275f9eb318a.setContent(html_171f45b13d01a54ebdb6813b28341c42);
+            
+        
+
+        marker_6f66dbecf7b532d245ed87d1e98c4f0d.bindPopup(popup_cfcacfe9b4e97b69c06b7275f9eb318a)
+        ;
+
+        
+    
+    
+            var marker_7ef58af92ba0688def94b2ff0d890cfb = L.marker(
+                [28.62916339811238, 77.23256504993535],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_5c75d75348b623cc02491a6c42da3077 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_7ef58af92ba0688def94b2ff0d890cfb.setIcon(icon_5c75d75348b623cc02491a6c42da3077);
+        
+    
+        var popup_2a4e00c53c9f369902d8d1d19c06a96e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_95278bc82ec33fb9aeaa21874f7279bc = $(`<div id="html_95278bc82ec33fb9aeaa21874f7279bc" style="width: 100.0%; height: 100.0%;">             ID: ACC-230420-872<br>             Category: Hit-and-Run<br>             Type: Accident Fleeing<br>             Date: 2023-04-20<br>             Time: 20:10:47<br>             Severity: 4             </div>`)[0];
+                popup_2a4e00c53c9f369902d8d1d19c06a96e.setContent(html_95278bc82ec33fb9aeaa21874f7279bc);
+            
+        
+
+        marker_7ef58af92ba0688def94b2ff0d890cfb.bindPopup(popup_2a4e00c53c9f369902d8d1d19c06a96e)
+        ;
+
+        
+    
+    
+            var marker_5c22775e0865b8d9f1d2a77fa354b537 = L.marker(
+                [28.65166900100883, 77.21289372402514],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_d04451deb95e81d2c5c9dce715a65831 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_5c22775e0865b8d9f1d2a77fa354b537.setIcon(icon_d04451deb95e81d2c5c9dce715a65831);
+        
+    
+        var popup_2da545534ca81ab9154ff64a550b0b2d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ce2287aa56d081062ba1a382ff13f3bc = $(`<div id="html_ce2287aa56d081062ba1a382ff13f3bc" style="width: 100.0%; height: 100.0%;">             ID: ARM-221012-052<br>             Category: Robbery<br>             Type: Armed Robbery<br>             Date: 2022-10-12<br>             Time: 20:42:56<br>             Severity: 5             </div>`)[0];
+                popup_2da545534ca81ab9154ff64a550b0b2d.setContent(html_ce2287aa56d081062ba1a382ff13f3bc);
+            
+        
+
+        marker_5c22775e0865b8d9f1d2a77fa354b537.bindPopup(popup_2da545534ca81ab9154ff64a550b0b2d)
+        ;
+
+        
+    
+    
+            var marker_8a23ae64ee710540e6ae946b5a503c8f = L.marker(
+                [28.584926214254786, 77.21765950942566],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_2eaa4294068bdbffe1e93160e5285d10 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_8a23ae64ee710540e6ae946b5a503c8f.setIcon(icon_2eaa4294068bdbffe1e93160e5285d10);
+        
+    
+        var popup_538c3e2977c22e0efac6940c92201e27 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e070333c1ddddcb1dc2d2cc247980e1f = $(`<div id="html_e070333c1ddddcb1dc2d2cc247980e1f" style="width: 100.0%; height: 100.0%;">             ID: VEH-221029-409<br>             Category: Vandalism<br>             Type: Vehicle Damage<br>             Date: 2022-10-29<br>             Time: 15:23:55<br>             Severity: 2             </div>`)[0];
+                popup_538c3e2977c22e0efac6940c92201e27.setContent(html_e070333c1ddddcb1dc2d2cc247980e1f);
+            
+        
+
+        marker_8a23ae64ee710540e6ae946b5a503c8f.bindPopup(popup_538c3e2977c22e0efac6940c92201e27)
+        ;
+
+        
+    
+    
+            var marker_732e2360bc1d5c8694762b370d118030 = L.marker(
+                [28.644999178214128, 77.16466126163375],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_26e053c22ba5bf13b1dd50cfc21ad6ac = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_732e2360bc1d5c8694762b370d118030.setIcon(icon_26e053c22ba5bf13b1dd50cfc21ad6ac);
+        
+    
+        var popup_7bc50a9c12166bb3f041fb48e5b85cea = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_137229e28b18dead570d706745d8a688 = $(`<div id="html_137229e28b18dead570d706745d8a688" style="width: 100.0%; height: 100.0%;">             ID: ROA-250101-515<br>             Category: Vandalism<br>             Type: Road Sign Graffiti<br>             Date: 2025-01-01<br>             Time: 23:33:06<br>             Severity: 1             </div>`)[0];
+                popup_7bc50a9c12166bb3f041fb48e5b85cea.setContent(html_137229e28b18dead570d706745d8a688);
+            
+        
+
+        marker_732e2360bc1d5c8694762b370d118030.bindPopup(popup_7bc50a9c12166bb3f041fb48e5b85cea)
+        ;
+
+        
+    
+    
+            var marker_ce37363ac56d7e05eaa9b7e41bcecf31 = L.marker(
+                [28.644106728496645, 77.20013257969725],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_1e5fffecf991503ac599a1ac07b198ed = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_ce37363ac56d7e05eaa9b7e41bcecf31.setIcon(icon_1e5fffecf991503ac599a1ac07b198ed);
+        
+    
+        var popup_f6fcb7ec2734c0ca1819f598590f1dce = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_64f79ae7b0e0ec40e8baa3b6ac3db560 = $(`<div id="html_64f79ae7b0e0ec40e8baa3b6ac3db560" style="width: 100.0%; height: 100.0%;">             ID: ACC-221219-958<br>             Category: Hit-and-Run<br>             Type: Accident Fleeing<br>             Date: 2022-12-19<br>             Time: 13:22:13<br>             Severity: 4             </div>`)[0];
+                popup_f6fcb7ec2734c0ca1819f598590f1dce.setContent(html_64f79ae7b0e0ec40e8baa3b6ac3db560);
+            
+        
+
+        marker_ce37363ac56d7e05eaa9b7e41bcecf31.bindPopup(popup_f6fcb7ec2734c0ca1819f598590f1dce)
+        ;
+
+        
+    
+    
+            var marker_95540f4b2a2b7a82f0adf85320faec64 = L.marker(
+                [28.648686785874624, 77.19704696118403],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_86864b2022a0b2eb211c4bf4289c2c25 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_95540f4b2a2b7a82f0adf85320faec64.setIcon(icon_86864b2022a0b2eb211c4bf4289c2c25);
+        
+    
+        var popup_fc7975c3920d151b02bd5f85538d431d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b565d5fd99f33c3bfefacab3c25fa31e = $(`<div id="html_b565d5fd99f33c3bfefacab3c25fa31e" style="width: 100.0%; height: 100.0%;">             ID: TOL-230317-644<br>             Category: Fraud<br>             Type: Toll Booth Fraud<br>             Date: 2023-03-17<br>             Time: 23:55:38<br>             Severity: 2             </div>`)[0];
+                popup_fc7975c3920d151b02bd5f85538d431d.setContent(html_b565d5fd99f33c3bfefacab3c25fa31e);
+            
+        
+
+        marker_95540f4b2a2b7a82f0adf85320faec64.bindPopup(popup_fc7975c3920d151b02bd5f85538d431d)
+        ;
+
+        
+    
+    
+            var marker_5b9ab51b4237e2caf8c4b83140cc165b = L.marker(
+                [28.58050109948381, 77.24474690384763],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_16e439d4ddd7658c73010c1f092f1032 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_5b9ab51b4237e2caf8c4b83140cc165b.setIcon(icon_16e439d4ddd7658c73010c1f092f1032);
+        
+    
+        var popup_393202aa83c5d02990203dbaf2d757ae = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2fa23708c8924ee7e7044f073c4b1d07 = $(`<div id="html_2fa23708c8924ee7e7044f073c4b1d07" style="width: 100.0%; height: 100.0%;">             ID: ACC-230113-431<br>             Category: Hit-and-Run<br>             Type: Accident Fleeing<br>             Date: 2023-01-13<br>             Time: 19:02:12<br>             Severity: 4             </div>`)[0];
+                popup_393202aa83c5d02990203dbaf2d757ae.setContent(html_2fa23708c8924ee7e7044f073c4b1d07);
+            
+        
+
+        marker_5b9ab51b4237e2caf8c4b83140cc165b.bindPopup(popup_393202aa83c5d02990203dbaf2d757ae)
+        ;
+
+        
+    
+    
+            var marker_f9f3cdf5b76ccaa473b9ea7ae1d7d4d1 = L.marker(
+                [28.64475344643912, 77.17298769937936],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_4827db495f3afb18b60e9b41b8e24145 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_f9f3cdf5b76ccaa473b9ea7ae1d7d4d1.setIcon(icon_4827db495f3afb18b60e9b41b8e24145);
+        
+    
+        var popup_e42a1938be0e884792bce4b12a1df555 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cba86debd7f743f8039739374d5f5eb6 = $(`<div id="html_cba86debd7f743f8039739374d5f5eb6" style="width: 100.0%; height: 100.0%;">             ID: SPE-230217-155<br>             Category: Traffic Violation<br>             Type: Speeding<br>             Date: 2023-02-17<br>             Time: 19:24:07<br>             Severity: 2             </div>`)[0];
+                popup_e42a1938be0e884792bce4b12a1df555.setContent(html_cba86debd7f743f8039739374d5f5eb6);
+            
+        
+
+        marker_f9f3cdf5b76ccaa473b9ea7ae1d7d4d1.bindPopup(popup_e42a1938be0e884792bce4b12a1df555)
+        ;
+
+        
+    
+    
+            var marker_87a97657e3de24095b76e140becc1b48 = L.marker(
+                [28.570858794502975, 77.224478081236],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_ac590d8bc473368fb2fa50aeb19d69f9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_87a97657e3de24095b76e140becc1b48.setIcon(icon_ac590d8bc473368fb2fa50aeb19d69f9);
+        
+    
+        var popup_3297f15a01d784a6a1fd37f0fc2432d6 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9ffc76919c9a90a47d7e64c0b96a47d5 = $(`<div id="html_9ffc76919c9a90a47d7e64c0b96a47d5" style="width: 100.0%; height: 100.0%;">             ID: TAR-220903-427<br>             Category: Hate Crimes<br>             Type: Targeted Assault<br>             Date: 2022-09-03<br>             Time: 15:53:05<br>             Severity: 5             </div>`)[0];
+                popup_3297f15a01d784a6a1fd37f0fc2432d6.setContent(html_9ffc76919c9a90a47d7e64c0b96a47d5);
+            
+        
+
+        marker_87a97657e3de24095b76e140becc1b48.bindPopup(popup_3297f15a01d784a6a1fd37f0fc2432d6)
+        ;
+
+        
+    
+    
+            var marker_11973fb6a5a2fc00be9d10756e91f0c3 = L.marker(
+                [28.654505171197183, 77.20983143591657],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_e36bbfdfc13f73d520306853e1e44f19 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_11973fb6a5a2fc00be9d10756e91f0c3.setIcon(icon_e36bbfdfc13f73d520306853e1e44f19);
+        
+    
+        var popup_5ad2556e9fdb7c07e72526728188583d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a32b293ddd8c839868af5166631c218d = $(`<div id="html_a32b293ddd8c839868af5166631c218d" style="width: 100.0%; height: 100.0%;">             ID: STR-230510-102<br>             Category: Loitering and Harassment<br>             Type: Street Harassment<br>             Date: 2023-05-10<br>             Time: 05:46:46<br>             Severity: 3             </div>`)[0];
+                popup_5ad2556e9fdb7c07e72526728188583d.setContent(html_a32b293ddd8c839868af5166631c218d);
+            
+        
+
+        marker_11973fb6a5a2fc00be9d10756e91f0c3.bindPopup(popup_5ad2556e9fdb7c07e72526728188583d)
+        ;
+
+        
+    
+    
+            var marker_30b64e986567232039eb6d099226e229 = L.marker(
+                [28.64878907025203, 77.23323213870108],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_ec66244ab3657fbf2527e94252d27f63 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_30b64e986567232039eb6d099226e229.setIcon(icon_ec66244ab3657fbf2527e94252d27f63);
+        
+    
+        var popup_ccbba2c260e18b5ca88e5b1645ee4b19 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1ff84d97eba9da5929128153f35fe061 = $(`<div id="html_1ff84d97eba9da5929128153f35fe061" style="width: 100.0%; height: 100.0%;">             ID: VEH-230317-034<br>             Category: Theft<br>             Type: Vehicle Theft<br>             Date: 2023-03-17<br>             Time: 02:20:47<br>             Severity: 4             </div>`)[0];
+                popup_ccbba2c260e18b5ca88e5b1645ee4b19.setContent(html_1ff84d97eba9da5929128153f35fe061);
+            
+        
+
+        marker_30b64e986567232039eb6d099226e229.bindPopup(popup_ccbba2c260e18b5ca88e5b1645ee4b19)
+        ;
+
+        
+    
+    
+            var marker_d1ffdda1143837a7065d04765cef320c = L.marker(
+                [28.604904937638096, 77.22780391460988],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_a727c9b7b9b2a5ac3b5ae179d7cc54fd = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_d1ffdda1143837a7065d04765cef320c.setIcon(icon_a727c9b7b9b2a5ac3b5ae179d7cc54fd);
+        
+    
+        var popup_65ae85c8232f8cf084588eb1c05ccd4f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7d61dac065362840aa9fee6c712e57f6 = $(`<div id="html_7d61dac065362840aa9fee6c712e57f6" style="width: 100.0%; height: 100.0%;">             ID: TOL-240830-366<br>             Category: Fraud<br>             Type: Toll Booth Fraud<br>             Date: 2024-08-30<br>             Time: 17:17:18<br>             Severity: 2             </div>`)[0];
+                popup_65ae85c8232f8cf084588eb1c05ccd4f.setContent(html_7d61dac065362840aa9fee6c712e57f6);
+            
+        
+
+        marker_d1ffdda1143837a7065d04765cef320c.bindPopup(popup_65ae85c8232f8cf084588eb1c05ccd4f)
+        ;
+
+        
+    
+    
+            var marker_88093140f481f7900c1759ebecbb8b50 = L.marker(
+                [28.64548534228037, 77.21320570882929],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_6e333cfad1b02620decdcaf563df8fa3 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_88093140f481f7900c1759ebecbb8b50.setIcon(icon_6e333cfad1b02620decdcaf563df8fa3);
+        
+    
+        var popup_2f5993691af80f472fadba43198064f0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_71b33e826c3bdef039c045f70ba9413b = $(`<div id="html_71b33e826c3bdef039c045f70ba9413b" style="width: 100.0%; height: 100.0%;">             ID: TAR-240120-493<br>             Category: Hate Crimes<br>             Type: Targeted Assault<br>             Date: 2024-01-20<br>             Time: 05:30:57<br>             Severity: 5             </div>`)[0];
+                popup_2f5993691af80f472fadba43198064f0.setContent(html_71b33e826c3bdef039c045f70ba9413b);
+            
+        
+
+        marker_88093140f481f7900c1759ebecbb8b50.bindPopup(popup_2f5993691af80f472fadba43198064f0)
+        ;
+
+        
+    
+    
+            var marker_b2f0f9c8c6919c541ce9ace5cd98b4c1 = L.marker(
+                [28.59283559478631, 77.1625623439331],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_7410c5ad4a7c85524122de159f23e500 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_b2f0f9c8c6919c541ce9ace5cd98b4c1.setIcon(icon_7410c5ad4a7c85524122de159f23e500);
+        
+    
+        var popup_2f60ca3ca667571be35b5723a0f4ce11 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_04de1339aecb12a2d5753ed331992b7e = $(`<div id="html_04de1339aecb12a2d5753ed331992b7e" style="width: 100.0%; height: 100.0%;">             ID: STR-220615-816<br>             Category: Loitering and Harassment<br>             Type: Street Harassment<br>             Date: 2022-06-15<br>             Time: 19:22:20<br>             Severity: 3             </div>`)[0];
+                popup_2f60ca3ca667571be35b5723a0f4ce11.setContent(html_04de1339aecb12a2d5753ed331992b7e);
+            
+        
+
+        marker_b2f0f9c8c6919c541ce9ace5cd98b4c1.bindPopup(popup_2f60ca3ca667571be35b5723a0f4ce11)
+        ;
+
+        
+    
+    
+            var marker_3615970949da78153c24c1205dd661e8 = L.marker(
+                [28.644973632919434, 77.18614239586277],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_a894ecffc5d9f2edc3e6aa8013b7fe9d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_3615970949da78153c24c1205dd661e8.setIcon(icon_a894ecffc5d9f2edc3e6aa8013b7fe9d);
+        
+    
+        var popup_7c430bc476358cbd84211ff0ae69b6d2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4e20a6b51c2383585ffdbc269e5ea1bc = $(`<div id="html_4e20a6b51c2383585ffdbc269e5ea1bc" style="width: 100.0%; height: 100.0%;">             ID: BLO-240207-790<br>             Category: Obstruction<br>             Type: Blocking Pedestrian Path<br>             Date: 2024-02-07<br>             Time: 21:00:46<br>             Severity: 1             </div>`)[0];
+                popup_7c430bc476358cbd84211ff0ae69b6d2.setContent(html_4e20a6b51c2383585ffdbc269e5ea1bc);
+            
+        
+
+        marker_3615970949da78153c24c1205dd661e8.bindPopup(popup_7c430bc476358cbd84211ff0ae69b6d2)
+        ;
+
+        
+    
+    
+            var marker_844fb1227d28bead5cfa191c9ff161c4 = L.marker(
+                [28.58055910857751, 77.25187694034597],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_3a03290004a060f8aac0ea77893c577a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_844fb1227d28bead5cfa191c9ff161c4.setIcon(icon_3a03290004a060f8aac0ea77893c577a);
+        
+    
+        var popup_76597a37708cf55f641700667ec28719 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f5ff201a31f1745e67bfb2e4f73c259d = $(`<div id="html_f5ff201a31f1745e67bfb2e4f73c259d" style="width: 100.0%; height: 100.0%;">             ID: DRA-240428-003<br>             Category: Illegal Street Racing<br>             Type: Drag Racing<br>             Date: 2024-04-28<br>             Time: 07:06:53<br>             Severity: 3             </div>`)[0];
+                popup_76597a37708cf55f641700667ec28719.setContent(html_f5ff201a31f1745e67bfb2e4f73c259d);
+            
+        
+
+        marker_844fb1227d28bead5cfa191c9ff161c4.bindPopup(popup_76597a37708cf55f641700667ec28719)
+        ;
+
+        
+    
+    
+            var marker_8f312b1deae8bc075623d8d3973dd8d3 = L.marker(
+                [28.644875743370356, 77.167914184551],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_3f785a6007f02c588336dd32bbbd99db = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_8f312b1deae8bc075623d8d3973dd8d3.setIcon(icon_3f785a6007f02c588336dd32bbbd99db);
+        
+    
+        var popup_c03b42d173aa97cd1b35f94fcbddc0ae = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f6bd7c4c4e427b450fd8c21581d0a772 = $(`<div id="html_f6bd7c4c4e427b450fd8c21581d0a772" style="width: 100.0%; height: 100.0%;">             ID: STA-241012-915<br>             Category: Loitering and Harassment<br>             Type: Stalking<br>             Date: 2024-10-12<br>             Time: 17:40:09<br>             Severity: 4             </div>`)[0];
+                popup_c03b42d173aa97cd1b35f94fcbddc0ae.setContent(html_f6bd7c4c4e427b450fd8c21581d0a772);
+            
+        
+
+        marker_8f312b1deae8bc075623d8d3973dd8d3.bindPopup(popup_c03b42d173aa97cd1b35f94fcbddc0ae)
+        ;
+
+        
+    
+    
+            var marker_c8ace29b66fc2fe9c047805c8df21ca1 = L.marker(
+                [28.644568399815213, 77.17383757961585],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_07802533e00b57c19dd5800232953fdc = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_c8ace29b66fc2fe9c047805c8df21ca1.setIcon(icon_07802533e00b57c19dd5800232953fdc);
+        
+    
+        var popup_2fdf04f4087b620d70ab577b210dfa47 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2f0430fcfae719bcad4f9bd8000c9267 = $(`<div id="html_2f0430fcfae719bcad4f9bd8000c9267" style="width: 100.0%; height: 100.0%;">             ID: VEH-230612-684<br>             Category: Theft<br>             Type: Vehicle Theft<br>             Date: 2023-06-12<br>             Time: 18:28:10<br>             Severity: 4             </div>`)[0];
+                popup_2fdf04f4087b620d70ab577b210dfa47.setContent(html_2f0430fcfae719bcad4f9bd8000c9267);
+            
+        
+
+        marker_c8ace29b66fc2fe9c047805c8df21ca1.bindPopup(popup_2fdf04f4087b620d70ab577b210dfa47)
+        ;
+
+        
+    
+    
+            var marker_188d1e12396fbd77bbb649f0681b767f = L.marker(
+                [28.62362778511176, 77.21235010473488],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_3e9213dbe0319db75f586331bc056d74 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_188d1e12396fbd77bbb649f0681b767f.setIcon(icon_3e9213dbe0319db75f586331bc056d74);
+        
+    
+        var popup_a08760191732e45884a2e87b7ec72b93 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b34aa86b9064d081e7071c32938f435c = $(`<div id="html_b34aa86b9064d081e7071c32938f435c" style="width: 100.0%; height: 100.0%;">             ID: VER-250116-975<br>             Category: Hate Crimes<br>             Type: Verbal Abuse<br>             Date: 2025-01-16<br>             Time: 14:32:21<br>             Severity: 3             </div>`)[0];
+                popup_a08760191732e45884a2e87b7ec72b93.setContent(html_b34aa86b9064d081e7071c32938f435c);
+            
+        
+
+        marker_188d1e12396fbd77bbb649f0681b767f.bindPopup(popup_a08760191732e45884a2e87b7ec72b93)
+        ;
+
+        
+    
+    
+            var marker_3fb0591cc3a43e36f8507b96562548b1 = L.marker(
+                [28.63281605338927, 77.17749444845258],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_e9daa533571f28dc0b663faad42a1d4a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_3fb0591cc3a43e36f8507b96562548b1.setIcon(icon_e9daa533571f28dc0b663faad42a1d4a);
+        
+    
+        var popup_b4a5a8a13eefab47c4bf3918ff43b31e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2649bb411281eafd65b935eb8a1621ba = $(`<div id="html_2649bb411281eafd65b935eb8a1621ba" style="width: 100.0%; height: 100.0%;">             ID: VER-230219-036<br>             Category: Hate Crimes<br>             Type: Verbal Abuse<br>             Date: 2023-02-19<br>             Time: 18:44:36<br>             Severity: 3             </div>`)[0];
+                popup_b4a5a8a13eefab47c4bf3918ff43b31e.setContent(html_2649bb411281eafd65b935eb8a1621ba);
+            
+        
+
+        marker_3fb0591cc3a43e36f8507b96562548b1.bindPopup(popup_b4a5a8a13eefab47c4bf3918ff43b31e)
+        ;
+
+        
+    
+    
+            var marker_db8fbcbdabbd9aa7ee273434cd978093 = L.marker(
+                [28.63021016610672, 77.20091603658882],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_000f7722e1896509d1e42ea36cf9db0c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_db8fbcbdabbd9aa7ee273434cd978093.setIcon(icon_000f7722e1896509d1e42ea36cf9db0c);
+        
+    
+        var popup_e7007a2b4ea7bee7587d8fc36478b9d7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_90bb8495fcfcc65cf5f7a70a427d88f5 = $(`<div id="html_90bb8495fcfcc65cf5f7a70a427d88f5" style="width: 100.0%; height: 100.0%;">             ID: PUB-220610-462<br>             Category: Vandalism<br>             Type: Public Property Destruction<br>             Date: 2022-06-10<br>             Time: 19:30:01<br>             Severity: 3             </div>`)[0];
+                popup_e7007a2b4ea7bee7587d8fc36478b9d7.setContent(html_90bb8495fcfcc65cf5f7a70a427d88f5);
+            
+        
+
+        marker_db8fbcbdabbd9aa7ee273434cd978093.bindPopup(popup_e7007a2b4ea7bee7587d8fc36478b9d7)
+        ;
+
+        
+    
+    
+            var marker_0312792c2f6b70f1e0f2a887fb633b02 = L.marker(
+                [28.58605842685526, 77.24375749252101],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_e853960d25ee75b70b6499e20fa20534 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_0312792c2f6b70f1e0f2a887fb633b02.setIcon(icon_e853960d25ee75b70b6499e20fa20534);
+        
+    
+        var popup_74ad535d41489269cd7afdf55a280ba7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2f29fc46c035b0c73ecc8d1c32604717 = $(`<div id="html_2f29fc46c035b0c73ecc8d1c32604717" style="width: 100.0%; height: 100.0%;">             ID: PUB-230809-308<br>             Category: Drug Trafficking<br>             Type: Public Intoxication<br>             Date: 2023-08-09<br>             Time: 19:00:46<br>             Severity: 1             </div>`)[0];
+                popup_74ad535d41489269cd7afdf55a280ba7.setContent(html_2f29fc46c035b0c73ecc8d1c32604717);
+            
+        
+
+        marker_0312792c2f6b70f1e0f2a887fb633b02.bindPopup(popup_74ad535d41489269cd7afdf55a280ba7)
+        ;
+
+        
+    
+    
+            var marker_7a1ad1d1cd45a3177f3dd35e4a127515 = L.marker(
+                [28.6515893342012, 77.16718106031898],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_1656ad8dc963a4b56d8b1c1a29913e07 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_7a1ad1d1cd45a3177f3dd35e4a127515.setIcon(icon_1656ad8dc963a4b56d8b1c1a29913e07);
+        
+    
+        var popup_8bc23b06e3424e1e5292ae5333e344cc = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5a42a79460f85de96436be7221ca1057 = $(`<div id="html_5a42a79460f85de96436be7221ca1057" style="width: 100.0%; height: 100.0%;">             ID: TAR-240212-070<br>             Category: Hate Crimes<br>             Type: Targeted Assault<br>             Date: 2024-02-12<br>             Time: 03:48:16<br>             Severity: 5             </div>`)[0];
+                popup_8bc23b06e3424e1e5292ae5333e344cc.setContent(html_5a42a79460f85de96436be7221ca1057);
+            
+        
+
+        marker_7a1ad1d1cd45a3177f3dd35e4a127515.bindPopup(popup_8bc23b06e3424e1e5292ae5333e344cc)
+        ;
+
+        
+    
+    
+            var marker_2a8802da8388e8a3633c8bcbb0886c97 = L.marker(
+                [28.642147688381073, 77.23255755425755],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_cc1b61cc2b167b06cb8de242720ee5d5 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_2a8802da8388e8a3633c8bcbb0886c97.setIcon(icon_cc1b61cc2b167b06cb8de242720ee5d5);
+        
+    
+        var popup_b896276e4d738e81e5742d93bc29fb76 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_49f7dc7d092978453c15f10b55dd923f = $(`<div id="html_49f7dc7d092978453c15f10b55dd923f" style="width: 100.0%; height: 100.0%;">             ID: VEH-231115-097<br>             Category: Vandalism<br>             Type: Vehicle Damage<br>             Date: 2023-11-15<br>             Time: 11:08:05<br>             Severity: 2             </div>`)[0];
+                popup_b896276e4d738e81e5742d93bc29fb76.setContent(html_49f7dc7d092978453c15f10b55dd923f);
+            
+        
+
+        marker_2a8802da8388e8a3633c8bcbb0886c97.bindPopup(popup_b896276e4d738e81e5742d93bc29fb76)
+        ;
+
+        
+    
+    
+            var marker_496147d2055a148f0e55cb49cb52b906 = L.marker(
+                [28.605672425222338, 77.22591794413886],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_4b0987dbfc4211264b4169b197112c39 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_496147d2055a148f0e55cb49cb52b906.setIcon(icon_4b0987dbfc4211264b4169b197112c39);
+        
+    
+        var popup_03793be6cbd3cad88945b9b3146ba6ab = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_19d373dfdd776df601acea6ca11a4dfd = $(`<div id="html_19d373dfdd776df601acea6ca11a4dfd" style="width: 100.0%; height: 100.0%;">             ID: SEX-230222-110<br>             Category: Sexual Crime<br>             Type: Sexual Harassment<br>             Date: 2023-02-22<br>             Time: 02:55:32<br>             Severity: 3             </div>`)[0];
+                popup_03793be6cbd3cad88945b9b3146ba6ab.setContent(html_19d373dfdd776df601acea6ca11a4dfd);
+            
+        
+
+        marker_496147d2055a148f0e55cb49cb52b906.bindPopup(popup_03793be6cbd3cad88945b9b3146ba6ab)
+        ;
+
+        
+    
+    
+            var marker_23727ab0d13d72b388ca0f1e07739736 = L.marker(
+                [28.57911765253204, 77.17511413771844],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_3331a799f96073ca23ca160b9059051a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_23727ab0d13d72b388ca0f1e07739736.setIcon(icon_3331a799f96073ca23ca160b9059051a);
+        
+    
+        var popup_fcf8bc7ac3252ec4d94c47a1f1f5fb6c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ef8f0534628bc8536533eebda676e74a = $(`<div id="html_ef8f0534628bc8536533eebda676e74a" style="width: 100.0%; height: 100.0%;">             ID: BLO-231004-648<br>             Category: Obstruction<br>             Type: Blocking Pedestrian Path<br>             Date: 2023-10-04<br>             Time: 13:08:28<br>             Severity: 1             </div>`)[0];
+                popup_fcf8bc7ac3252ec4d94c47a1f1f5fb6c.setContent(html_ef8f0534628bc8536533eebda676e74a);
+            
+        
+
+        marker_23727ab0d13d72b388ca0f1e07739736.bindPopup(popup_fcf8bc7ac3252ec4d94c47a1f1f5fb6c)
+        ;
+
+        
+    
+    
+            var marker_9270d40680ee635184656874aea606d5 = L.marker(
+                [28.649104200067814, 77.18400055018371],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_94069396f4029cb79b7a6a818b96ff30 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_9270d40680ee635184656874aea606d5.setIcon(icon_94069396f4029cb79b7a6a818b96ff30);
+        
+    
+        var popup_3bd657b4e6f7f620a0d1ed6580103d4a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_36887f54d225b782b1d04b50e3709ddd = $(`<div id="html_36887f54d225b782b1d04b50e3709ddd" style="width: 100.0%; height: 100.0%;">             ID: AGG-230829-358<br>             Category: Loitering and Harassment<br>             Type: Aggressive Panhandling<br>             Date: 2023-08-29<br>             Time: 13:14:59<br>             Severity: 2             </div>`)[0];
+                popup_3bd657b4e6f7f620a0d1ed6580103d4a.setContent(html_36887f54d225b782b1d04b50e3709ddd);
+            
+        
+
+        marker_9270d40680ee635184656874aea606d5.bindPopup(popup_3bd657b4e6f7f620a0d1ed6580103d4a)
+        ;
+
+        
+    
+    
+            var marker_ba67626764bbabbcea605db77a02492b = L.marker(
+                [28.58529347225353, 77.24354800913204],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_f2f0832593d0689ea07607bf8b02c0c8 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_ba67626764bbabbcea605db77a02492b.setIcon(icon_f2f0832593d0689ea07607bf8b02c0c8);
+        
+    
+        var popup_977601e2d4cfbe0e29d72cb8772a251c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c7b3c7e849d3b6beb85e94c31dc0e4b4 = $(`<div id="html_c7b3c7e849d3b6beb85e94c31dc0e4b4" style="width: 100.0%; height: 100.0%;">             ID: DRU-240526-408<br>             Category: Traffic Violation<br>             Type: Drunk Driving<br>             Date: 2024-05-26<br>             Time: 23:20:50<br>             Severity: 4             </div>`)[0];
+                popup_977601e2d4cfbe0e29d72cb8772a251c.setContent(html_c7b3c7e849d3b6beb85e94c31dc0e4b4);
+            
+        
+
+        marker_ba67626764bbabbcea605db77a02492b.bindPopup(popup_977601e2d4cfbe0e29d72cb8772a251c)
+        ;
+
+        
+    
+    
+            var marker_a7d02634a84ba7151f70c86efd6268cd = L.marker(
+                [28.603613423570504, 77.2432140453373],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_062a1330f3f961a329befbf4aaefb7f3 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_a7d02634a84ba7151f70c86efd6268cd.setIcon(icon_062a1330f3f961a329befbf4aaefb7f3);
+        
+    
+        var popup_d703d4bb6e85f2306657b94c48298cbd = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6b0b27e244cd66b8beb5cb8561a9a6ba = $(`<div id="html_6b0b27e244cd66b8beb5cb8561a9a6ba" style="width: 100.0%; height: 100.0%;">             ID: AGG-230308-251<br>             Category: Loitering and Harassment<br>             Type: Aggressive Panhandling<br>             Date: 2023-03-08<br>             Time: 04:07:36<br>             Severity: 2             </div>`)[0];
+                popup_d703d4bb6e85f2306657b94c48298cbd.setContent(html_6b0b27e244cd66b8beb5cb8561a9a6ba);
+            
+        
+
+        marker_a7d02634a84ba7151f70c86efd6268cd.bindPopup(popup_d703d4bb6e85f2306657b94c48298cbd)
+        ;
+
+        
+    
+    
+            var marker_0936a4365ba08adb0b118dca4f82697c = L.marker(
+                [28.583060815957474, 77.24969199051529],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_890f35bc577dbe6dabb2c9776fd499a9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_0936a4365ba08adb0b118dca4f82697c.setIcon(icon_890f35bc577dbe6dabb2c9776fd499a9);
+        
+    
+        var popup_93ad839c6ee1b505a4d201191894f4d9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_67fff1132ae11bf1e4d94235642e5907 = $(`<div id="html_67fff1132ae11bf1e4d94235642e5907" style="width: 100.0%; height: 100.0%;">             ID: AGG-240307-031<br>             Category: Loitering and Harassment<br>             Type: Aggressive Panhandling<br>             Date: 2024-03-07<br>             Time: 05:19:55<br>             Severity: 2             </div>`)[0];
+                popup_93ad839c6ee1b505a4d201191894f4d9.setContent(html_67fff1132ae11bf1e4d94235642e5907);
+            
+        
+
+        marker_0936a4365ba08adb0b118dca4f82697c.bindPopup(popup_93ad839c6ee1b505a4d201191894f4d9)
+        ;
+
+        
+    
+    
+            var marker_d16db95e43aebc168cd15930ae8f2973 = L.marker(
+                [28.64707543014182, 77.17016538051645],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_b044d3060d8c371f92b8767d625b9e6d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_d16db95e43aebc168cd15930ae8f2973.setIcon(icon_b044d3060d8c371f92b8767d625b9e6d);
+        
+    
+        var popup_7aee8a8640e2d93c326c703ac6b21752 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_39195171d5108fc334c8938d612005fe = $(`<div id="html_39195171d5108fc334c8938d612005fe" style="width: 100.0%; height: 100.0%;">             ID: BLO-231231-606<br>             Category: Obstruction<br>             Type: Blocking Pedestrian Path<br>             Date: 2023-12-31<br>             Time: 09:31:23<br>             Severity: 1             </div>`)[0];
+                popup_7aee8a8640e2d93c326c703ac6b21752.setContent(html_39195171d5108fc334c8938d612005fe);
+            
+        
+
+        marker_d16db95e43aebc168cd15930ae8f2973.bindPopup(popup_7aee8a8640e2d93c326c703ac6b21752)
+        ;
+
+        
+    
+    
+            var marker_221e33762564de7f474476a66f977053 = L.marker(
+                [28.591156067335476, 77.22898166640982],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_775b9ee0635e68788efe2177384c4ca7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_221e33762564de7f474476a66f977053.setIcon(icon_775b9ee0635e68788efe2177384c4ca7);
+        
+    
+        var popup_99490b69c70253229b5108aa8f4d85e8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a097dcf7c15b07ae9506b2b3c5ddbcf2 = $(`<div id="html_a097dcf7c15b07ae9506b2b3c5ddbcf2" style="width: 100.0%; height: 100.0%;">             ID: INJ-220909-527<br>             Category: Hit-and-Run<br>             Type: Injury Escape<br>             Date: 2022-09-09<br>             Time: 10:51:01<br>             Severity: 5             </div>`)[0];
+                popup_99490b69c70253229b5108aa8f4d85e8.setContent(html_a097dcf7c15b07ae9506b2b3c5ddbcf2);
+            
+        
+
+        marker_221e33762564de7f474476a66f977053.bindPopup(popup_99490b69c70253229b5108aa8f4d85e8)
+        ;
+
+        
+    
+    
+            var marker_94d11a62f1f0185ad1c5f2d5d66dc0cc = L.marker(
+                [28.589677741264897, 77.22377086660866],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_0b04ad99e3a9560e7ab2ac19adb936bd = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_94d11a62f1f0185ad1c5f2d5d66dc0cc.setIcon(icon_0b04ad99e3a9560e7ab2ac19adb936bd);
+        
+    
+        var popup_8835783f32a69b396fc9a968a0eb9a5d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_fd451eba66236106dccee21a9b4e897c = $(`<div id="html_fd451eba66236106dccee21a9b4e897c" style="width: 100.0%; height: 100.0%;">             ID: CAR-240605-525<br>             Category: Assault<br>             Type: Carjacking<br>             Date: 2024-06-05<br>             Time: 23:17:05<br>             Severity: 5             </div>`)[0];
+                popup_8835783f32a69b396fc9a968a0eb9a5d.setContent(html_fd451eba66236106dccee21a9b4e897c);
+            
+        
+
+        marker_94d11a62f1f0185ad1c5f2d5d66dc0cc.bindPopup(popup_8835783f32a69b396fc9a968a0eb9a5d)
+        ;
+
+        
+    
+    
+            var marker_50ee9defc5c5bf627ed3d625be1af8c4 = L.marker(
+                [28.644920390400138, 77.17107062447512],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_679ffb2c30bf35184d6873532e9dec0b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_50ee9defc5c5bf627ed3d625be1af8c4.setIcon(icon_679ffb2c30bf35184d6873532e9dec0b);
+        
+    
+        var popup_9a09f999afa5e1fcc174e1934850810c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cc3afb30eabb7e2f620cf94605bb8065 = $(`<div id="html_cc3afb30eabb7e2f620cf94605bb8065" style="width: 100.0%; height: 100.0%;">             ID: TOL-241004-249<br>             Category: Fraud<br>             Type: Toll Booth Fraud<br>             Date: 2024-10-04<br>             Time: 08:23:09<br>             Severity: 2             </div>`)[0];
+                popup_9a09f999afa5e1fcc174e1934850810c.setContent(html_cc3afb30eabb7e2f620cf94605bb8065);
+            
+        
+
+        marker_50ee9defc5c5bf627ed3d625be1af8c4.bindPopup(popup_9a09f999afa5e1fcc174e1934850810c)
+        ;
+
+        
+    
+    
+            var marker_e3f5d9547c8e65eb5383f385f2e6c2bf = L.marker(
+                [28.582355733311562, 77.24320034309416],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_f90be22a4fa4f3b9acc373f06a7b3ecf = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_e3f5d9547c8e65eb5383f385f2e6c2bf.setIcon(icon_f90be22a4fa4f3b9acc373f06a7b3ecf);
+        
+    
+        var popup_82e5021fea2fae18efa3c1615f06ae7e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a18fff447a4785e6479aa99cbd508a3b = $(`<div id="html_a18fff447a4785e6479aa99cbd508a3b" style="width: 100.0%; height: 100.0%;">             ID: RAP-220610-827<br>             Category: Sexual Crime<br>             Type: Rape<br>             Date: 2022-06-10<br>             Time: 14:01:14<br>             Severity: 5             </div>`)[0];
+                popup_82e5021fea2fae18efa3c1615f06ae7e.setContent(html_a18fff447a4785e6479aa99cbd508a3b);
+            
+        
+
+        marker_e3f5d9547c8e65eb5383f385f2e6c2bf.bindPopup(popup_82e5021fea2fae18efa3c1615f06ae7e)
+        ;
+
+        
+    
+    
+            var marker_736d8fdda6d5dd62d3a4292927daf590 = L.marker(
+                [28.592617420309058, 77.23918137049161],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_d4f455c84952a2622bb1af015a95d9a4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_736d8fdda6d5dd62d3a4292927daf590.setIcon(icon_d4f455c84952a2622bb1af015a95d9a4);
+        
+    
+        var popup_e3d415897efdb8add554db1219674163 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c76c8126fdba63362d20cfd641bc9d2d = $(`<div id="html_c76c8126fdba63362d20cfd641bc9d2d" style="width: 100.0%; height: 100.0%;">             ID: STR-240815-646<br>             Category: Loitering and Harassment<br>             Type: Street Harassment<br>             Date: 2024-08-15<br>             Time: 02:23:54<br>             Severity: 3             </div>`)[0];
+                popup_e3d415897efdb8add554db1219674163.setContent(html_c76c8126fdba63362d20cfd641bc9d2d);
+            
+        
+
+        marker_736d8fdda6d5dd62d3a4292927daf590.bindPopup(popup_e3d415897efdb8add554db1219674163)
+        ;
+
+        
+    
+    
+            var marker_5cb80685ce816d83e054d850ecd68d2e = L.marker(
+                [28.569490055282294, 77.23987885690431],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_64d835fce7fb46f47985cc2033afa31e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_5cb80685ce816d83e054d850ecd68d2e.setIcon(icon_64d835fce7fb46f47985cc2033afa31e);
+        
+    
+        var popup_63041975ac8830c93c4c5e494460706a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_86c0b0ce46a2d4ae61e2d3e593c00b02 = $(`<div id="html_86c0b0ce46a2d4ae61e2d3e593c00b02" style="width: 100.0%; height: 100.0%;">             ID: PUB-230211-763<br>             Category: Drug Trafficking<br>             Type: Public Intoxication<br>             Date: 2023-02-11<br>             Time: 23:08:02<br>             Severity: 1             </div>`)[0];
+                popup_63041975ac8830c93c4c5e494460706a.setContent(html_86c0b0ce46a2d4ae61e2d3e593c00b02);
+            
+        
+
+        marker_5cb80685ce816d83e054d850ecd68d2e.bindPopup(popup_63041975ac8830c93c4c5e494460706a)
+        ;
+
+        
+    
+    
+            var marker_9a5f4e22da87a2637e3bc9f845ef1044 = L.marker(
+                [28.584344604341727, 77.24493084144393],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_06076d3e56298cef417b636c72f9f246 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_9a5f4e22da87a2637e3bc9f845ef1044.setIcon(icon_06076d3e56298cef417b636c72f9f246);
+        
+    
+        var popup_864f6bcad753a0a8d91032a2bb349e52 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_219d64ebfb391d41d7308e7685070dd8 = $(`<div id="html_219d64ebfb391d41d7308e7685070dd8" style="width: 100.0%; height: 100.0%;">             ID: INJ-221009-576<br>             Category: Hit-and-Run<br>             Type: Injury Escape<br>             Date: 2022-10-09<br>             Time: 14:49:50<br>             Severity: 5             </div>`)[0];
+                popup_864f6bcad753a0a8d91032a2bb349e52.setContent(html_219d64ebfb391d41d7308e7685070dd8);
+            
+        
+
+        marker_9a5f4e22da87a2637e3bc9f845ef1044.bindPopup(popup_864f6bcad753a0a8d91032a2bb349e52)
+        ;
+
+        
+    
+    
+            var marker_980d9d62dc96c610bdec9e5a5e3422ce = L.marker(
+                [28.57082394310462, 77.20448590518892],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_75a9a79f2d02d9a34bbd9f71e84c64a6 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_980d9d62dc96c610bdec9e5a5e3422ce.setIcon(icon_75a9a79f2d02d9a34bbd9f71e84c64a6);
+        
+    
+        var popup_382c27fda7ba1662c42ffb1808bcc467 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_36e0f6cffe110d0cc5bd207d3d41a36c = $(`<div id="html_36e0f6cffe110d0cc5bd207d3d41a36c" style="width: 100.0%; height: 100.0%;">             ID: STE-230210-178<br>             Category: Theft<br>             Type: Stealing from Vehicle<br>             Date: 2023-02-10<br>             Time: 11:25:35<br>             Severity: 3             </div>`)[0];
+                popup_382c27fda7ba1662c42ffb1808bcc467.setContent(html_36e0f6cffe110d0cc5bd207d3d41a36c);
+            
+        
+
+        marker_980d9d62dc96c610bdec9e5a5e3422ce.bindPopup(popup_382c27fda7ba1662c42ffb1808bcc467)
+        ;
+
+        
+    
+    
+            var marker_8978f7fb0052c150357a25504cee3bfa = L.marker(
+                [28.574134354335623, 77.24512286160045],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_6113c746d7cbe52fd17ace1474c040b1 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_8978f7fb0052c150357a25504cee3bfa.setIcon(icon_6113c746d7cbe52fd17ace1474c040b1);
+        
+    
+        var popup_5c931203ccc0cd389b3f202dea3ec10d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_18de27fdc8e87a5a9cc6975ab03e7ed8 = $(`<div id="html_18de27fdc8e87a5a9cc6975ab03e7ed8" style="width: 100.0%; height: 100.0%;">             ID: RAP-230924-434<br>             Category: Sexual Crime<br>             Type: Rape<br>             Date: 2023-09-24<br>             Time: 20:54:16<br>             Severity: 5             </div>`)[0];
+                popup_5c931203ccc0cd389b3f202dea3ec10d.setContent(html_18de27fdc8e87a5a9cc6975ab03e7ed8);
+            
+        
+
+        marker_8978f7fb0052c150357a25504cee3bfa.bindPopup(popup_5c931203ccc0cd389b3f202dea3ec10d)
+        ;
+
+        
+    
+    
+            var marker_1062386c8b2d4519299a0e407f432d65 = L.marker(
+                [28.571533941677576, 77.20676641572892],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_0e8d6bfa590e4ead331f5e6f3aaebdc1 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_1062386c8b2d4519299a0e407f432d65.setIcon(icon_0e8d6bfa590e4ead331f5e6f3aaebdc1);
+        
+    
+        var popup_6dba0feae721ad4b998511db64e152e5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9cd3fa75eadb4a386e7916310be43d9b = $(`<div id="html_9cd3fa75eadb4a386e7916310be43d9b" style="width: 100.0%; height: 100.0%;">             ID: VER-240320-762<br>             Category: Hate Crimes<br>             Type: Verbal Abuse<br>             Date: 2024-03-20<br>             Time: 08:04:44<br>             Severity: 3             </div>`)[0];
+                popup_6dba0feae721ad4b998511db64e152e5.setContent(html_9cd3fa75eadb4a386e7916310be43d9b);
+            
+        
+
+        marker_1062386c8b2d4519299a0e407f432d65.bindPopup(popup_6dba0feae721ad4b998511db64e152e5)
+        ;
+
+        
+    
+    
+            var marker_9cb08017a0890ba3bfe0940b3bac094d = L.marker(
+                [28.587152681023447, 77.24632836248685],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_4fa0b384252c55c66dea2e5d46096b3d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_9cb08017a0890ba3bfe0940b3bac094d.setIcon(icon_4fa0b384252c55c66dea2e5d46096b3d);
+        
+    
+        var popup_e02e9aa7f2a7d5c1e49164a62823570b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0d866431485f620cabf58430cff2223c = $(`<div id="html_0d866431485f620cabf58430cff2223c" style="width: 100.0%; height: 100.0%;">             ID: BIK-220813-395<br>             Category: Theft<br>             Type: Bike Theft<br>             Date: 2022-08-13<br>             Time: 05:44:55<br>             Severity: 2             </div>`)[0];
+                popup_e02e9aa7f2a7d5c1e49164a62823570b.setContent(html_0d866431485f620cabf58430cff2223c);
+            
+        
+
+        marker_9cb08017a0890ba3bfe0940b3bac094d.bindPopup(popup_e02e9aa7f2a7d5c1e49164a62823570b)
+        ;
+
+        
+    
+    
+            var marker_e32cc972c187d65140b646e464998ba8 = L.marker(
+                [28.65675283426341, 77.1866634601578],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_cf2c6b52b1584f1536fbc0c3fb71a540 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_e32cc972c187d65140b646e464998ba8.setIcon(icon_cf2c6b52b1584f1536fbc0c3fb71a540);
+        
+    
+        var popup_cae50d56f9489e4187c47950cad5f44a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c3be2cd51605093a7c8a956648cb46f9 = $(`<div id="html_c3be2cd51605093a7c8a956648cb46f9" style="width: 100.0%; height: 100.0%;">             ID: INS-240711-286<br>             Category: Fraud<br>             Type: Insurance Scam<br>             Date: 2024-07-11<br>             Time: 17:18:15<br>             Severity: 3             </div>`)[0];
+                popup_cae50d56f9489e4187c47950cad5f44a.setContent(html_c3be2cd51605093a7c8a956648cb46f9);
+            
+        
+
+        marker_e32cc972c187d65140b646e464998ba8.bindPopup(popup_cae50d56f9489e4187c47950cad5f44a)
+        ;
+
+        
+    
+    
+            var marker_bf3a85fdb9ff0ef663d83fbff9473e8b = L.marker(
+                [28.609944589617587, 77.22427888631404],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_0b6c23d637e9ab4a394deae81ea35443 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_bf3a85fdb9ff0ef663d83fbff9473e8b.setIcon(icon_0b6c23d637e9ab4a394deae81ea35443);
+        
+    
+        var popup_29112e8c001493c3a257be286554cf07 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6b73d34ac49df8d44f6482b68b05a772 = $(`<div id="html_6b73d34ac49df8d44f6482b68b05a772" style="width: 100.0%; height: 100.0%;">             ID: PED-230522-166<br>             Category: Assault<br>             Type: Pedestrian Attack<br>             Date: 2023-05-22<br>             Time: 00:30:32<br>             Severity: 5             </div>`)[0];
+                popup_29112e8c001493c3a257be286554cf07.setContent(html_6b73d34ac49df8d44f6482b68b05a772);
+            
+        
+
+        marker_bf3a85fdb9ff0ef663d83fbff9473e8b.bindPopup(popup_29112e8c001493c3a257be286554cf07)
+        ;
+
+        
+    
+    
+            var marker_e870ef7ee438b28f1cecfbebc7ebcadf = L.marker(
+                [28.607687883092396, 77.21831385546307],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_482943cd6970c3487db8614eb682b72d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_e870ef7ee438b28f1cecfbebc7ebcadf.setIcon(icon_482943cd6970c3487db8614eb682b72d);
+        
+    
+        var popup_f2f386198e9fe0ff2da45f505a4dc442 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_fe4e33f53fab8f6761591c81da71cf91 = $(`<div id="html_fe4e33f53fab8f6761591c81da71cf91" style="width: 100.0%; height: 100.0%;">             ID: VER-230927-500<br>             Category: Hate Crimes<br>             Type: Verbal Abuse<br>             Date: 2023-09-27<br>             Time: 23:17:32<br>             Severity: 3             </div>`)[0];
+                popup_f2f386198e9fe0ff2da45f505a4dc442.setContent(html_fe4e33f53fab8f6761591c81da71cf91);
+            
+        
+
+        marker_e870ef7ee438b28f1cecfbebc7ebcadf.bindPopup(popup_f2f386198e9fe0ff2da45f505a4dc442)
+        ;
+
+        
+    
+    
+            var marker_e8f52d0394c98c6e200c76bf6b4bfa84 = L.marker(
+                [28.65243486278, 77.15987616552665],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_655f5c1ad174751cd66ea9cd37ce6b34 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_e8f52d0394c98c6e200c76bf6b4bfa84.setIcon(icon_655f5c1ad174751cd66ea9cd37ce6b34);
+        
+    
+        var popup_193d2428299e9a81de3372a7dcc15a0c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_23da8a3f1fdd72f87c36b0aae899648d = $(`<div id="html_23da8a3f1fdd72f87c36b0aae899648d" style="width: 100.0%; height: 100.0%;">             ID: INS-221010-072<br>             Category: Fraud<br>             Type: Insurance Scam<br>             Date: 2022-10-10<br>             Time: 11:09:48<br>             Severity: 3             </div>`)[0];
+                popup_193d2428299e9a81de3372a7dcc15a0c.setContent(html_23da8a3f1fdd72f87c36b0aae899648d);
+            
+        
+
+        marker_e8f52d0394c98c6e200c76bf6b4bfa84.bindPopup(popup_193d2428299e9a81de3372a7dcc15a0c)
+        ;
+
+        
+    
+    
+            var marker_cdc7a6892a737498356ab74803ce3d34 = L.marker(
+                [28.58399852693431, 77.16509197894483],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_d30cfce297d742c2f68717b7af48e435 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_cdc7a6892a737498356ab74803ce3d34.setIcon(icon_d30cfce297d742c2f68717b7af48e435);
+        
+    
+        var popup_a1539e90541ee89086dbaa2e73b2b0d1 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_12e12fd17e4c2899fbb456e95027085b = $(`<div id="html_12e12fd17e4c2899fbb456e95027085b" style="width: 100.0%; height: 100.0%;">             ID: CAR-230508-338<br>             Category: Assault<br>             Type: Carjacking<br>             Date: 2023-05-08<br>             Time: 03:36:28<br>             Severity: 5             </div>`)[0];
+                popup_a1539e90541ee89086dbaa2e73b2b0d1.setContent(html_12e12fd17e4c2899fbb456e95027085b);
+            
+        
+
+        marker_cdc7a6892a737498356ab74803ce3d34.bindPopup(popup_a1539e90541ee89086dbaa2e73b2b0d1)
+        ;
+
+        
+    
+    
+            var marker_1b3bd454cae9858bb1eba49daaadb0e0 = L.marker(
+                [28.60638653102505, 77.22854187599971],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_cffee5815af606f6851acf6c7b4ef800 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_1b3bd454cae9858bb1eba49daaadb0e0.setIcon(icon_cffee5815af606f6851acf6c7b4ef800);
+        
+    
+        var popup_3d8c4b1fd5048f4d3efc5f15d563d5f3 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_26021418ef7a9df2338c9ba9613d5e39 = $(`<div id="html_26021418ef7a9df2338c9ba9613d5e39" style="width: 100.0%; height: 100.0%;">             ID: VER-230119-556<br>             Category: Hate Crimes<br>             Type: Verbal Abuse<br>             Date: 2023-01-19<br>             Time: 12:10:35<br>             Severity: 3             </div>`)[0];
+                popup_3d8c4b1fd5048f4d3efc5f15d563d5f3.setContent(html_26021418ef7a9df2338c9ba9613d5e39);
+            
+        
+
+        marker_1b3bd454cae9858bb1eba49daaadb0e0.bindPopup(popup_3d8c4b1fd5048f4d3efc5f15d563d5f3)
+        ;
+
+        
+    
+    
+            var marker_96aa2a503f352197e855fcdcf9b06fec = L.marker(
+                [28.57962302698999, 77.25382408063733],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_556762451b00f4a057066a8876a37951 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_96aa2a503f352197e855fcdcf9b06fec.setIcon(icon_556762451b00f4a057066a8876a37951);
+        
+    
+        var popup_456d141ce007a73290575f6314427653 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9377fd92d25d658320666e6af108a228 = $(`<div id="html_9377fd92d25d658320666e6af108a228" style="width: 100.0%; height: 100.0%;">             ID: PED-230712-176<br>             Category: Assault<br>             Type: Pedestrian Attack<br>             Date: 2023-07-12<br>             Time: 09:07:43<br>             Severity: 5             </div>`)[0];
+                popup_456d141ce007a73290575f6314427653.setContent(html_9377fd92d25d658320666e6af108a228);
+            
+        
+
+        marker_96aa2a503f352197e855fcdcf9b06fec.bindPopup(popup_456d141ce007a73290575f6314427653)
+        ;
+
+        
+    
+    
+            var marker_5a5cf75f44d5b6ef221a42953ffd36e3 = L.marker(
+                [28.647350444979377, 77.23873958657545],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_a889386b213d7923e019f5468edfc148 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_5a5cf75f44d5b6ef221a42953ffd36e3.setIcon(icon_a889386b213d7923e019f5468edfc148);
+        
+    
+        var popup_18afdde07cdb2230629b294c12995dff = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0b23a178ef64c6412e0f9360e0eafdb4 = $(`<div id="html_0b23a178ef64c6412e0f9360e0eafdb4" style="width: 100.0%; height: 100.0%;">             ID: RAP-231125-694<br>             Category: Sexual Crime<br>             Type: Rape<br>             Date: 2023-11-25<br>             Time: 20:17:42<br>             Severity: 5             </div>`)[0];
+                popup_18afdde07cdb2230629b294c12995dff.setContent(html_0b23a178ef64c6412e0f9360e0eafdb4);
+            
+        
+
+        marker_5a5cf75f44d5b6ef221a42953ffd36e3.bindPopup(popup_18afdde07cdb2230629b294c12995dff)
+        ;
+
+        
+    
+    
+            var marker_ad4ad9cf65ebd74891d9cb379831c50f = L.marker(
+                [28.583040648007547, 77.25601238027318],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_80a6f69b74e9eb4efb04fcf47ee6b2fa = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_ad4ad9cf65ebd74891d9cb379831c50f.setIcon(icon_80a6f69b74e9eb4efb04fcf47ee6b2fa);
+        
+    
+        var popup_757a8987fa5a263f33be37dc5f58adfd = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_183b3272cdd167b8e6d7a82c72006ee9 = $(`<div id="html_183b3272cdd167b8e6d7a82c72006ee9" style="width: 100.0%; height: 100.0%;">             ID: PUB-231116-557<br>             Category: Vandalism<br>             Type: Public Property Destruction<br>             Date: 2023-11-16<br>             Time: 12:10:59<br>             Severity: 3             </div>`)[0];
+                popup_757a8987fa5a263f33be37dc5f58adfd.setContent(html_183b3272cdd167b8e6d7a82c72006ee9);
+            
+        
+
+        marker_ad4ad9cf65ebd74891d9cb379831c50f.bindPopup(popup_757a8987fa5a263f33be37dc5f58adfd)
+        ;
+
+        
+    
+    
+            var marker_2f8ac940318ad198c286504602b09501 = L.marker(
+                [28.65203156381593, 77.16325794494726],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_47eb278f607463c3946362b51a5d9fcc = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_2f8ac940318ad198c286504602b09501.setIcon(icon_47eb278f607463c3946362b51a5d9fcc);
+        
+    
+        var popup_c2f65de69bdc86d5d4198c0d4188d367 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_93666d1aa3c7290be376d677eea23805 = $(`<div id="html_93666d1aa3c7290be376d677eea23805" style="width: 100.0%; height: 100.0%;">             ID: SEX-230606-309<br>             Category: Sexual Crime<br>             Type: Sexual Harassment<br>             Date: 2023-06-06<br>             Time: 20:34:58<br>             Severity: 3             </div>`)[0];
+                popup_c2f65de69bdc86d5d4198c0d4188d367.setContent(html_93666d1aa3c7290be376d677eea23805);
+            
+        
+
+        marker_2f8ac940318ad198c286504602b09501.bindPopup(popup_c2f65de69bdc86d5d4198c0d4188d367)
+        ;
+
+        
+    
+    
+            var marker_78aeb868fb086919670e7fd3938e19dc = L.marker(
+                [28.582489212988055, 77.24038304951537],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_75ad138ef1f4a9efdf64fda29c17a448 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_78aeb868fb086919670e7fd3938e19dc.setIcon(icon_75ad138ef1f4a9efdf64fda29c17a448);
+        
+    
+        var popup_7b70bae7a29a68feaa1034d0f4588fec = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e08d93859e4199ce64143864c9ebf0d6 = $(`<div id="html_e08d93859e4199ce64143864c9ebf0d6" style="width: 100.0%; height: 100.0%;">             ID: DAN-230317-254<br>             Category: Illegal Street Racing<br>             Type: Dangerous Driving<br>             Date: 2023-03-17<br>             Time: 08:03:11<br>             Severity: 4             </div>`)[0];
+                popup_7b70bae7a29a68feaa1034d0f4588fec.setContent(html_e08d93859e4199ce64143864c9ebf0d6);
+            
+        
+
+        marker_78aeb868fb086919670e7fd3938e19dc.bindPopup(popup_7b70bae7a29a68feaa1034d0f4588fec)
+        ;
+
+        
+    
+    
+            var marker_bf203f1107804ea5561de9dfff7cdfc3 = L.marker(
+                [28.575056838358044, 77.18068450813907],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_3e046008bf09318d93e6d98f30f8a78e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_bf203f1107804ea5561de9dfff7cdfc3.setIcon(icon_3e046008bf09318d93e6d98f30f8a78e);
+        
+    
+        var popup_680cf61ad99d3977267a21ca65949084 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0927177f14905426e98a8c94221fcb41 = $(`<div id="html_0927177f14905426e98a8c94221fcb41" style="width: 100.0%; height: 100.0%;">             ID: TAR-241221-187<br>             Category: Hate Crimes<br>             Type: Targeted Assault<br>             Date: 2024-12-21<br>             Time: 17:54:26<br>             Severity: 5             </div>`)[0];
+                popup_680cf61ad99d3977267a21ca65949084.setContent(html_0927177f14905426e98a8c94221fcb41);
+            
+        
+
+        marker_bf203f1107804ea5561de9dfff7cdfc3.bindPopup(popup_680cf61ad99d3977267a21ca65949084)
+        ;
+
+        
+    
+    
+            var marker_fdbe15b77db09f3d513259661be1da5f = L.marker(
+                [28.655228462014293, 77.16772494548528],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_ec5f9e854d757d3b63e6ca9136dbd145 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_fdbe15b77db09f3d513259661be1da5f.setIcon(icon_ec5f9e854d757d3b63e6ca9136dbd145);
+        
+    
+        var popup_7479c79961bdd0f6b2dc503ec3e6d0e4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d356ed5428d948fff65843be4e0aa90e = $(`<div id="html_d356ed5428d948fff65843be4e0aa90e" style="width: 100.0%; height: 100.0%;">             ID: SEX-230217-770<br>             Category: Sexual Crime<br>             Type: Sexual Harassment<br>             Date: 2023-02-17<br>             Time: 13:52:53<br>             Severity: 3             </div>`)[0];
+                popup_7479c79961bdd0f6b2dc503ec3e6d0e4.setContent(html_d356ed5428d948fff65843be4e0aa90e);
+            
+        
+
+        marker_fdbe15b77db09f3d513259661be1da5f.bindPopup(popup_7479c79961bdd0f6b2dc503ec3e6d0e4)
+        ;
+
+        
+    
+    
+            var marker_1faa9dfc64b5ae10a572ec231492e22e = L.marker(
+                [28.651982599519844, 77.16902413568663],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_1dd76c0f06a6cebc70265e6974124a27 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_1faa9dfc64b5ae10a572ec231492e22e.setIcon(icon_1dd76c0f06a6cebc70265e6974124a27);
+        
+    
+        var popup_e54f858a14e2dde519b4ada53783750c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_21859609b0e87abd54d6ecaff286c143 = $(`<div id="html_21859609b0e87abd54d6ecaff286c143" style="width: 100.0%; height: 100.0%;">             ID: INS-240301-381<br>             Category: Fraud<br>             Type: Insurance Scam<br>             Date: 2024-03-01<br>             Time: 02:06:31<br>             Severity: 3             </div>`)[0];
+                popup_e54f858a14e2dde519b4ada53783750c.setContent(html_21859609b0e87abd54d6ecaff286c143);
+            
+        
+
+        marker_1faa9dfc64b5ae10a572ec231492e22e.bindPopup(popup_e54f858a14e2dde519b4ada53783750c)
+        ;
+
+        
+    
+    
+            var marker_76ef9c9d4bbc452c1b148b0d1c9e839a = L.marker(
+                [28.645589962934203, 77.16538244858717],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_20fb2b997177a59ac0ec39fa4c8c409f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_76ef9c9d4bbc452c1b148b0d1c9e839a.setIcon(icon_20fb2b997177a59ac0ec39fa4c8c409f);
+        
+    
+        var popup_ccaf337d487bba1985ffbf0a111852d7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3c6ec4be53bacbfc6861ff9ed271a2a8 = $(`<div id="html_3c6ec4be53bacbfc6861ff9ed271a2a8" style="width: 100.0%; height: 100.0%;">             ID: PUB-230310-557<br>             Category: Vandalism<br>             Type: Public Property Destruction<br>             Date: 2023-03-10<br>             Time: 12:14:19<br>             Severity: 3             </div>`)[0];
+                popup_ccaf337d487bba1985ffbf0a111852d7.setContent(html_3c6ec4be53bacbfc6861ff9ed271a2a8);
+            
+        
+
+        marker_76ef9c9d4bbc452c1b148b0d1c9e839a.bindPopup(popup_ccaf337d487bba1985ffbf0a111852d7)
+        ;
+
+        
+    
+    
+            var marker_01a8853cf78a738ac26e9f51179ce620 = L.marker(
+                [28.640027221284146, 77.17794182386494],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_3f6e1d8057593b0cb9f7128715af14c8 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_01a8853cf78a738ac26e9f51179ce620.setIcon(icon_3f6e1d8057593b0cb9f7128715af14c8);
+        
+    
+        var popup_9b17850a547309e6f99bc3fbb96fea4b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e74906ecb2fc62393ef510889ba29957 = $(`<div id="html_e74906ecb2fc62393ef510889ba29957" style="width: 100.0%; height: 100.0%;">             ID: VEH-230113-834<br>             Category: Theft<br>             Type: Vehicle Theft<br>             Date: 2023-01-13<br>             Time: 12:55:17<br>             Severity: 4             </div>`)[0];
+                popup_9b17850a547309e6f99bc3fbb96fea4b.setContent(html_e74906ecb2fc62393ef510889ba29957);
+            
+        
+
+        marker_01a8853cf78a738ac26e9f51179ce620.bindPopup(popup_9b17850a547309e6f99bc3fbb96fea4b)
+        ;
+
+        
+    
+    
+            var marker_76718246748906e00634f0aabe41419f = L.marker(
+                [28.644900770609123, 77.20102714589224],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_508d801af2b5bc85750afe26b5ae594e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_76718246748906e00634f0aabe41419f.setIcon(icon_508d801af2b5bc85750afe26b5ae594e);
+        
+    
+        var popup_ac49e9c6e180acca7762853b0b396be7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9b6109aec94f3feb632a1784a35faf61 = $(`<div id="html_9b6109aec94f3feb632a1784a35faf61" style="width: 100.0%; height: 100.0%;">             ID: INJ-230315-089<br>             Category: Hit-and-Run<br>             Type: Injury Escape<br>             Date: 2023-03-15<br>             Time: 07:28:42<br>             Severity: 5             </div>`)[0];
+                popup_ac49e9c6e180acca7762853b0b396be7.setContent(html_9b6109aec94f3feb632a1784a35faf61);
+            
+        
+
+        marker_76718246748906e00634f0aabe41419f.bindPopup(popup_ac49e9c6e180acca7762853b0b396be7)
+        ;
+
+        
+    
+    
+            var marker_ca46bb07a564cd4a4bd22892ac0bb0be = L.marker(
+                [28.646459664416867, 77.189400550932],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_67cd3de594ba6bfbfc63277276b7b481 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_ca46bb07a564cd4a4bd22892ac0bb0be.setIcon(icon_67cd3de594ba6bfbfc63277276b7b481);
+        
+    
+        var popup_89aefc32b8a8b11fdc30edb88fa2fb93 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6beb63e187e9b68b8104b0895d98a9a2 = $(`<div id="html_6beb63e187e9b68b8104b0895d98a9a2" style="width: 100.0%; height: 100.0%;">             ID: BIK-230731-390<br>             Category: Theft<br>             Type: Bike Theft<br>             Date: 2023-07-31<br>             Time: 05:35:38<br>             Severity: 2             </div>`)[0];
+                popup_89aefc32b8a8b11fdc30edb88fa2fb93.setContent(html_6beb63e187e9b68b8104b0895d98a9a2);
+            
+        
+
+        marker_ca46bb07a564cd4a4bd22892ac0bb0be.bindPopup(popup_89aefc32b8a8b11fdc30edb88fa2fb93)
+        ;
+
+        
+    
+    
+            var marker_ede923adeaa6c4ab1b8e9c9dc1ad5bb9 = L.marker(
+                [28.610119109376008, 77.22480486181594],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_1462cf6dac802e0adae8f07f682749c4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_ede923adeaa6c4ab1b8e9c9dc1ad5bb9.setIcon(icon_1462cf6dac802e0adae8f07f682749c4);
+        
+    
+        var popup_375c9d86dcfd08151446f9595d750f71 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6c5e500d5c7566d353eb1bfd805d531f = $(`<div id="html_6c5e500d5c7566d353eb1bfd805d531f" style="width: 100.0%; height: 100.0%;">             ID: DAN-221024-372<br>             Category: Illegal Street Racing<br>             Type: Dangerous Driving<br>             Date: 2022-10-24<br>             Time: 07:16:05<br>             Severity: 4             </div>`)[0];
+                popup_375c9d86dcfd08151446f9595d750f71.setContent(html_6c5e500d5c7566d353eb1bfd805d531f);
+            
+        
+
+        marker_ede923adeaa6c4ab1b8e9c9dc1ad5bb9.bindPopup(popup_375c9d86dcfd08151446f9595d750f71)
+        ;
+
+        
+    
+    
+            var marker_af7cf9ace3af5bb945a178037a7d04cc = L.marker(
+                [28.64117634060761, 77.23969973764031],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_e7c0be4c5016ee48277c0dc91cd2b844 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_af7cf9ace3af5bb945a178037a7d04cc.setIcon(icon_e7c0be4c5016ee48277c0dc91cd2b844);
+        
+    
+        var popup_51722575d3ab3b6a736d7c1fd35a5bba = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c2d12643004c61c3177859eb61e8eba5 = $(`<div id="html_c2d12643004c61c3177859eb61e8eba5" style="width: 100.0%; height: 100.0%;">             ID: REC-221116-481<br>             Category: Traffic Violation<br>             Type: Reckless Driving<br>             Date: 2022-11-16<br>             Time: 12:36:53<br>             Severity: 3             </div>`)[0];
+                popup_51722575d3ab3b6a736d7c1fd35a5bba.setContent(html_c2d12643004c61c3177859eb61e8eba5);
+            
+        
+
+        marker_af7cf9ace3af5bb945a178037a7d04cc.bindPopup(popup_51722575d3ab3b6a736d7c1fd35a5bba)
+        ;
+
+        
+    
+    
+            var marker_72e69c4694baf2ced87829e8817450d1 = L.marker(
+                [28.58379426995566, 77.21677404224803],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_4b0a7118dfccf5398deb2d1f0fd5191e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_72e69c4694baf2ced87829e8817450d1.setIcon(icon_4b0a7118dfccf5398deb2d1f0fd5191e);
+        
+    
+        var popup_65b0a0ca266ea94339399af352a90c26 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_258c5f396b27eb814b549e597153eb65 = $(`<div id="html_258c5f396b27eb814b549e597153eb65" style="width: 100.0%; height: 100.0%;">             ID: STA-240824-571<br>             Category: Loitering and Harassment<br>             Type: Stalking<br>             Date: 2024-08-24<br>             Time: 21:32:55<br>             Severity: 4             </div>`)[0];
+                popup_65b0a0ca266ea94339399af352a90c26.setContent(html_258c5f396b27eb814b549e597153eb65);
+            
+        
+
+        marker_72e69c4694baf2ced87829e8817450d1.bindPopup(popup_65b0a0ca266ea94339399af352a90c26)
+        ;
+
+        
+    
+    
+            var marker_78aeaad759b62547b52f6466082f3e18 = L.marker(
+                [28.59641124053472, 77.20827784578252],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_670694b6a510a9242863c36c8cebcef3 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_78aeaad759b62547b52f6466082f3e18.setIcon(icon_670694b6a510a9242863c36c8cebcef3);
+        
+    
+        var popup_7518828e12fd787a59daecf4df4aacd4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ce33f71f38d5fa13126dccd6bf281888 = $(`<div id="html_ce33f71f38d5fa13126dccd6bf281888" style="width: 100.0%; height: 100.0%;">             ID: REC-230121-715<br>             Category: Traffic Violation<br>             Type: Reckless Driving<br>             Date: 2023-01-21<br>             Time: 18:27:59<br>             Severity: 3             </div>`)[0];
+                popup_7518828e12fd787a59daecf4df4aacd4.setContent(html_ce33f71f38d5fa13126dccd6bf281888);
+            
+        
+
+        marker_78aeaad759b62547b52f6466082f3e18.bindPopup(popup_7518828e12fd787a59daecf4df4aacd4)
+        ;
+
+        
+    
+    
+            var marker_504d76b611e856e7799e9b0ed44bdd01 = L.marker(
+                [28.58496501092328, 77.23166629215662],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_fc6e40068ef03e8c93dd48aead6959e7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_504d76b611e856e7799e9b0ed44bdd01.setIcon(icon_fc6e40068ef03e8c93dd48aead6959e7);
+        
+    
+        var popup_b9065d4e253a42e9df6e4be99ab73bfa = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4dd6b8942a185820aa46625e02c3c343 = $(`<div id="html_4dd6b8942a185820aa46625e02c3c343" style="width: 100.0%; height: 100.0%;">             ID: ACC-220523-447<br>             Category: Hit-and-Run<br>             Type: Accident Fleeing<br>             Date: 2022-05-23<br>             Time: 06:11:57<br>             Severity: 4             </div>`)[0];
+                popup_b9065d4e253a42e9df6e4be99ab73bfa.setContent(html_4dd6b8942a185820aa46625e02c3c343);
+            
+        
+
+        marker_504d76b611e856e7799e9b0ed44bdd01.bindPopup(popup_b9065d4e253a42e9df6e4be99ab73bfa)
+        ;
+
+        
+    
+    
+            var marker_04bf2d60deca3fc33d1d43a3fe21e868 = L.marker(
+                [28.584166100795255, 77.21694113666972],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_3617e2c2343bdc2b81eb22a0bb766e5e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_04bf2d60deca3fc33d1d43a3fe21e868.setIcon(icon_3617e2c2343bdc2b81eb22a0bb766e5e);
+        
+    
+        var popup_44d26308b0753f9f3448175de72fe65d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_279c2d738446137bb64a9317e9fd2e66 = $(`<div id="html_279c2d738446137bb64a9317e9fd2e66" style="width: 100.0%; height: 100.0%;">             ID: DAN-240326-041<br>             Category: Illegal Street Racing<br>             Type: Dangerous Driving<br>             Date: 2024-03-26<br>             Time: 00:22:47<br>             Severity: 4             </div>`)[0];
+                popup_44d26308b0753f9f3448175de72fe65d.setContent(html_279c2d738446137bb64a9317e9fd2e66);
+            
+        
+
+        marker_04bf2d60deca3fc33d1d43a3fe21e868.bindPopup(popup_44d26308b0753f9f3448175de72fe65d)
+        ;
+
+        
+    
+    
+            var marker_39f8f4812b3931238ea03471dce9dbd2 = L.marker(
+                [28.642684184455593, 77.24461056311561],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_fb83632922815429c5890086e6541d41 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_39f8f4812b3931238ea03471dce9dbd2.setIcon(icon_fb83632922815429c5890086e6541d41);
+        
+    
+        var popup_2ae0ce84e6c35fcd78d66dbaaf895040 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c70b4ae61c4f8ad6b60176cb8388dd1e = $(`<div id="html_c70b4ae61c4f8ad6b60176cb8388dd1e" style="width: 100.0%; height: 100.0%;">             ID: HUM-240217-635<br>             Category: Drug Trafficking<br>             Type: Human Trafficking<br>             Date: 2024-02-17<br>             Time: 18:05:28<br>             Severity: 5             </div>`)[0];
+                popup_2ae0ce84e6c35fcd78d66dbaaf895040.setContent(html_c70b4ae61c4f8ad6b60176cb8388dd1e);
+            
+        
+
+        marker_39f8f4812b3931238ea03471dce9dbd2.bindPopup(popup_2ae0ce84e6c35fcd78d66dbaaf895040)
+        ;
+
+        
+    
+    
+            var marker_f9d8d5bed58b374340c6a22b1fdf638a = L.marker(
+                [28.577455113554073, 77.24459554145643],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_f4b276dc6a73b26dd0d6b787435e61eb = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_f9d8d5bed58b374340c6a22b1fdf638a.setIcon(icon_f4b276dc6a73b26dd0d6b787435e61eb);
+        
+    
+        var popup_866c907a5b809ac0c0b00341d7af9251 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_bb34390cd60bdc637c122b08b12203a0 = $(`<div id="html_bb34390cd60bdc637c122b08b12203a0" style="width: 100.0%; height: 100.0%;">             ID: VEH-240410-307<br>             Category: Vandalism<br>             Type: Vehicle Damage<br>             Date: 2024-04-10<br>             Time: 01:16:59<br>             Severity: 2             </div>`)[0];
+                popup_866c907a5b809ac0c0b00341d7af9251.setContent(html_bb34390cd60bdc637c122b08b12203a0);
+            
+        
+
+        marker_f9d8d5bed58b374340c6a22b1fdf638a.bindPopup(popup_866c907a5b809ac0c0b00341d7af9251)
+        ;
+
+        
+    
+    
+            var marker_0371bbab148715c2abb199e86b863880 = L.marker(
+                [28.618743104949715, 77.2096433587499],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_4ed8988ed2ae81c97d5b1f7f71361b92 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_0371bbab148715c2abb199e86b863880.setIcon(icon_4ed8988ed2ae81c97d5b1f7f71361b92);
+        
+    
+        var popup_9d048e41d3d46cc0aad4642dcd6e4138 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_400d1fc833212a6e0db2fdb7a95fe455 = $(`<div id="html_400d1fc833212a6e0db2fdb7a95fe455" style="width: 100.0%; height: 100.0%;">             ID: PED-230531-603<br>             Category: Assault<br>             Type: Pedestrian Attack<br>             Date: 2023-05-31<br>             Time: 04:59:55<br>             Severity: 5             </div>`)[0];
+                popup_9d048e41d3d46cc0aad4642dcd6e4138.setContent(html_400d1fc833212a6e0db2fdb7a95fe455);
+            
+        
+
+        marker_0371bbab148715c2abb199e86b863880.bindPopup(popup_9d048e41d3d46cc0aad4642dcd6e4138)
+        ;
+
+        
+    
+    
+            var marker_ed14bdc0e4f572eef59968a2264bfc6c = L.marker(
+                [28.570904495041784, 77.22450779137928],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_2370d1e48db7b32edf3ed187c1a1ae85 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_ed14bdc0e4f572eef59968a2264bfc6c.setIcon(icon_2370d1e48db7b32edf3ed187c1a1ae85);
+        
+    
+        var popup_68db441cc7ff484adf7b85f31dc16545 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ebeed5afefb53187ce8535f096fa6605 = $(`<div id="html_ebeed5afefb53187ce8535f096fa6605" style="width: 100.0%; height: 100.0%;">             ID: STA-240206-646<br>             Category: Loitering and Harassment<br>             Type: Stalking<br>             Date: 2024-02-06<br>             Time: 05:39:10<br>             Severity: 4             </div>`)[0];
+                popup_68db441cc7ff484adf7b85f31dc16545.setContent(html_ebeed5afefb53187ce8535f096fa6605);
+            
+        
+
+        marker_ed14bdc0e4f572eef59968a2264bfc6c.bindPopup(popup_68db441cc7ff484adf7b85f31dc16545)
+        ;
+
+        
+    
+    
+            var marker_f9ca1781b73f491a124033896afa203b = L.marker(
+                [28.640895994045728, 77.17430400194526],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_f891d8f81bdfddd4905953474a6be204 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_f9ca1781b73f491a124033896afa203b.setIcon(icon_f891d8f81bdfddd4905953474a6be204);
+        
+    
+        var popup_bfcd6bf34c33a0bf9d6c40e10e6b9c11 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_06920b1f54cab0d02d6a265aeba45deb = $(`<div id="html_06920b1f54cab0d02d6a265aeba45deb" style="width: 100.0%; height: 100.0%;">             ID: ILL-240319-746<br>             Category: Obstruction<br>             Type: Illegal Vending<br>             Date: 2024-03-19<br>             Time: 20:19:12<br>             Severity: 1             </div>`)[0];
+                popup_bfcd6bf34c33a0bf9d6c40e10e6b9c11.setContent(html_06920b1f54cab0d02d6a265aeba45deb);
+            
+        
+
+        marker_f9ca1781b73f491a124033896afa203b.bindPopup(popup_bfcd6bf34c33a0bf9d6c40e10e6b9c11)
+        ;
+
+        
+    
+    
+            var marker_3d0269ff5b9a053ff271bdb17325b2a3 = L.marker(
+                [28.584869045078776, 77.21766297863515],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_bf98fd75c7454986d1f67576e3dad6e4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_3d0269ff5b9a053ff271bdb17325b2a3.setIcon(icon_bf98fd75c7454986d1f67576e3dad6e4);
+        
+    
+        var popup_94bee64e29b3a764a6cdc2cc6c1d64dd = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_39afd06e6a297875c2bf622048b64477 = $(`<div id="html_39afd06e6a297875c2bf622048b64477" style="width: 100.0%; height: 100.0%;">             ID: PUB-240916-569<br>             Category: Drug Trafficking<br>             Type: Public Intoxication<br>             Date: 2024-09-16<br>             Time: 12:09:28<br>             Severity: 1             </div>`)[0];
+                popup_94bee64e29b3a764a6cdc2cc6c1d64dd.setContent(html_39afd06e6a297875c2bf622048b64477);
+            
+        
+
+        marker_3d0269ff5b9a053ff271bdb17325b2a3.bindPopup(popup_94bee64e29b3a764a6cdc2cc6c1d64dd)
+        ;
+
+        
+    
+    
+            var marker_af57881ffe56ab59436812c61a9e8ea4 = L.marker(
+                [28.578533388443685, 77.21032095749553],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_ad7fc4290c33ac28f6ad9179e2794a4b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_af57881ffe56ab59436812c61a9e8ea4.setIcon(icon_ad7fc4290c33ac28f6ad9179e2794a4b);
+        
+    
+        var popup_29f8218e8af5f2e1f0f45fc0dc61e200 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4909954b86c3466e9fff24ea53fb7e14 = $(`<div id="html_4909954b86c3466e9fff24ea53fb7e14" style="width: 100.0%; height: 100.0%;">             ID: DRA-240413-546<br>             Category: Illegal Street Racing<br>             Type: Drag Racing<br>             Date: 2024-04-13<br>             Time: 15:21:11<br>             Severity: 3             </div>`)[0];
+                popup_29f8218e8af5f2e1f0f45fc0dc61e200.setContent(html_4909954b86c3466e9fff24ea53fb7e14);
+            
+        
+
+        marker_af57881ffe56ab59436812c61a9e8ea4.bindPopup(popup_29f8218e8af5f2e1f0f45fc0dc61e200)
+        ;
+
+        
+    
+    
+            var marker_3aa31174026688524b47fe8539846071 = L.marker(
+                [28.64562427547819, 77.18811527270294],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_30bca1e714614565d2f321330891837e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_3aa31174026688524b47fe8539846071.setIcon(icon_30bca1e714614565d2f321330891837e);
+        
+    
+        var popup_5d9dc83a092419e1465977c474ad5d6e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_708162aeb79c5e50e032b849a94a5149 = $(`<div id="html_708162aeb79c5e50e032b849a94a5149" style="width: 100.0%; height: 100.0%;">             ID: STE-230219-002<br>             Category: Theft<br>             Type: Stealing from Vehicle<br>             Date: 2023-02-19<br>             Time: 10:17:43<br>             Severity: 3             </div>`)[0];
+                popup_5d9dc83a092419e1465977c474ad5d6e.setContent(html_708162aeb79c5e50e032b849a94a5149);
+            
+        
+
+        marker_3aa31174026688524b47fe8539846071.bindPopup(popup_5d9dc83a092419e1465977c474ad5d6e)
+        ;
+
+        
+    
+    
+            var marker_7d58749d4be50c4bf175e209dea3cdcd = L.marker(
+                [28.648020501182433, 77.22827610713809],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_ed1c672307a8fc3544d3ab97a282b1c8 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_7d58749d4be50c4bf175e209dea3cdcd.setIcon(icon_ed1c672307a8fc3544d3ab97a282b1c8);
+        
+    
+        var popup_bd8b1a097762e06edf942de43e4646a0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_250f0ebfebd3105ae97f6116bbc4352a = $(`<div id="html_250f0ebfebd3105ae97f6116bbc4352a" style="width: 100.0%; height: 100.0%;">             ID: PAR-240712-361<br>             Category: Robbery<br>             Type: Parking Lot Robbery<br>             Date: 2024-07-12<br>             Time: 18:20:32<br>             Severity: 4             </div>`)[0];
+                popup_bd8b1a097762e06edf942de43e4646a0.setContent(html_250f0ebfebd3105ae97f6116bbc4352a);
+            
+        
+
+        marker_7d58749d4be50c4bf175e209dea3cdcd.bindPopup(popup_bd8b1a097762e06edf942de43e4646a0)
+        ;
+
+        
+    
+    
+            var marker_947492a5ed1933719a1de910c136cec0 = L.marker(
+                [28.60087350960546, 77.20526619797923],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_6c8ed06760bd9b070b8c105e939e1a9d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_947492a5ed1933719a1de910c136cec0.setIcon(icon_6c8ed06760bd9b070b8c105e939e1a9d);
+        
+    
+        var popup_7022d8354005bdcac76c981d62f679f5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_019922dd5c525b99bed993cde151f011 = $(`<div id="html_019922dd5c525b99bed993cde151f011" style="width: 100.0%; height: 100.0%;">             ID: BLO-231108-297<br>             Category: Obstruction<br>             Type: Blocking Pedestrian Path<br>             Date: 2023-11-08<br>             Time: 14:19:08<br>             Severity: 1             </div>`)[0];
+                popup_7022d8354005bdcac76c981d62f679f5.setContent(html_019922dd5c525b99bed993cde151f011);
+            
+        
+
+        marker_947492a5ed1933719a1de910c136cec0.bindPopup(popup_7022d8354005bdcac76c981d62f679f5)
+        ;
+
+        
+    
+    
+            var marker_79e7b58fec20a3d290776fa9b7b4661d = L.marker(
+                [28.65575677517802, 77.21208373188617],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_427bc59831bedd67504cbf5ea82d5f14 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkred",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_79e7b58fec20a3d290776fa9b7b4661d.setIcon(icon_427bc59831bedd67504cbf5ea82d5f14);
+        
+    
+        var popup_f2c729afe436eb676c929e0a12820830 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_17a1438267436624d9632fc90e7de4b6 = $(`<div id="html_17a1438267436624d9632fc90e7de4b6" style="width: 100.0%; height: 100.0%;">             ID: PED-240523-919<br>             Category: Assault<br>             Type: Pedestrian Attack<br>             Date: 2024-05-23<br>             Time: 19:33:44<br>             Severity: 5             </div>`)[0];
+                popup_f2c729afe436eb676c929e0a12820830.setContent(html_17a1438267436624d9632fc90e7de4b6);
+            
+        
+
+        marker_79e7b58fec20a3d290776fa9b7b4661d.bindPopup(popup_f2c729afe436eb676c929e0a12820830)
+        ;
+
+        
+    
+    
+            var marker_37d94e35d7eab8a46f5f1493e290b302 = L.marker(
+                [28.638163100571145, 77.18469778338685],
+                {
+}
+            ).addTo(map_fd28d54d7335b40a6a07eb7e1b8ce90b);
+        
+    
+            var icon_a3d46d976d1fcb0fb97015f60a82ef3b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_37d94e35d7eab8a46f5f1493e290b302.setIcon(icon_a3d46d976d1fcb0fb97015f60a82ef3b);
+        
+    
+        var popup_e3dfb915c3dd29f55fc8cb871624d967 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_90cdb60efb6724c6766c2bd1843013cf = $(`<div id="html_90cdb60efb6724c6766c2bd1843013cf" style="width: 100.0%; height: 100.0%;">             ID: ILL-230425-229<br>             Category: Obstruction<br>             Type: Illegal Vending<br>             Date: 2023-04-25<br>             Time: 12:19:42<br>             Severity: 1             </div>`)[0];
+                popup_e3dfb915c3dd29f55fc8cb871624d967.setContent(html_90cdb60efb6724c6766c2bd1843013cf);
+            
+        
+
+        marker_37d94e35d7eab8a46f5f1493e290b302.bindPopup(popup_e3dfb915c3dd29f55fc8cb871624d967)
+        ;
+
+        
+    
+</script>
+</html>
