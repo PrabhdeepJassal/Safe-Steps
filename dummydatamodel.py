@@ -5,10 +5,24 @@ import folium
 import random
 from datetime import datetime, timedelta
 
+# Set a fixed random seed for reproducibility
+RANDOM_SEED = 42
+random.seed(RANDOM_SEED)
+np.random.seed(RANDOM_SEED)
+
+# Multiple coordinates to cover wider Delhi area
+REGION_COORDS = [
+    ("North Delhi", 28.7006, 77.2050),
+    ("South Delhi", 28.5535, 77.2154),
+    ("East Delhi", 28.6355, 77.2850),
+    ("West Delhi", 28.6377, 77.1019),
+    ("Central Delhi", 28.6328, 77.2190)
+]
+
 def generate_detailed_crime_types():
     return {
         'Theft': [
-            ('Vehicle Theft', 4), 
+            ('Vehicle Theft', 3), 
             ('Bike Theft', 2), 
             ('Stealing from Vehicle', 3), 
             ('Pickpocketing', 2)
@@ -23,11 +37,7 @@ def generate_detailed_crime_types():
             ('Accident Fleeing', 4),
             ('Injury Escape', 5)
         ],
-        'Traffic Violation': [
-            ('Reckless Driving', 3), 
-            ('Drunk Driving', 4), 
-            ('Speeding', 2)
-        ],
+    
         'Robbery': [
             ('Mugging', 4), 
             ('Armed Robbery', 5), 
@@ -42,14 +52,10 @@ def generate_detailed_crime_types():
             ('Vehicle Abduction', 5), 
             ('Highway Kidnapping', 5)
         ],
-        'Fraud': [
-            ('Insurance Scam', 3), 
-            ('Toll Booth Fraud', 2)
-        ],
         'Sexual Crime': [
             ('Sexual Assault', 5), 
             ('Rape', 5), 
-            ('Sexual Harassment', 3)
+            ('Sexual Harassment', 4)
         ],
         'Drug Trafficking': [
             ('Public Intoxication', 1), 
@@ -80,40 +86,30 @@ def generate_simplified_id(crime_type, date):
     random_suffix = f"{random.randint(0, 999):03d}"
     return f"{crime_prefix}-{date_part}-{random_suffix}"
 
-def generate_road_data(num_entries):
-    latitude, longitude = 28.6139, 77.2090
-    
+def generate_road_data(num_entries, latitude, longitude, specific_year=2021):
     try:
         graph = ox.graph_from_point(
             (latitude, longitude), 
-            dist=5000,  
+            dist=10000,  
             network_type='drive'
         )
         
         edges = ox.graph_to_gdfs(graph, nodes=False)
-        
         crime_types_dict = generate_detailed_crime_types()
-        
         crime_data = []
+        
         for _ in range(num_entries):
             crime_category = random.choice(list(crime_types_dict.keys()))
             specific_crime, severity = random.choice(crime_types_dict[crime_category])
-            
             road = edges.iloc[random.randint(0, len(edges)-1)]
             road_line = road.geometry
-            
             point_along_road = road_line.interpolate(random.random(), normalized=True)
             
-            crime_date = datetime.now() - timedelta(days=random.randint(1, 1000))
-            
-            random_hour = random.randint(0, 23)
-            random_minute = random.randint(0, 59)
-            random_second = random.randint(0, 59)
-            
+            crime_date = datetime(year=specific_year, month=random.randint(1, 12), day=random.randint(1, 28))
             crime_datetime = crime_date.replace(
-                hour=random_hour, 
-                minute=random_minute, 
-                second=random_second
+                hour=random.randint(0, 23), 
+                minute=random.randint(0, 59), 
+                second=random.randint(0, 59)
             )
             
             crime_data.append({
@@ -128,7 +124,6 @@ def generate_road_data(num_entries):
             })
         
         return pd.DataFrame(crime_data)
-    
     except Exception as e:
         print(f"Error generating road-specific data: {e}")
         return pd.DataFrame()
@@ -137,8 +132,8 @@ def get_color(severity):
     colors = {1: 'green', 2: 'lightgreen', 3: 'orange', 4: 'red', 5: 'darkred'}
     return colors.get(severity, 'blue')
 
-def create_crime_map(data):
-    map_center = [28.6139, 77.2090]
+def create_combined_map(data):
+    map_center = [data['Latitude'].mean(), data['Longitude'].mean()]
     crime_map = folium.Map(location=map_center, zoom_start=11)
     
     for _, row in data.iterrows():
@@ -155,15 +150,23 @@ def create_crime_map(data):
             icon=folium.Icon(color=get_color(row['Severity']))
         ).add_to(crime_map)
     
-    crime_map.save("road_crime_map.html")
-    print("Map saved as road_crime_map.html")
+    crime_map.save("combined_crime_map.html")
+    print("Combined map saved as combined_crime_map.html")
 
 def main():
-    data = generate_road_data(100)
-    if not data.empty:
-        create_crime_map(data)
-        data.to_csv("crime_data.csv", index=False)
-        print("Crime data also saved to crime_data.csv")
+    specific_year = 2021
+    all_data = pd.DataFrame()
+    
+    for region_name, latitude, longitude in REGION_COORDS:
+        print(f"Processing region: {region_name}")
+        data = generate_road_data(400, latitude, longitude, specific_year=specific_year)
+        if not data.empty:
+            all_data = pd.concat([all_data, data])
+    
+    if not all_data.empty:
+        create_combined_map(all_data)
+        all_data.to_csv("combined_crime_data.csv", index=False)
+        print("Combined crime data saved as combined_crime_data.csv")
 
 if __name__ == "__main__":
     main()
