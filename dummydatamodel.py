@@ -50,7 +50,7 @@ def generate_detailed_crime_types():
         ],
         'Kidnapping': [
             ('Vehicle Abduction', 5), 
-            ('Highway Kidnapping', 5)
+            ('Kidnapping', 5)
         ],
         'Sexual Crime': [
             ('Sexual Assault', 5), 
