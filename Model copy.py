@@ -21,15 +21,12 @@ class CrimeRouteModel:
         try:
             df = pd.read_csv(file_path)
         
-            # Check if 'Latitude' and 'Longitude' exist in the dataset
             if 'Latitude' not in df.columns or 'Longitude' not in df.columns:
                 raise ValueError("Columns 'Latitude' or 'Longitude' are missing in the dataset.")
         
-            # Use Latitude and Longitude columns
             df['latitude'] = df['Latitude'].astype(float)
             df['longitude'] = df['Longitude'].astype(float)
         
-            # Build KDTree for efficient lookup
             self.crime_data = df
             self.crime_points = df[['latitude', 'longitude']].values
             self.kd_tree = KDTree(self.crime_points)
@@ -38,38 +35,75 @@ class CrimeRouteModel:
             print(f"Error loading crime data: {e}")
             raise
 
+    def get_all_possible_routes(self, source, destination):
+        # Get initial routes
+        initial_routes = self.get_routes_from_osrm(source, destination)
+        if not initial_routes:
+            return None
+
+        # Get additional routes by using different waypoints
+        all_routes = initial_routes.copy()
+        route_coords = list(initial_routes.values())[0]  # Get coordinates from first route
+        
+        # Generate intermediate points along the route
+        num_points = min(len(route_coords) - 1, 3)  # Limit to 3 intermediate points
+        step = len(route_coords) // (num_points + 1)
+        
+        for i in range(1, num_points + 1):
+            waypoint = route_coords[i * step]
+            # Get route through this waypoint
+            route1 = self.get_routes_from_osrm(source, waypoint)
+            route2 = self.get_routes_from_osrm(waypoint, destination)
+            
+            if route1 and route2:
+                # Combine the routes
+                for r1_key, r1_coords in route1.items():
+                    for r2_key, r2_coords in route2.items():
+                        new_route_key = f'Route {len(all_routes) + 1}'
+                        # Combine coordinates, removing duplicate waypoint
+                        all_routes[new_route_key] = r1_coords[:-1] + r2_coords
+
+        return all_routes
 
     def get_routes_from_osrm(self, source, destination):
-        url = f"{OSRM_BASE_URL}{source[1]},{source[0]};{destination[1]},{destination[0]}?alternatives=true&steps=true&annotations=true&geometries=geojson"
-        response = requests.get(url)
-        if response.status_code != 200:
+        # Request multiple alternatives from OSRM
+        url = f"{OSRM_BASE_URL}{source[1]},{source[0]};{destination[1]},{destination[0]}?alternatives=true&steps=true&annotations=true&geometries=geojson&overview=full&alternatives=3"
+        try:
+            response = requests.get(url)
+            if response.status_code != 200:
+                return None
+            data = response.json()
+            routes = {}
+            for i, route in enumerate(data['routes']):
+                route_coords = [(step[1], step[0]) for step in route['geometry']['coordinates']]
+                routes[f'Route {i+1}'] = route_coords
+            return routes
+        except Exception as e:
+            print(f"Error fetching routes: {e}")
             return None
-        data = response.json()
-        routes = {}
-        for i, route in enumerate(data['routes']):
-            route_coords = [(step[1], step[0]) for step in route['geometry']['coordinates']]
-            routes[f'Route {i+1}'] = route_coords
-        return routes
-    
+
     def calculate_crime_near_route(self, route_coords, radius=0.5):
         total_crimes = 0
         total_severity = 0
         nearby_crimes = []
+        seen_crimes = set()  # To prevent duplicate crimes
 
         for route_point in route_coords:
-            indices = self.kd_tree.query_ball_point(route_point, radius / 111)  # Convert km to lat/lon degrees
+            indices = self.kd_tree.query_ball_point(route_point, radius / 111)  # Convert km to degrees
             for i in indices:
                 crime = self.crime_data.iloc[i]
-                total_crimes += 1
-                total_severity += crime['Severity']
-                nearby_crimes.append({
-                    'crime_id': crime['CrimeID'],
-                    'category': crime['CrimeCategory'],
-                    'location': (crime['Latitude'], crime['Longitude']),
-                    'severity': crime['Severity']
-                })
+                crime_id = crime['CrimeID']
+                if crime_id not in seen_crimes:
+                    seen_crimes.add(crime_id)
+                    total_crimes += 1
+                    total_severity += crime['Severity']
+                    nearby_crimes.append({
+                        'crime_id': crime_id,
+                        'category': crime['CrimeCategory'],
+                        'location': (crime['Latitude'], crime['Longitude']),
+                        'severity': crime['Severity']
+                    })
         
-        # Improved safety score calculation
         max_severity = self.crime_data['Severity'].max() or 1
         safety_score = max(0, 1 - (total_severity / (len(route_coords) * max_severity)))
         return total_crimes, safety_score, nearby_crimes
@@ -79,16 +113,16 @@ class CrimeRouteModel:
     
     @staticmethod
     def convert_int64_to_int(data):
-        if isinstance(data, np.int64):  # For individual int64 values
+        if isinstance(data, (np.int64, np.int32)):
             return int(data)
-        elif isinstance(data, np.float64):  # For individual float64 values
+        elif isinstance(data, (np.float64, np.float32)):
             return float(data)
-        elif isinstance(data, dict):  # For dictionaries
+        elif isinstance(data, dict):
             return {key: CrimeRouteModel.convert_int64_to_int(value) for key, value in data.items()}
-        elif isinstance(data, list):  # For lists
+        elif isinstance(data, list):
             return [CrimeRouteModel.convert_int64_to_int(item) for item in data]
-        else:
-            return data  # Return the data as is if it's not a list, dict, or int64
+        return data
+
 
     def evaluate_routes(self, routes):
         results = []
@@ -97,7 +131,6 @@ class CrimeRouteModel:
             total_crimes, safety_score, nearby_crimes = self.calculate_crime_near_route(route_coords)
             total_distance = self.calculate_route_distance(route_coords)
             
-            # Ensure all numeric types are convertible to JSON serializable types
             result = {
                 'route_name': route_name,
                 'total_crimes': CrimeRouteModel.convert_int64_to_int(total_crimes),
@@ -109,12 +142,7 @@ class CrimeRouteModel:
             
             results.append(result)
     
-        # Ensure the final list is also JSON serializable
-        results = CrimeRouteModel.convert_int64_to_int(results)
-    
-        # Sort by safety_score
         return sorted(results, key=lambda x: x['safety_score'], reverse=True)
-
 
 # Initialize model and load crime data
 model = CrimeRouteModel()
@@ -130,12 +158,15 @@ def evaluate_routes_endpoint():
     if not source or not destination:
         return jsonify({'error': 'Source and destination required'}), 400
     
-    routes = model.get_routes_from_osrm(source, destination)
+    # Use the new method to get all possible routes
+    routes = model.get_all_possible_routes(source, destination)
     if not routes:
         return jsonify({'error': 'Could not fetch routes'}), 500
     
     ranked_routes = model.evaluate_routes(routes)
-    return jsonify(ranked_routes)
+    return jsonify(CrimeRouteModel.convert_int64_to_int(ranked_routes))
+
+
 
 @app.route('/load_crime_data', methods=['POST'])
 def reload_crime_data():
