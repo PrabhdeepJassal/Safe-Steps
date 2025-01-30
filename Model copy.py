@@ -11,6 +11,7 @@ CORS(app)
 
 OSRM_BASE_URL = "http://router.project-osrm.org/route/v1/driving/"
 
+
 class CrimeRouteModel:
     def __init__(self):
         self.crime_data = None
@@ -30,6 +31,8 @@ class CrimeRouteModel:
             self.crime_data = df
             self.crime_points = df[['latitude', 'longitude']].values
             self.kd_tree = KDTree(self.crime_points)
+        
+            print(f"Crime data loaded: {self.crime_data.head()}")  # Print the first few rows of data
         
         except Exception as e:
             print(f"Error loading crime data: {e}")
@@ -70,7 +73,9 @@ class CrimeRouteModel:
         url = f"{OSRM_BASE_URL}{source[1]},{source[0]};{destination[1]},{destination[0]}?alternatives=true&steps=true&annotations=true&geometries=geojson&overview=full&alternatives=3"
         try:
             response = requests.get(url)
+            print("OSRM Response Status Code:", response.status_code)  # Log status code
             if response.status_code != 200:
+                print("OSRM Error:", response.text)  # Log error message
                 return None
             data = response.json()
             routes = {}
@@ -123,11 +128,11 @@ class CrimeRouteModel:
             return [CrimeRouteModel.convert_int64_to_int(item) for item in data]
         return data
 
-
     def evaluate_routes(self, routes):
         results = []
     
         for route_name, route_coords in routes.items():
+            print(f"Evaluating route: {route_name}")  # Log route evaluation
             total_crimes, safety_score, nearby_crimes = self.calculate_crime_near_route(route_coords)
             total_distance = self.calculate_route_distance(route_coords)
             
@@ -152,21 +157,19 @@ model.load_crime_data(crime_file)
 @app.route('/evaluate_routes', methods=['POST'])
 def evaluate_routes_endpoint():
     data = request.json
+    print(f"Received data: {data}")  # Log the incoming data
     source = data.get('source')
     destination = data.get('destination')
     
     if not source or not destination:
         return jsonify({'error': 'Source and destination required'}), 400
     
-    # Use the new method to get all possible routes
     routes = model.get_all_possible_routes(source, destination)
     if not routes:
         return jsonify({'error': 'Could not fetch routes'}), 500
     
     ranked_routes = model.evaluate_routes(routes)
     return jsonify(CrimeRouteModel.convert_int64_to_int(ranked_routes))
-
-
 
 @app.route('/load_crime_data', methods=['POST'])
 def reload_crime_data():
