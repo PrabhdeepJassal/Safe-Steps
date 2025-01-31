@@ -227,6 +227,7 @@
         function clearCrimeMarkers() {
             crimeMarkers.clearLayers();
         }
+        
 
         function plotCrimes(crimes) {
             clearCrimeMarkers();
@@ -306,139 +307,202 @@
             }
         }
 
-        function initializeRouteSelection() {
-            // Clear previous route layers
-            routeLayers.forEach(layer => map.removeLayer(layer));
-            routeLayers = [];
+function clearAllRoutes() {
+    // Aggressive route clearing method
+    routeLayers.forEach(layer => {
+        // Remove routing control
+        if (layer instanceof L.Routing.Control) {
+            layer.remove();
+            map.removeControl(layer);
+        }
+        
+        // Remove any lingering route layers
+        if (layer._route) {
+            map.removeLayer(layer._route);
+        }
+    });
+
+    // Reset route layers array
+    routeLayers = [];
+
+    // Additional cleanup for any remaining routing elements
+    const routingElements = document.querySelectorAll('.leaflet-routing-container');
+    routingElements.forEach(el => el.remove());
+}
+
+function initializeRouteSelection() {
+    // Completely clear existing routes and markers
+    clearAllRoutes();
+    clearCrimeMarkers();
+
+    // Plot all routes initially
+    const allRouteCrimes = [];
+    rankedRoutes.forEach((route, index) => {
+        const routeCoords = route.route_coords.map(coord => L.latLng(coord));
+        
+        const routeControl = L.Routing.control({
+            waypoints: routeCoords,
+            routeWhileDragging: false,
+            addWaypoints: false,
+            draggableWaypoints: false,
+            lineOptions: {
+                styles: [{
+                    color: index === 0 ? '#00ff00' : '#ff0000',
+                    weight: index === 0 ? 5 : 3,
+                    opacity: index === 0 ? 0.8 : 0.5
+                }]
+            },
+            createMarker: () => null
+        }).addTo(map);
+
+        routeLayers.push(routeControl);
+
+        // Collect crimes from all routes
+        allRouteCrimes.push(...(route.nearby_crimes || []));
+    });
+
+    // Plot all crimes initially
+    plotCrimes(allRouteCrimes);
+
+    // Create route cards with selection functionality
+    const routesInfo = document.getElementById("routes-info");
+    routesInfo.innerHTML = ""; // Clear existing routes
+
+    rankedRoutes.forEach((route, index) => {
+        const routeCard = document.createElement("div");
+        routeCard.classList.add("route-card");
+        if (index === 0) {
+            routeCard.classList.add("active", "recommended");
+        }
+        
+        routeCard.innerHTML = `
+            <strong>${route.route_name}</strong>
+            <div style="margin-top: 5px;">
+                <div style="color: ${route.safety_score >= 0.7 ? 'green' : route.safety_score >= 0.4 ? 'orange' : 'red'}">
+                    Safety Score: ${(route.safety_score * 100).toFixed(1)}%
+                </div>
+                <div>Crimes Nearby: ${route.total_crimes}</div>
+                <div>Distance: ${route.total_distance_km.toFixed(2)} km</div>
+            </div>
+        `;
+
+        // Add click handler for route selection
+        routeCard.addEventListener("click", () => {
+            // Update route cards
+            document.querySelectorAll('.route-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            routeCard.classList.add('active');
+
+            // Completely clear previous routes
+            clearAllRoutes();
+
+            // Redraw only the selected route
+            const selectedRouteControl = L.Routing.control({
+                waypoints: route.route_coords.map(coord => L.latLng(coord)),
+                routeWhileDragging: false,
+                addWaypoints: false,
+                draggableWaypoints: false,
+                lineOptions: {
+                    styles: [{
+                        color: '#00ff00',
+                        weight: 5,
+                        opacity: 0.8
+                    }]
+                },
+                createMarker: () => null
+            }).addTo(map);
             
-            // Plot each route with its own color
-            rankedRoutes.forEach((route, index) => {
-                const routeCoords = route.route_coords.map(coord => L.latLng(coord));
-                
-                const routeControl = L.Routing.control({
-                    waypoints: routeCoords,
-                    routeWhileDragging: false,
-                    lineOptions: {
-                        styles: [{
-                            color: index === 0 ? '#00ff00' : '#ff0000',
-                            weight: index === 0 ? 5 : 3,
-                            opacity: index === 0 ? 0.8 : 0.5
-                        }]
-                    },
-                    createMarker: () => null
-                }).addTo(map);
+            routeLayers.push(selectedRouteControl);
 
-                routeLayers.push(routeControl);
-            });
-
-            // Create route cards with selection functionality
-            const routesInfo = document.getElementById("routes-info");
-            routesInfo.innerHTML = ""; // Clear existing routes
-
-            rankedRoutes.forEach((route, index) => {
-                const routeCard = document.createElement("div");
-                routeCard.classList.add("route-card");
-                if (index === 0) {
-                    routeCard.classList.add("active", "recommended");
-                }
-                
-                routeCard.innerHTML = `
-                    <strong>${route.route_name}</strong>
-                    <div style="margin-top: 5px;">
-                        <div style="color: ${route.safety_score >= 0.7 ? 'green' : route.safety_score >= 0.4 ? 'orange' : 'red'}">
-                            Safety Score: ${(route.safety_score * 100).toFixed(1)}%
-                        </div>
-                        <div>Crimes Nearby: ${route.total_crimes}</div>
-                        <div>Distance: ${route.total_distance_km.toFixed(2)} km</div>
-                    </div>
-                `;
-
-                // Add click handler for route selection
-                routeCard.addEventListener("click", () => {
-                    // Update route cards
-                    document.querySelectorAll('.route-card').forEach(card => {
-                        card.classList.remove('active');
-                    });
-                    routeCard.classList.add('active');
-
-                    // Update route visibility and styling
-                    routeLayers.forEach((layer, i) => {
-                        const isSelected = i === index;
-                        layer.setWaypoints(route.route_coords.map(coord => L.latLng(coord)));
-                        
-                        // Update route style
-                        layer.options.lineOptions.styles = [{
-                            color: isSelected ? '#00ff00' : '#ff0000',
-                            weight: isSelected ? 5 : 3,
-                            opacity: isSelected ? 0.8 : 0.5
-                        }];
-                        
-                        // Force route redraw
-                        if (layer._route) {
-                            layer._route.setStyle(layer.options.lineOptions.styles[0]);
-                        }
-                    });
-
-                    // Center map on selected route
-                    const bounds = L.latLngBounds(route.route_coords.map(coord => L.latLng(coord)));
-                    map.fitBounds(bounds, { padding: [50, 50] });
-                });
-
-                routesInfo.appendChild(routeCard);
-            });
-        }
-
-        async function getSafeRoutes() {
-            const sourceLat = parseFloat(document.getElementById('sourceLat').value);
-            const sourceLng = parseFloat(document.getElementById('sourceLng').value);
-            const destLat = parseFloat(document.getElementById('destLat').value);
-            const destLng = parseFloat(document.getElementById('destLng').value);
-
-            if (!sourceLat || !sourceLng || !destLat || !destLng) {
-                alert('Please enter both source and destination coordinates');
-                return;
-            }
-
-            const source = [sourceLat, sourceLng];
-            const destination = [destLat, destLng];
-
-            // Clear previous routes and crimes
-            routeLayers.forEach(layer => map.removeLayer(layer));
-            routeLayers = [];
+            // Clear and plot only the crimes for this route
             clearCrimeMarkers();
+            plotCrimes(route.nearby_crimes);
 
-            try {
-                const response = await axios.post('http://127.0.0.1:5000/evaluate_routes', {
-                    source,
-                    destination
-                });
+            // Center map on selected route
+            const bounds = L.latLngBounds(route.route_coords.map(coord => L.latLng(coord)));
+            map.fitBounds(bounds, { padding: [50, 50] });
+        });
 
-                rankedRoutes = response.data;
-                
-                // Collect and plot all crimes
-                const allCrimes = rankedRoutes.reduce((acc, route) => {
-                    return acc.concat(route.nearby_crimes || []);
-                }, []);
-                
-                plotCrimes(allCrimes);
-                
-                // Initialize route selection interface
-                initializeRouteSelection();
-                
-                // Fit map to show all routes
-                if (rankedRoutes.length > 0) {
-                    const allCoords = rankedRoutes.reduce((acc, route) => {
-                        return acc.concat(route.route_coords);
-                    }, []);
-                    const bounds = L.latLngBounds(allCoords.map(coord => L.latLng(coord)));
-                    map.fitBounds(bounds, { padding: [50, 50] });
-                }
+        routesInfo.appendChild(routeCard);
+    });
+}
 
-            } catch (error) {
-                console.error('Error fetching route data:', error);
-                alert('Error fetching route data. Please try again.');
-            }
+async function getSafeRoutes() {
+    const sourceLat = parseFloat(document.getElementById('sourceLat').value);
+    const sourceLng = parseFloat(document.getElementById('sourceLng').value);
+    const destLat = parseFloat(document.getElementById('destLat').value);
+    const destLng = parseFloat(document.getElementById('destLng').value);
+
+    if (!sourceLat || !sourceLng || !destLat || !destLng) {
+        alert('Please enter both source and destination coordinates');
+        return;
+    }
+
+    const source = [sourceLat, sourceLng];
+    const destination = [destLat, destLng];
+
+    // Get current time from user's device
+    const now = new Date();
+    const currentTime = now.toTimeString().split(' ')[0];
+    const currentHour = now.getHours();
+
+    // Determine time category
+    let timeCategory;
+    if (currentHour >= 0 && currentHour < 6) {
+        timeCategory = 'Night';
+    } else if (currentHour >= 6 && currentHour < 12) {
+        timeCategory = 'Morning';
+    } else if (currentHour >= 12 && currentHour < 18) {
+        timeCategory = 'Afternoon';
+    } else {
+        timeCategory = 'Evening';
+    }
+
+    // Clear previous routes and crimes
+    routeLayers.forEach(layer => map.removeLayer(layer));
+    routeLayers = [];
+    clearCrimeMarkers();
+
+    try {
+        const response = await axios.post('http://127.0.0.1:5000/evaluate_routes', {
+            source,
+            destination,
+            current_time: currentTime,
+            time_category: timeCategory
+        });
+
+        rankedRoutes = response.data;
+        
+        // Add time category to route display
+        rankedRoutes.forEach(route => {
+            route.time_category_display = `Time of Day: ${timeCategory}`;
+        });
+        
+        // Collect and plot all crimes
+        const allCrimes = rankedRoutes.reduce((acc, route) => {
+            return acc.concat(route.nearby_crimes || []);
+        }, []);
+        
+        plotCrimes(allCrimes);
+        
+        // Initialize route selection interface
+        initializeRouteSelection();
+        
+        // Fit map to show all routes
+        if (rankedRoutes.length > 0) {
+            const allCoords = rankedRoutes.reduce((acc, route) => {
+                return acc.concat(route.route_coords);
+            }, []);
+            const bounds = L.latLngBounds(allCoords.map(coord => L.latLng(coord)));
+            map.fitBounds(bounds, { padding: [50, 50] });
         }
+
+    } catch (error) {
+        console.error('Error fetching route data:', error);
+        alert('Error fetching route data. Please try again.');
+    }
+}
 
         // Map click handler
         map.on('click', function(e) {
