@@ -5,11 +5,6 @@ import folium
 import random
 from datetime import datetime, timedelta
 
-# Set a fixed random seed for reproducibility
-RANDOM_SEED = 42
-random.seed(RANDOM_SEED)
-np.random.seed(RANDOM_SEED)
-
 # Multiple coordinates to cover wider Delhi area
 REGION_COORDS = [
     ("North Delhi", 28.7006, 77.2050),
@@ -150,23 +145,23 @@ def create_combined_map(data):
             icon=folium.Icon(color=get_color(row['Severity']))
         ).add_to(crime_map)
     
-    crime_map.save("combined_crime_map.html")
-    print("Combined map saved as combined_crime_map.html")
+    crime_map.save("2024_DELHI.html")
+    print("Combined map saved as 2024_DELHI.html")
 
 def main():
-    specific_year = 2021
+    specific_year = 2024 #year
     all_data = pd.DataFrame()
     
     for region_name, latitude, longitude in REGION_COORDS:
         print(f"Processing region: {region_name}")
-        data = generate_road_data(400, latitude, longitude, specific_year=specific_year)
+        data = generate_road_data(18040, latitude, longitude, specific_year=specific_year)
         if not data.empty:
             all_data = pd.concat([all_data, data])
     
     if not all_data.empty:
         create_combined_map(all_data)
-        all_data.to_csv("combined_crime_data.csv", index=False)
-        print("Combined crime data saved as combined_crime_data.csv")
+        all_data.to_csv("2024_DELHI_DATA.csv", index=False)
+        print("Combined crime data saved as 2024_DELHI_DATA.csv")
 
 if __name__ == "__main__":
     main()

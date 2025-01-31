@@ -128,25 +128,35 @@ class CrimeRouteModel:
             return [CrimeRouteModel.convert_int64_to_int(item) for item in data]
         return data
 
-    def evaluate_routes(self, routes):
-        results = []
+    def evaluate_routes(self, routes, time_category=None):
+    # Time severity multipliers
+        time_severity_multiplier = {
+            'Night': 1.5,     # Higher risk at night
+            'Morning': 1.0,   # Baseline risk
+            'Afternoon': 1.0, # Baseline risk
+            'Evening': 1.2    # Slightly elevated risk
+        }
     
+        results = []
         for route_name, route_coords in routes.items():
-            print(f"Evaluating route: {route_name}")  # Log route evaluation
-            total_crimes, safety_score, nearby_crimes = self.calculate_crime_near_route(route_coords)
-            total_distance = self.calculate_route_distance(route_coords)
-            
+            total_crimes, base_safety_score, nearby_crimes = self.calculate_crime_near_route(route_coords)
+        
+        # Apply time-based severity multiplier
+            time_multiplier = time_severity_multiplier.get(time_category, 1.0)
+            adjusted_safety_score = max(0, base_safety_score / time_multiplier)
+        
             result = {
                 'route_name': route_name,
-                'total_crimes': CrimeRouteModel.convert_int64_to_int(total_crimes),
-                'safety_score': round(CrimeRouteModel.convert_int64_to_int(safety_score), 2),
-                'total_distance_km': round(CrimeRouteModel.convert_int64_to_int(total_distance), 2),
+                'total_crimes': total_crimes,
+                'safety_score': round(adjusted_safety_score, 2),
+                'total_distance_km': self.calculate_route_distance(route_coords),
                 'nearby_crimes': nearby_crimes,
-                'route_coords': route_coords
+                'route_coords': route_coords,
+                'time_category': time_category
             }
-            
             results.append(result)
     
+    # Sort routes by safety score, considering time of day
         return sorted(results, key=lambda x: x['safety_score'], reverse=True)
 
 # Initialize model and load crime data
@@ -160,6 +170,8 @@ def evaluate_routes_endpoint():
     print(f"Received data: {data}")  # Log the incoming data
     source = data.get('source')
     destination = data.get('destination')
+    current_time = data.get('current_time')
+    time_category = data.get('time_category')
     
     if not source or not destination:
         return jsonify({'error': 'Source and destination required'}), 400
@@ -168,7 +180,8 @@ def evaluate_routes_endpoint():
     if not routes:
         return jsonify({'error': 'Could not fetch routes'}), 500
     
-    ranked_routes = model.evaluate_routes(routes)
+    # Pass time category to evaluation
+    ranked_routes = model.evaluate_routes(routes, time_category)
     return jsonify(CrimeRouteModel.convert_int64_to_int(ranked_routes))
 
 @app.route('/load_crime_data', methods=['POST'])
