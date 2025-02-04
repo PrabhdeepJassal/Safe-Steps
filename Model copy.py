@@ -11,7 +11,6 @@ CORS(app)
 
 OSRM_BASE_URL = "http://router.project-osrm.org/route/v1/driving/"
 
-
 class CrimeRouteModel:
     def __init__(self):
         self.crime_data = None
@@ -129,7 +128,7 @@ class CrimeRouteModel:
         return data
 
     def evaluate_routes(self, routes, time_category=None):
-    # Time severity multipliers
+        # Time severity multipliers
         time_severity_multiplier = {
             'Night': 1.5,     # Higher risk at night
             'Morning': 1.0,   # Baseline risk
@@ -141,7 +140,7 @@ class CrimeRouteModel:
         for route_name, route_coords in routes.items():
             total_crimes, base_safety_score, nearby_crimes = self.calculate_crime_near_route(route_coords)
         
-        # Apply time-based severity multiplier
+            # Apply time-based severity multiplier
             time_multiplier = time_severity_multiplier.get(time_category, 1.0)
             adjusted_safety_score = max(0, base_safety_score / time_multiplier)
         
@@ -156,12 +155,12 @@ class CrimeRouteModel:
             }
             results.append(result)
     
-    # Sort routes by safety score, considering time of day
+        # Sort routes by safety score, considering time of day
         return sorted(results, key=lambda x: x['safety_score'], reverse=True)
 
 # Initialize model and load crime data
 model = CrimeRouteModel()
-crime_file = 'combined_crime_data.csv'
+crime_file = '2021-2024_DELHI_DATA.csv'
 model.load_crime_data(crime_file)
 
 @app.route('/evaluate_routes', methods=['POST'])
