@@ -43,29 +43,40 @@ class CrimeRouteModel:
         if not initial_routes:
             return None
 
-        # Get additional routes by using different waypoints
-        all_routes = initial_routes.copy()
+        # Create a set to track unique route coordinates
+        unique_routes = {}
+    
+        for route_name, route_coords in initial_routes.items():
+            route_key = tuple(tuple(coord) for coord in route_coords)
+            unique_routes[route_name] = route_coords
+
+        # Generate additional routes by using different waypoints
         route_coords = list(initial_routes.values())[0]  # Get coordinates from first route
-        
+    
         # Generate intermediate points along the route
         num_points = min(len(route_coords) - 1, 3)  # Limit to 3 intermediate points
         step = len(route_coords) // (num_points + 1)
-        
+    
         for i in range(1, num_points + 1):
             waypoint = route_coords[i * step]
             # Get route through this waypoint
             route1 = self.get_routes_from_osrm(source, waypoint)
             route2 = self.get_routes_from_osrm(waypoint, destination)
-            
+        
             if route1 and route2:
                 # Combine the routes
                 for r1_key, r1_coords in route1.items():
                     for r2_key, r2_coords in route2.items():
-                        new_route_key = f'Route {len(all_routes) + 1}'
                         # Combine coordinates, removing duplicate waypoint
-                        all_routes[new_route_key] = r1_coords[:-1] + r2_coords
+                        combined_coords = r1_coords[:-1] + r2_coords
+                    
+                        # Check for uniqueness
+                        route_key = tuple(tuple(coord) for coord in combined_coords)
+                        if route_key not in [tuple(tuple(coord) for coord in existing_route) for existing_route in unique_routes.values()]:
+                            new_route_key = f'Route {len(unique_routes) + 1}'
+                            unique_routes[new_route_key] = combined_coords
 
-        return all_routes
+        return unique_routes
 
     def get_routes_from_osrm(self, source, destination):
         # Request multiple alternatives from OSRM
@@ -86,14 +97,14 @@ class CrimeRouteModel:
             print(f"Error fetching routes: {e}")
             return None
 
-    def calculate_crime_near_route(self, route_coords, radius=0.5):
+    def calculate_crime_near_route(self, route_coords, radius=0.1):
         total_crimes = 0
         total_severity = 0
         nearby_crimes = []
-        seen_crimes = set()  # To prevent duplicate crimes
+        seen_crimes = set()  
 
         for route_point in route_coords:
-            indices = self.kd_tree.query_ball_point(route_point, radius / 111)  # Convert km to degrees
+            indices = self.kd_tree.query_ball_point(route_point, radius / 111)  
             for i in indices:
                 crime = self.crime_data.iloc[i]
                 crime_id = crime['CrimeID']
@@ -107,10 +118,18 @@ class CrimeRouteModel:
                         'location': (crime['Latitude'], crime['Longitude']),
                         'severity': crime['Severity']
                     })
-        
-        max_severity = self.crime_data['Severity'].max() or 1
-        safety_score = max(0, 1 - (total_severity / (len(route_coords) * max_severity)))
-        return total_crimes, safety_score, nearby_crimes
+
+        # Normalize severity and introduce a base safety factor
+        max_severity = self.crime_data['Severity'].max() or 1  
+        route_length = max(len(route_coords), 1)  # Prevent division by zero
+        base_safety_factor = 0.3  # Minimum safety score (adjustable)
+
+        # Compute adjusted safety score
+        normalized_severity = total_severity / (total_crimes * max_severity + 1)  # Prevent division by extreme values
+        safety_score = max(base_safety_factor, 1 - normalized_severity)
+
+        return total_crimes, round(safety_score, 2), nearby_crimes
+
     
     def calculate_route_distance(self, route_coords):
         return sum(geodesic(route_coords[i], route_coords[i+1]).km for i in range(len(route_coords) - 1))
@@ -195,3 +214,4 @@ def reload_crime_data():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
