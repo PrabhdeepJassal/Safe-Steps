@@ -1,0 +1,4 @@
+Model version: 1.0
+Data records: 509425
+Categories: 12
+Last updated: 2025-03-18 14:09:26
