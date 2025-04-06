@@ -1,7 +1,21 @@
-import React, { useRef, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Animated, PanResponder, Dimensions, TouchableOpacity, Easing, Keyboard } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Animated,
+  PanResponder,
+  Dimensions,
+  TouchableOpacity,
+  Easing,
+  Keyboard,
+} from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { Ionicons } from '@expo/vector-icons';
+
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default function MapScreen() {
   const DELHI_REGION = {
@@ -11,123 +25,127 @@ export default function MapScreen() {
     longitudeDelta: 0.15,
   };
 
-  // Get screen dimensions
-  const { height: SCREEN_HEIGHT } = Dimensions.get('window');
-  
-  // Define drawer snap points
   const DRAWER_MIN_HEIGHT = 100;
   const DRAWER_MID_HEIGHT = SCREEN_HEIGHT * 0.4;
   const DRAWER_MAX_HEIGHT = SCREEN_HEIGHT * 0.8;
 
-  // State management
   const [searchQuery, setSearchQuery] = useState('');
   const [showDrawer, setShowDrawer] = useState(false);
   const [activeRoute, setActiveRoute] = useState(null);
   const [drawerHeight, setDrawerHeight] = useState(DRAWER_MIN_HEIGHT);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
-  // Animation values that can use native driver
-  const drawerTranslateY = useRef(new Animated.Value(0)).current;
-  const drawerOpacity = useRef(new Animated.Value(0)).current;
-  const legendPosition = useRef(new Animated.Value(170)).current;
-  const handleRotation = useRef(new Animated.Value(0)).current;
-  
-  // Convert rotation value to interpolated string for transform
-  const rotateArrow = handleRotation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '180deg'],
-  });
-
-  // Animate drawer to specific height
-  const animateDrawerTo = (height, duration = 300) => {
-    // Determine if drawer is expanding or collapsing
-    const isExpanding = height > drawerHeight;
-    
-    // Update handle rotation based on drawer state
-    Animated.timing(handleRotation, {
-      toValue: height > DRAWER_MIN_HEIGHT + 50 ? 1 : 0,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
-    
-    // Update drawer height state
-    setDrawerHeight(height);
+  const createAnimatedValue = (initialValue) => {
+    try {
+      return new Animated.Value(initialValue);
+    } catch (e) {
+      console.error('Failed to create Animated.Value:', e);
+      return { setValue: () => {}, interpolate: () => '0' };
+    }
   };
 
-  // Calculate translateY based on drawer position
-  const getTranslateY = () => {
-    const maxTranslate = DRAWER_MAX_HEIGHT - DRAWER_MIN_HEIGHT;
-    const currentTranslate = Math.max(0, Math.min(maxTranslate, drawerHeight - DRAWER_MIN_HEIGHT));
-    return maxTranslate - currentTranslate;
-  };
+  const drawerTranslateY = useRef(createAnimatedValue(DRAWER_MIN_HEIGHT)).current;
+  const drawerOpacity = useRef(createAnimatedValue(0)).current;
+  const legendPosition = useRef(createAnimatedValue(170)).current;
+  const handleRotation = useRef(createAnimatedValue(0)).current;
+  const searchBarScale = useRef(createAnimatedValue(1)).current;
+  const backdropOpacity = useRef(createAnimatedValue(0)).current;
 
-  // PanResponder for drawer gestures
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: (_, gestureState) => {
-        return Math.abs(gestureState.dy) > 5;
-      },
-      onPanResponderMove: (_, gestureState) => {
-        // Update drawer height through state instead of animated value
-        const newHeight = Math.max(
-          DRAWER_MIN_HEIGHT, 
-          Math.min(DRAWER_MAX_HEIGHT, drawerHeight - gestureState.dy)
-        );
-        setDrawerHeight(newHeight);
-      },
-      onPanResponderRelease: (_, gestureState) => {
-        const velocity = gestureState.vy;
-        
-        // Determine which snap point to use based on velocity and current position
-        if (velocity < -0.5) {
-          // Fast upward swipe - go to max height
-          animateDrawerTo(DRAWER_MAX_HEIGHT);
-        } else if (velocity > 0.5) {
-          // Fast downward swipe - go to min height
-          animateDrawerTo(DRAWER_MIN_HEIGHT);
-        } else {
-          // Slower movement - snap to closest point
-          if (drawerHeight < (DRAWER_MIN_HEIGHT + DRAWER_MID_HEIGHT) / 2) {
-            animateDrawerTo(DRAWER_MIN_HEIGHT);
-          } else if (drawerHeight < (DRAWER_MID_HEIGHT + DRAWER_MAX_HEIGHT) / 2) {
-            animateDrawerTo(DRAWER_MID_HEIGHT);
-          } else {
-            animateDrawerTo(DRAWER_MAX_HEIGHT);
-          }
-        }
-      },
-    })
-  ).current;
-
-  // Sample route data
   const sampleRoutes = [
     { id: 1, title: 'Fastest Route', time: '25 min', distance: '12 km', color: '#00ff00', eta: '10:45 AM' },
     { id: 2, title: 'Shortest Route', time: '30 min', distance: '10 km', color: '#ffff00', eta: '10:50 AM' },
     { id: 3, title: 'Scenic Route', time: '35 min', distance: '15 km', color: '#ff8c00', eta: '10:55 AM' },
   ];
+  const routeCardScales = useRef(sampleRoutes.map(() => createAnimatedValue(1))).current;
 
-  // Handle search input changes
+  const rotateArrow = handleRotation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '180deg'],
+  });
+
+  const animateDrawerTo = (height, duration = 300) => {
+    Animated.parallel([
+      Animated.timing(handleRotation, {
+        toValue: height > DRAWER_MIN_HEIGHT + 50 ? 1 : 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.spring(drawerTranslateY, {
+        toValue: height,
+        friction: 8,
+        tension: 40,
+        useNativeDriver: false,
+      }),
+      Animated.timing(backdropOpacity, {
+        toValue: height > DRAWER_MIN_HEIGHT ? 0.5 : 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(legendPosition, {
+        toValue: height > DRAWER_MID_HEIGHT ? DRAWER_MAX_HEIGHT + 20 : 170,
+        duration: 300,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: false,
+      })
+    ]).start(() => {
+      setDrawerHeight(height);
+    });
+  };
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: (_, gestureState) => Math.abs(gestureState.dy) > 5,
+      onPanResponderMove: (_, gestureState) => {
+        const newHeight = Math.max(
+          DRAWER_MIN_HEIGHT,
+          Math.min(DRAWER_MAX_HEIGHT, drawerHeight - gestureState.dy)
+        );
+        drawerTranslateY.setValue(newHeight);
+        backdropOpacity.setValue(
+          Math.min(0.5, (newHeight - DRAWER_MIN_HEIGHT) / (DRAWER_MAX_HEIGHT - DRAWER_MIN_HEIGHT) * 0.5)
+        );
+        legendPosition.setValue(newHeight > DRAWER_MID_HEIGHT ? DRAWER_MAX_HEIGHT + 20 : 170);
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        const velocity = gestureState.vy;
+        let targetHeight;
+
+        if (velocity < -0.5) {
+          targetHeight = DRAWER_MAX_HEIGHT;
+        } else if (velocity > 0.5) {
+          targetHeight = DRAWER_MIN_HEIGHT;
+        } else {
+          if (drawerHeight < (DRAWER_MIN_HEIGHT + DRAWER_MID_HEIGHT) / 2) {
+            targetHeight = DRAWER_MIN_HEIGHT;
+          } else if (drawerHeight < (DRAWER_MID_HEIGHT + DRAWER_MAX_HEIGHT) / 2) {
+            targetHeight = DRAWER_MID_HEIGHT;
+          } else {
+            targetHeight = DRAWER_MAX_HEIGHT;
+          }
+        }
+        animateDrawerTo(targetHeight);
+      },
+    })
+  ).current;
+
   const handleSearch = (text) => {
     setSearchQuery(text);
     const shouldShowDrawer = text.length > 0;
     
     if (shouldShowDrawer !== showDrawer) {
       setShowDrawer(shouldShowDrawer);
-      
-      // Animate the drawer appearance/disappearance
       if (shouldShowDrawer) {
-        setDrawerHeight(DRAWER_MID_HEIGHT);
-        Animated.timing(drawerOpacity, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }).start();
+        animateDrawerTo(DRAWER_MID_HEIGHT);
+        Animated.timing(drawerOpacity, { toValue: 1, duration: 300, useNativeDriver: true }).start();
       } else {
-        Animated.timing(drawerOpacity, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-        }).start();
+        Animated.timing(drawerOpacity, { 
+          toValue: 0, 
+          duration: 200, 
+          useNativeDriver: true 
+        }).start(() => {
+          animateDrawerTo(DRAWER_MIN_HEIGHT);
+        });
       }
     }
   };
@@ -137,22 +155,33 @@ export default function MapScreen() {
     if (searchQuery.length > 0 && !showDrawer) {
       setShowDrawer(true);
       animateDrawerTo(DRAWER_MID_HEIGHT);
-      Animated.timing(drawerOpacity, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
+      Animated.timing(drawerOpacity, { toValue: 1, duration: 300, useNativeDriver: true }).start();
     }
   };
 
-  // Select a route
-  const selectRoute = (route) => {
-    setActiveRoute(route.id === activeRoute ? null : route.id);
+  const handleSearchFocus = () => {
+    setIsSearchFocused(true);
+    Animated.spring(searchBarScale, { toValue: 1.02, friction: 8, tension: 40, useNativeDriver: true }).start();
+  };
+
+  const handleSearchBlur = () => {
+    setIsSearchFocused(false);
+    Animated.spring(searchBarScale, { toValue: 1, friction: 8, tension: 40, useNativeDriver: true }).start();
+  };
+
+  const selectRoute = (route, index) => {
+    const newActiveRoute = route.id === activeRoute ? null : route.id;
+    setActiveRoute(newActiveRoute);
+    
+    Animated.sequence([
+      Animated.timing(routeCardScales[index], { toValue: 0.95, duration: 100, useNativeDriver: true }),
+      Animated.spring(routeCardScales[index], { toValue: 1, friction: 8, tension: 40, useNativeDriver: true }),
+    ]).start();
   };
 
   const renderSearchBar = () => (
-    <View style={styles.searchContainer}>
-      <View style={styles.searchBar}>
+    <Animated.View style={[styles.searchContainer, { transform: [{ scale: searchBarScale }] }]}>
+      <View style={[styles.searchBar, isSearchFocused && styles.searchBarFocused]}>
         <Ionicons name="search" size={20} color="#666" />
         <TextInput
           style={styles.searchInput}
@@ -162,16 +191,16 @@ export default function MapScreen() {
           onChangeText={handleSearch}
           onSubmitEditing={handleSubmit}
           returnKeyType="done"
+          onFocus={handleSearchFocus}
+          onBlur={handleSearchBlur}
         />
         <Ionicons name="mic" size={20} color="#666" />
       </View>
-    </View>
+    </Animated.View>
   );
 
   const renderSeverityLegend = () => (
-    <View 
-      style={[styles.legendContainer, { bottom: 170 }]}
-    >
+    <Animated.View style={[styles.legendContainer, { bottom: legendPosition }]}>
       <Text style={styles.legendTitle}>Severity Level</Text>
       {[
         { level: 'Severity Level 5 (Highest)', color: '#8b0000' },
@@ -185,102 +214,75 @@ export default function MapScreen() {
           <Text style={styles.legendText}>{item.level}</Text>
         </View>
       ))}
-    </View>
+    </Animated.View>
   );
 
-  const renderRouteCard = (route) => (
-    <TouchableOpacity 
-      key={route.id} 
-      style={[
-        styles.routeCard,
-        activeRoute === route.id && styles.routeCardActive
-      ]}
-      onPress={() => selectRoute(route)}
-      activeOpacity={0.8}
-    >
-      <View style={[styles.routeIndicator, { backgroundColor: route.color }]} />
-      <View style={styles.routeInfo}>
-        <Text style={styles.routeTitle}>{route.title}</Text>
-        <Text style={styles.routeDetails}>{route.time} • {route.distance}</Text>
-        {activeRoute === route.id && (
-          <View style={styles.routeExtraInfo}>
-            <Text style={styles.routeEta}>ETA: {route.eta}</Text>
-            <View style={styles.routeTags}>
-              <View style={styles.routeTag}>
-                <Ionicons name="car-outline" size={12} color="#444" />
-                <Text style={styles.routeTagText}>Low Traffic</Text>
-              </View>
-              <View style={styles.routeTag}>
-                <Ionicons name="pricetag-outline" size={12} color="#444" />
-                <Text style={styles.routeTagText}>₹50 Toll</Text>
+  const renderRouteCard = (route, index) => (
+    <Animated.View style={{ transform: [{ scale: routeCardScales[index] }] }}>
+      <TouchableOpacity
+        style={[styles.routeCard, activeRoute === route.id && styles.routeCardActive]}
+        onPress={() => selectRoute(route, index)}
+        activeOpacity={0.8}
+      >
+        <View style={[styles.routeIndicator, { backgroundColor: route.color }]} />
+        <View style={styles.routeInfo}>
+          <Text style={styles.routeTitle}>{route.title}</Text>
+          <Text style={styles.routeDetails}>{route.time} • {route.distance}</Text>
+          {activeRoute === route.id && (
+            <View style={styles.routeExtraInfo}>
+              <Text style={styles.routeEta}>ETA: {route.eta}</Text>
+              <View style={styles.routeTags}>
+                <View style={styles.routeTag}>
+                  <Ionicons name="car-outline" size={12} color="#444" />
+                  <Text style={styles.routeTagText}>Low Traffic</Text>
+                </View>
+                <View style={styles.routeTag}>
+                  <Ionicons name="pricetag-outline" size={12} color="#444" />
+                  <Text style={styles.routeTagText}>₹50 Toll</Text>
+                </View>
               </View>
             </View>
-          </View>
-        )}
-      </View>
-      <Ionicons 
-        name={activeRoute === route.id ? "chevron-up" : "chevron-down"} 
-        size={20} 
-        color="#666" 
-      />
-    </TouchableOpacity>
+          )}
+        </View>
+        <Ionicons
+          name={activeRoute === route.id ? "chevron-up" : "chevron-down"}
+          size={20}
+          color="#666"
+        />
+      </TouchableOpacity>
+    </Animated.View>
   );
 
-  const renderDrawer = () => {
-    if (!showDrawer) return null;
-
-    return (
-      <Animated.View 
-        style={[
-          styles.drawerContainer, 
-          { 
-            height: drawerHeight,
-            opacity: drawerOpacity,
-            transform: [
-              { 
-                translateY: drawerOpacity.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [100, 0]
-                })
-              }
-            ]
-          }
-        ]}
-      >
-        <View style={styles.drawerHeaderContainer}>
-          <View 
-            style={styles.drawerHandleContainer}
-            {...panResponder.panHandlers}
-          >
-            <View style={styles.drawerHandle} />
-            <Animated.View style={{ transform: [{ rotate: rotateArrow }], marginTop: 8 }}>
-              <Ionicons name="chevron-up" size={20} color="#666" />
-            </Animated.View>
-          </View>
-          
-          <Text style={styles.drawerTitle}>Routes to {searchQuery}</Text>
-          
-          <View style={styles.drawerActions}>
-            <TouchableOpacity style={styles.drawerAction}>
-              <Ionicons name="options-outline" size={22} color="#555" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.drawerAction}>
-              <Ionicons name="share-social-outline" size={22} color="#555" />
-            </TouchableOpacity>
-          </View>
+  const renderDrawer = () => showDrawer && (
+    <Animated.View style={[styles.drawerContainer, { height: drawerTranslateY }]}>
+      <View style={styles.drawerHeaderContainer}>
+        <View style={styles.drawerHandleContainer} {...panResponder.panHandlers}>
+          <View style={styles.drawerHandle} />
+          <Animated.View style={{ transform: [{ rotate: rotateArrow }], marginTop: 8 }}>
+            <Ionicons name="chevron-up" size={20} color="#666" />
+          </Animated.View>
         </View>
-        
+        <Text style={styles.drawerTitle}>Routes to {searchQuery}</Text>
+        <View style={styles.drawerActions}>
+          <TouchableOpacity style={styles.drawerAction}>
+            <Ionicons name="options-outline" size={22} color="#555" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.drawerAction}>
+            <Ionicons name="share-social-outline" size={22} color="#555" />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <Animated.View style={{ opacity: drawerOpacity, flex: 1 }}>
         <View style={styles.drawerContent}>
-          {sampleRoutes.map(route => renderRouteCard(route))}
-          
+          {sampleRoutes.map((route, index) => renderRouteCard(route, index))}
           <TouchableOpacity style={styles.startButton}>
             <Ionicons name="navigate" size={20} color="#fff" />
             <Text style={styles.startButtonText}>Start Navigation</Text>
           </TouchableOpacity>
         </View>
       </Animated.View>
-    );
-  };
+    </Animated.View>
+  );
 
   return (
     <View style={styles.container}>
@@ -291,9 +293,16 @@ export default function MapScreen() {
         showsUserLocation
         showsMyLocationButton
       />
-      {renderSearchBar()}
-      {renderSeverityLegend()}
-      {renderDrawer()}
+      {/* Wrap overlay components in a separate container with proper pointer events */}
+      <View style={styles.overlayContainer} pointerEvents="box-none">
+        <Animated.View 
+          style={[styles.backdrop, { opacity: backdropOpacity }]} 
+          pointerEvents={showDrawer ? 'auto' : 'none'}
+        />
+        {renderSearchBar()}
+        {renderSeverityLegend()}
+        {renderDrawer()}
+      </View>
     </View>
   );
 }
@@ -301,17 +310,33 @@ export default function MapScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    position: 'absolute',  // Ensure container takes full screen
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   map: {
-    flex: 1,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+    position: 'absolute',  // Ensure map fills container
+    top: 0,
+    left: 0,
+  },
+  overlayContainer: {
+    ...StyleSheet.absoluteFillObject,  // Make overlay match container size
+    zIndex: 1,  // Ensure overlay is above map
+  },
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'black',
   },
   searchContainer: {
     position: 'absolute',
     top: 50,
     left: 20,
     right: 20,
-    zIndex: 1,
+    zIndex: 2,  // Higher zIndex for search bar
   },
   searchBar: {
     flexDirection: 'row',
@@ -320,31 +345,25 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     paddingHorizontal: 15,
     paddingVertical: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
     elevation: 5,
   },
+  searchBarFocused: { elevation: 8 },
   searchInput: {
     flex: 1,
-    marginLeft: 10,
-    fontSize: 16,
+    marginHorizontal: 10,
+    fontSize: 17.5,
+    opacity: 0.6,
   },
   legendContainer: {
     position: 'absolute',
-    marginBottom: -80,
     left: 15,
     backgroundColor: '#fff',
     padding: 10,
     borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
     elevation: 5,
+    zIndex: 2,  // Higher zIndex for legend
+    marginBottom: -50,
   },
-
   legendTitle: {
     fontSize: 12,
     fontWeight: 'bold',
@@ -361,9 +380,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginRight: 8,
   },
-  legendText: {
-    fontSize: 12,
-  },
+  legendText: { fontSize: 12 },
   drawerContainer: {
     position: 'absolute',
     bottom: 0,
@@ -372,11 +389,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -3 },
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
     elevation: 6,
+    zIndex: 2,  // Higher zIndex for drawer
   },
   drawerHeaderContainer: {
     paddingHorizontal: 20,
@@ -404,7 +418,6 @@ const styles = StyleSheet.create({
   drawerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginLeft: 0,
     marginTop: 50,
     marginBottom: 10,
   },
@@ -428,31 +441,21 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: '#f8f8f8',
     marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
     elevation: 2,
   },
   routeCardActive: {
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
     elevation: 4,
     borderWidth: 1,
     borderColor: '#f0f0f0',
   },
   routeIndicator: {
     width: 8,
-    height: '100%',
+    height: 40,
     borderRadius: 4,
     marginRight: 15,
   },
-  routeInfo: {
-    flex: 1,
-  },
+  routeInfo: { flex: 1 },
   routeTitle: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -502,10 +505,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#4285F4',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
     elevation: 3,
   },
   startButtonText: {

@@ -1,84 +1,191 @@
-import React from 'react';
-import { View, Text, TextInput, ScrollView, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, ScrollView, Image, StyleSheet, TouchableOpacity, StatusBar, Platform, RefreshControl } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useFocusEffect } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 
-const HomeScreen = () => {
+// Skeleton Placeholder Component
+const SkeletonPlaceholder = ({ style }) => (
+  <View style={[styles.skeletonBase, style]}>
+    <LinearGradient
+      colors={['#e0e0e0', '#f5f5f5', '#e0e0e0']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+      style={styles.skeletonGradient}
+    />
+  </View>
+);
+
+// Array of headlines that change daily
+const headlines = [
+  "Enhance safety and travel security",
+  "Stay Safe, Travel Smart",
+  "Navigate with Confidence",
+  "Your Safety, Our Priority",
+  "Secure Journeys, Worry-Free Travel",
+  "Explore with Peace of Mind",
+  "Smart Routes, Safer Travels",
+  "Travel Fearlessly, Arrive Safely",
+  "Where Safety Meets Convenience",
+  "Protecting Every Step You Take",
+  "Plan Ahead, Travel Safely",
+  "Be Aware, Stay Secure",
+  "Your Guardian on the Go",
+  "Navigate the World with Confidence"
+];
+
+const HomeScreen = ({ navigation }) => { // Add navigation prop for navigation buttons
+  const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const today = new Date().getDate();
+  const headline = headlines[today % headlines.length];
+
+  // Set StatusBar on initial mount
+  useEffect(() => {
+    StatusBar.setBackgroundColor('transparent');
+    StatusBar.setTranslucent(true);
+    StatusBar.setBarStyle('light-content');
+  }, []);
+
+  // Handle StatusBar when screen gains/loses focus
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBackgroundColor('transparent');
+      StatusBar.setTranslucent(true);
+      StatusBar.setBarStyle('light-content');
+
+      return () => {
+        StatusBar.setBackgroundColor('#ffffff');
+        StatusBar.setTranslucent(false);
+        StatusBar.setBarStyle('dark-content');
+      };
+    }, [])
+  );
+
+  // Simulate API loading
+  useEffect(() => {
+    setTimeout(() => setIsLoading(false), 2000);
+  }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      setRefreshing(false);
+    }, 2000);
+  };
+
   return (
-    <ScrollView style={styles.container}>
-      {/* Banner Section (Unchanged) */}
-      <View style={styles.bannerContainer}>
-        <View style={styles.banner}>
-          <Text style={styles.headerTitle}>Enhance safety and{''} travel security</Text>
-        </View>
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Enter your destination"
-            placeholderTextColor="#666"
+    <View style={styles.fullScreenContainer}>
+      <ScrollView 
+        style={styles.scrollContainer} 
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#fff"
+            colors={['#000']}
           />
-          <TouchableOpacity>
-            <Ionicons name="arrow-forward" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Safe Routes Section */}
-      <View style={[styles.section, styles.firstSection]}>
-        <Text style={styles.sectionTitle}>Safe Routes Nearby</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <TouchableOpacity style={styles.placeCard}>
-            <Image
-              source={{ uri: 'https://via.placeholder.com/250x150' }}
-              style={styles.placeImage}
+        }
+      >
+        <View style={styles.bannerContainer}>
+          <View style={styles.banner}>
+            {isLoading ? (
+              <SkeletonPlaceholder style={styles.headerSkeleton} />
+            ) : (
+              <Text style={styles.headerTitle}>{headline}</Text>
+            )}
+          </View>
+          <View style={styles.searchContainer}>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Enter your destination"
+              placeholderTextColor="#666"
             />
-            <View style={styles.cardContent}>
-              <Text style={styles.placeName}>Street Side Cafe</Text>
-              <Text style={styles.placeDistance}>200m away</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.placeCard}>
-            <Image
-              source={{ uri: 'https://via.placeholder.com/250x150' }}
-              style={styles.placeImage}
-            />
-            <View style={styles.cardContent}>
-              <Text style={styles.placeName}>Children’s Park</Text>
-              <Text style={styles.placeDistance}>125m away</Text>
-            </View>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-
-      {/* Safety Check Section */}
-      <View style={styles.safetyCheckContainer}>
-        <Ionicons name="time-outline" size={24} color="black" style={styles.safetyIcon} />
-        <View style={styles.safetyTextContainer}>
-          <Text style={styles.safetyTitle}>Safety Check</Text>
-          <Text style={styles.safetySubtitle}>Set a check-in timer for your phone to confirm that you’re safe</Text>
+            <TouchableOpacity>
+              <Ionicons name="arrow-forward" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
         </View>
-        <TouchableOpacity style={styles.safetyButton}>
-          <Text style={styles.safetyButtonText}>Start a safety check</Text>
-        </TouchableOpacity>
-      </View>
 
-      {/* Explore Features Section */}
-      <View style={styles.exploreContainer}>
-        <Ionicons name="grid-outline" size={24} color="black" style={styles.safetyIcon} />
-        <View style={styles.safetyTextContainer}>
-          <Text style={styles.safetyTitle}>Explore Features</Text>
+        <View style={[styles.section, styles.firstSection]}>
+          <Text style={styles.sectionTitle}>Recent Routes</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {isLoading ? (
+              <>
+                <SkeletonPlaceholder style={styles.placeCard} />
+                <SkeletonPlaceholder style={styles.placeCard} />
+              </>
+            ) : (
+              <>
+                <TouchableOpacity style={styles.placeCard}>
+                  <Image source={{ uri: 'https://via.placeholder.com/250x150' }} style={styles.placeImage} />
+                  <View style={styles.cardContent}>
+                    <Text style={styles.placeName}>Street Side Cafe</Text>
+                    <Text style={styles.placeDistance}>200m away</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.placeCard}>
+                  <Image source={{ uri: 'https://via.placeholder.com/250x150' }} style={styles.placeImage} />
+                  <View style={styles.cardContent}>
+                    <Text style={styles.placeName}>Children’s Park</Text>
+                    <Text style={styles.placeDistance}>125m away</Text>
+                  </View>
+                </TouchableOpacity>
+              </>
+            )}
+          </ScrollView>
         </View>
-        <TouchableOpacity style={styles.safetyButton}>
-          <Text style={styles.safetyButtonText}>Explore</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+
+    
+
+        {/* Navigation Buttons Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Quick Actions</Text>
+          <View style={styles.quickActionsContainer}>
+            <TouchableOpacity 
+              style={styles.actionButton} 
+              onPress={() => navigation.navigate('authorityno')} // Replace 'Map' with your actual screen name
+            >
+              <Ionicons name="man-outline" size={30} color="#fff" />
+              <Text style={styles.actionText}>Authorities</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.actionButton} 
+              onPress={() => navigation.navigate('SOS')} // Replace 'Settings' with your actual screen name
+            >
+              <Ionicons name="alert-outline" size={30} color="#fff" />
+              <Text style={styles.actionText}>SOS</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.actionButton} 
+              onPress={() => navigation.navigate('Profile')} // Replace 'Profile' with your actual screen name
+            >
+              <Ionicons name="person-outline" size={30} color="#fff" />
+              <Text style={styles.actionText}>Profile</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
+// Updated Styles
 const styles = StyleSheet.create({
-  container: {
+  fullScreenContainer: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  contentContainer: {
+    paddingTop: 0,
   },
   bannerContainer: {
     position: 'relative',
@@ -87,7 +194,7 @@ const styles = StyleSheet.create({
   banner: {
     backgroundColor: '#000',
     padding: 20,
-    paddingTop: 60,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 50 : 20,
     paddingBottom: 60,
   },
   headerTitle: {
@@ -105,16 +212,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
     elevation: 5,
   },
   searchInput: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 17.5,
     paddingVertical: 8,
+    opacity: 0.6,
   },
   firstSection: {
     marginTop: 20,
@@ -134,6 +238,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginRight: 15,
     overflow: 'hidden',
+    height: 180,
   },
   placeImage: {
     width: '100%',
@@ -150,45 +255,58 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
   },
-  safetyCheckContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f2f2f2',
-    padding: 15,
-    borderRadius: 12,
-    margin: 20,
-  },
-  safetyIcon: {
-    marginRight: 10,
-  },
-  safetyTextContainer: {
-    flex: 1,
-  },
-  safetyTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  safetySubtitle: {
-    fontSize: 14,
-    color: '#666',
-  },
-  safetyButton: {
-    backgroundColor: '#4A90E2',
+  skeletonBase: {
+    backgroundColor: '#e0e0e0',
     borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 15,
   },
-  safetyButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+  skeletonGradient: {
+    flex: 1,
+    height: '100%',
+    borderRadius: 8,
   },
-  exploreContainer: {
+  headerSkeleton: {
+    width: '80%',
+    height: 35,
+    borderRadius: 6,
+  },
+  // New Styles for Authority Numbers
+  authorityContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
+  },
+  authorityItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    borderRadius: 8,
+    elevation: 2,
+  },
+  authorityText: {
+    fontSize: 16,
+    marginLeft: 10,
+    color: '#000',
+  },
+  // New Styles for Quick Actions
+  quickActionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
+  },
+  actionButton: {
+    backgroundColor: '#000',
     padding: 15,
     borderRadius: 12,
-    margin: 20,
+    alignItems: 'center',
+    width: 100,
+    elevation: 3,
+  },
+  actionText: {
+    color: '#fff',
+    fontSize: 14,
+    marginTop: 5,
+    fontWeight: 'bold',
   },
 });
 

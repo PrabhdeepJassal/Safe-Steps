@@ -39,11 +39,11 @@ const SignUpScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Sign up</Text>
-      </View>
-
       <View style={styles.formContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Sign up</Text>
+        </View>
+
         <TouchableOpacity style={styles.googleButton}>
           <Image 
             source={require('../assets/images/googlelogo.png')}
@@ -131,22 +131,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 30, // Increased padding to shift content inward
+    justifyContent: 'center', // Center vertically
+    alignItems: 'center', // Center horizontally
+    paddingHorizontal: 30,
+  },
+  formContainer: {
+    width: '90%',
+    alignSelf: 'center', // Ensure the form container is centered horizontally
   },
   headerContainer: {
     alignItems: 'center',
-    marginTop: 40,
     marginBottom: 30,
   },
   headerText: {
     fontSize: 28,
     fontWeight: 'bold',
   },
-  formContainer: {
-    width: '90%', // Reduced width from 100% to allow centering
-    alignSelf: 'center', // Center the form container horizontally
-  },
   googleButton: {
+    width: '95%',  
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -155,6 +157,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 10,
     marginBottom: 20,
+    alignSelf: 'center', // Center the button within formContainer
   },
   googleLogo: {
     width: 24,
@@ -189,14 +192,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 16,
     marginBottom: 15,
+    alignSelf: 'center', // Center the input within formContainer
   },
   passwordContainer: {
+    width: '95%',
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F5F7FA',
     paddingHorizontal: 16,
     borderRadius: 10,
     marginBottom: 15,
+    alignSelf: 'center', // Center the password container within formContainer
   },
   passwordInput: {
     flex: 1,
@@ -244,11 +250,13 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   createButton: {
+    width: '95%',
     backgroundColor: '#000000',
     paddingVertical: 16,
     borderRadius: 10,
     alignItems: 'center',
     marginBottom: 20,
+    alignSelf: 'center', // Center the button within formContainer
   },
   createButtonText: {
     color: '#FFFFFF',

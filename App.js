@@ -3,13 +3,21 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StatusBar } from 'react-native';
+import { StatusBar, SafeAreaView, StyleSheet } from 'react-native';
 import LoginScreen from './screens/login';
 import HomeScreen from './screens/homescreen';
+import authorityno from './screens/authorityno';
 import SafeRoutesScreen from './screens/saferoutes';
 import ProfileScreen from './screens/Profilescreen';
 import CallSignScreen from './screens/Callscreen';
 import SignupScreen from './screens/SignupScreen';
+import ForgotPasswordScreen from './screens/forgot';
+import OtpScreen from './screens/otp';
+import ResetPasswordScreen from './screens/resetpass';
+import EmergencyContactsScreen from './screens/emergencycontact';
+import EmergencyActiveScreen from './screens/emergencyactivescreen';
+import medicalinfo from './screens/medicalinfo';
+import EmergencySharing from './screens/emergencysharing';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Stack = createStackNavigator();
@@ -33,28 +41,27 @@ const TabNavigator = () => {
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         headerShown: false,
+        tabBarActiveTintColor: 'black',
+        tabBarInactiveTintColor: 'gray',
         tabBarStyle: {
           position: 'absolute',
-          bottom: -10, // Changed from 25 to 0 to sit at the bottom
+          bottom: -15,
           left: 20,
           right: 20,
           elevation: 0,
           backgroundColor: '#ffffff',
-          borderRadius: 30, // Still applies to top corners
+          borderRadius: 30,
           height: 85,
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 10 },
           shadowOpacity: 0.25,
           shadowRadius: 5.5,
           elevation: 4,
-          paddingBottom: 0, // Removed paddingBottom to align content closer to bottom
+          paddingBottom: 0,
+          borderTopWidth: 0,
         },
         tabBarLabelStyle: { paddingBottom: 5 },
       })}
-      tabBarOptions={{
-        activeTintColor: 'black',
-        inactiveTintColor: 'gray',
-      }}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Safe Routes" component={SafeRoutesScreen} />
@@ -64,24 +71,29 @@ const TabNavigator = () => {
   );
 };
 
+const TabNavigatorWrapper = () => {
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <TabNavigator />
+    </SafeAreaView>
+  );
+};
+
 const RootStack = () => {
   return (
     <Stack.Navigator initialRouteName="Login">
-      <Stack.Screen 
-        name="Login" 
-        component={LoginScreen} 
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen 
-        name="signup"
-        component={SignupScreen} 
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen 
-        name="Main" 
-        component={TabNavigator} 
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="signup" component={SignupScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="forgot" component={ForgotPasswordScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="otp" component={OtpScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="resetPassword" component={ResetPasswordScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="emergencycontact" component={EmergencyContactsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="medicalinfo" component={medicalinfo} options={{ headerShown: false }} />
+      <Stack.Screen name="emergencysharing" component={EmergencySharing} options={{ headerShown: false }} />
+      <Stack.Screen name="emergencyactivescreen" component={EmergencyActiveScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="authorityno" component={authorityno} options={{ headerShown: false }} />
+
+      <Stack.Screen name="Main" component={TabNavigatorWrapper} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };
@@ -89,8 +101,17 @@ const RootStack = () => {
 export default function App() {
   return (
     <NavigationContainer>
-      <StatusBar barStyle="dark-content" />
-      <RootStack />
+      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+      <SafeAreaView style={styles.safeArea}>
+        <RootStack />
+      </SafeAreaView>
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+});

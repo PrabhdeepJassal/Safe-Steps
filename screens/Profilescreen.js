@@ -108,14 +108,18 @@ const ProfileScreen = ({ navigation, route }) => {
         />
 
         <Text style={[styles.sectionTitle, { marginTop: 20 }]}>Emergency Info</Text>
-        <TouchableOpacity style={styles.infoButton}>
+        <TouchableOpacity style={styles.infoButton}
+        onPress={() => navigation.navigate('medicalinfo')}>
           <Ionicons name="document-text-outline" size={20} color="#888888" style={styles.icon} />
           <Text style={styles.infoText}>Medical Information</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.infoButton}>
-          <Ionicons name="call-outline" size={20} color="#888888" style={styles.icon} />
-          <Text style={styles.infoText}>Emergency Contacts</Text>
-        </TouchableOpacity>
+        <TouchableOpacity 
+        style={styles.infoButton} 
+        onPress={() => navigation.navigate('emergencycontact')}
+      >
+        <Ionicons name="call-outline" size={20} color="#888888" style={styles.icon} />
+        <Text style={styles.infoText}>Emergency Contacts</Text>
+      </TouchableOpacity>
 
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Text style={styles.logoutButtonText}>Log Out</Text>
