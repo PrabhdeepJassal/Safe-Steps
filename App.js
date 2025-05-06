@@ -4,20 +4,21 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StatusBar, SafeAreaView, StyleSheet } from 'react-native';
-import LoginScreen from './screens/login';
+import LoginScreen from './screens/login/login';
 import HomeScreen from './screens/homescreen';
-import authorityno from './screens/authorityno';
-import SafeRoutesScreen from './screens/saferoutes';
+import authorityno from './screens/emergency/authorityno';
+import MapScreen from './screens/navigation/saferoutes';
 import ProfileScreen from './screens/Profilescreen';
 import CallSignScreen from './screens/Callscreen';
-import SignupScreen from './screens/SignupScreen';
-import ForgotPasswordScreen from './screens/forgot';
-import OtpScreen from './screens/otp';
-import ResetPasswordScreen from './screens/resetpass';
-import EmergencyContactsScreen from './screens/emergencycontact';
-import EmergencyActiveScreen from './screens/emergencyactivescreen';
+import SignupScreen from './screens/login/SignupScreen';
+import ForgotPasswordScreen from './screens/login/forgot';
+import OtpScreen from './screens/login/otp';
+import ResetPasswordScreen from './screens/login/resetpass';
+import EmergencyContactsScreen from './screens/emergency/emergencycontact';
+import EmergencyActiveScreen from './screens/emergency/emergencyactivescreen';
 import medicalinfo from './screens/medicalinfo';
-import EmergencySharing from './screens/emergencysharing';
+import EmergencySharing from './screens/emergency/emergencysharing';
+import NavigationScreen from './screens/navigation/navigationscreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Stack = createStackNavigator();
@@ -64,7 +65,7 @@ const TabNavigator = () => {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Safe Routes" component={SafeRoutesScreen} />
+      <Tab.Screen name="Safe Routes" component={MapScreen} />
       <Tab.Screen name="Call Sign" component={CallSignScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
@@ -92,7 +93,7 @@ const RootStack = () => {
       <Stack.Screen name="emergencysharing" component={EmergencySharing} options={{ headerShown: false }} />
       <Stack.Screen name="emergencyactivescreen" component={EmergencyActiveScreen} options={{ headerShown: false }} />
       <Stack.Screen name="authorityno" component={authorityno} options={{ headerShown: false }} />
-
+      <Stack.Screen name="NavigationScreen" component={NavigationScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Main" component={TabNavigatorWrapper} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
