@@ -34,7 +34,7 @@ const headlines = [
   "Navigate the World with Confidence"
 ];
 
-const HomeScreen = ({ navigation }) => { // Add navigation prop for navigation buttons
+const HomeScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -113,27 +113,33 @@ const HomeScreen = ({ navigation }) => { // Add navigation prop for navigation b
         </View>
 
         <View style={[styles.section, styles.firstSection]}>
-          <Text style={styles.sectionTitle}>Recent Routes</Text>
+          <Text style={styles.sectionTitle}>YouTube Tutorials</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {isLoading ? (
               <>
-                <SkeletonPlaceholder style={styles.placeCard} />
-                <SkeletonPlaceholder style={styles.placeCard} />
+                <SkeletonPlaceholder style={styles.tutorialCard} />
+                <SkeletonPlaceholder style={styles.tutorialCard} />
               </>
             ) : (
               <>
-                <TouchableOpacity style={styles.placeCard}>
-                  <Image source={{ uri: 'https://via.placeholder.com/250x150' }} style={styles.placeImage} />
+                <TouchableOpacity style={styles.tutorialCard}>
+                  <Image 
+                    source={{ uri: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg' }} 
+                    style={styles.tutorialImage} 
+                  />
                   <View style={styles.cardContent}>
-                    <Text style={styles.placeName}>Street Side Cafe</Text>
-                    <Text style={styles.placeDistance}>200m away</Text>
+                    <Text style={styles.tutorialName}>Travel Safety Tips</Text>
+                    <Text style={styles.tutorialChannel}>Safety First Channel</Text>
                   </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.placeCard}>
-                  <Image source={{ uri: 'https://via.placeholder.com/250x150' }} style={styles.placeImage} />
+                <TouchableOpacity style={styles.tutorialCard}>
+                  <Image 
+                    source={{ uri: 'https://img.youtube.com/vi/9bZkp7q19f0/maxresdefault.jpg' }} 
+                    style={styles.tutorialImage} 
+                  />
                   <View style={styles.cardContent}>
-                    <Text style={styles.placeName}>Children’s Park</Text>
-                    <Text style={styles.placeDistance}>125m away</Text>
+                    <Text style={styles.tutorialName}>Emergency Preparedness</Text>
+                    <Text style={styles.tutorialChannel}>Travel Guide Hub</Text>
                   </View>
                 </TouchableOpacity>
               </>
@@ -141,29 +147,27 @@ const HomeScreen = ({ navigation }) => { // Add navigation prop for navigation b
           </ScrollView>
         </View>
 
-    
-
         {/* Navigation Buttons Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.quickActionsContainer}>
             <TouchableOpacity 
               style={styles.actionButton} 
-              onPress={() => navigation.navigate('authorityno')} // Replace 'Map' with your actual screen name
+              onPress={() => navigation.navigate('authorityno')}
             >
               <Ionicons name="man-outline" size={30} color="#fff" />
               <Text style={styles.actionText}>Authorities</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.actionButton} 
-              onPress={() => navigation.navigate('SOS')} // Replace 'Settings' with your actual screen name
+              onPress={() => navigation.navigate('SOS')}
             >
               <Ionicons name="alert-outline" size={30} color="#fff" />
               <Text style={styles.actionText}>SOS</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.actionButton} 
-              onPress={() => navigation.navigate('Profile')} // Replace 'Profile' with your actual screen name
+              onPress={() => navigation.navigate('Profile')}
             >
               <Ionicons name="person-outline" size={30} color="#fff" />
               <Text style={styles.actionText}>Profile</Text>
@@ -232,7 +236,7 @@ const styles = StyleSheet.create({
     color: '#000',
     marginBottom: 15,
   },
-  placeCard: {
+  tutorialCard: {
     width: 250,
     backgroundColor: '#ddd',
     borderRadius: 12,
@@ -240,18 +244,18 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     height: 180,
   },
-  placeImage: {
+  tutorialImage: {
     width: '100%',
     height: 150,
   },
   cardContent: {
     padding: 10,
   },
-  placeName: {
+  tutorialName: {
     fontSize: 18,
     fontWeight: 'bold',
   },
-  placeDistance: {
+  tutorialChannel: {
     fontSize: 14,
     color: '#666',
   },
@@ -269,30 +273,11 @@ const styles = StyleSheet.create({
     height: 35,
     borderRadius: 6,
   },
-  // New Styles for Authority Numbers
-  authorityContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 10,
-  },
-  authorityItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-    padding: 10,
-    borderRadius: 8,
-    elevation: 2,
-  },
-  authorityText: {
-    fontSize: 16,
-    marginLeft: 10,
-    color: '#000',
-  },
-  // New Styles for Quick Actions
   quickActionsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: 10,
+    marginBottom: 100,
   },
   actionButton: {
     backgroundColor: '#000',
