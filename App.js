@@ -34,7 +34,7 @@ const TabNavigator = () => {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'Safe Routes') {
             iconName = focused ? 'navigate' : 'navigate-outline';
-          } else if (route.name === 'Call Sign') {
+          } else if (route.name === 'Call') {
             iconName = focused ? 'call' : 'call-outline';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
@@ -66,7 +66,7 @@ const TabNavigator = () => {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Safe Routes" component={MapScreen} />
-      <Tab.Screen name="Call Sign" component={CallSignScreen} />
+      <Tab.Screen name="Call" component={CallSignScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

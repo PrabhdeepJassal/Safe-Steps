@@ -1,0 +1,156 @@
+2025-05-06 21:55:50,045 - INFO - Dataset max severity: 5
+2025-05-06 21:55:54,771 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-05-06 21:56:06,912 - INFO - Model trained successfully
+2025-05-06 21:56:07,514 - INFO - Dataset max severity: 5
+2025-05-06 21:56:11,632 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-05-06 21:56:23,493 - INFO - Model trained successfully
+2025-05-06 21:56:23,558 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-06 21:56:23,558 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-06 21:56:23,559 - INFO -  * Restarting with stat
+2025-05-06 21:56:25,465 - INFO - Dataset max severity: 5
+2025-05-06 21:56:29,645 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-05-06 21:56:41,730 - INFO - Model trained successfully
+2025-05-06 21:56:42,316 - INFO - Dataset max severity: 5
+2025-05-06 21:56:46,500 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-05-06 21:56:58,389 - INFO - Model trained successfully
+2025-05-06 21:56:58,436 - WARNING -  * Debugger is active!
+2025-05-06 21:56:58,445 - INFO -  * Debugger PIN: 362-580-284
+2025-05-06 21:56:58,456 - INFO - 127.0.0.1 - - [06/May/2025 21:56:58] "OPTIONS /evaluate_routes HTTP/1.1" 200 -
+2025-05-06 21:56:58,459 - INFO - Received request: source=[28.607884, 77.187023], destination=[28.625364, 77.225475], time_category=Evening
+2025-05-06 21:56:58,459 - INFO - Fetching direct routes from OSRM: http://router.project-osrm.org/route/v1/driving/77.187023,28.607884;77.225475,28.625364?alternatives=true&steps=true&geometries=geojson&overview=full&alternatives=3
+2025-05-06 21:56:58,874 - INFO - Fetching waypoint 1 routes: http://router.project-osrm.org/route/v1/driving/77.187023,28.607884;77.18306009342182,28.612756596541285?alternatives=true&steps=true&geometries=geojson&overview=full&alternatives=1 and http://router.project-osrm.org/route/v1/driving/77.18306009342182,28.612756596541285;77.225475,28.625364?alternatives=true&steps=true&geometries=geojson&overview=full&alternatives=1
+2025-05-06 21:56:59,871 - INFO - Fetching waypoint 2 routes: http://router.project-osrm.org/route/v1/driving/77.187023,28.607884;77.15398376686457,28.64455844734706?alternatives=true&steps=true&geometries=geojson&overview=full&alternatives=1 and http://router.project-osrm.org/route/v1/driving/77.15398376686457,28.64455844734706;77.225475,28.625364?alternatives=true&steps=true&geometries=geojson&overview=full&alternatives=1
+2025-05-06 21:57:00,911 - INFO - Fetching waypoint 3 routes: http://router.project-osrm.org/route/v1/driving/77.187023,28.607884;77.15933689698863,28.646023502746846?alternatives=true&steps=true&geometries=geojson&overview=full&alternatives=1 and http://router.project-osrm.org/route/v1/driving/77.15933689698863,28.646023502746846;77.225475,28.625364?alternatives=true&steps=true&geometries=geojson&overview=full&alternatives=1
+2025-05-06 21:57:02,513 - INFO - Generated 4 unique routes (target 6–7)
+2025-05-06 21:57:02,784 - INFO - Dynamic max_crimes_per_route: 658, max_total_severity: 2262
+2025-05-06 21:57:03,411 - INFO - Raw safety scores: [10, 10, 10, 10]
+2025-05-06 21:57:03,411 - INFO - Returning 4 ranked routes
+2025-05-06 21:57:03,427 - INFO - 127.0.0.1 - - [06/May/2025 21:57:03] "POST /evaluate_routes HTTP/1.1" 200 -
+2025-05-06 22:07:21,868 - INFO -  * Detected change in '/Users/prabhdeepsingh/Git Projects/Safe-Steps/ML_model/app.py', reloading
+2025-05-06 22:07:22,153 - INFO -  * Restarting with stat
+2025-05-06 22:07:28,793 - INFO - Dataset max severity: 5
+2025-05-06 22:07:34,101 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-05-06 22:07:46,648 - INFO - Model trained successfully
+2025-05-06 22:07:47,235 - INFO - Dataset max severity: 5
+2025-05-06 22:07:51,311 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-05-06 22:08:03,345 - INFO - Model trained successfully
+2025-05-06 22:08:03,427 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2025-05-06 22:08:03,428 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-06 22:08:03,428 - INFO -  * Restarting with stat
+2025-05-06 22:08:05,363 - INFO - Dataset max severity: 5
+2025-05-06 22:08:09,493 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-05-06 22:08:21,679 - INFO - Model trained successfully
+2025-05-06 22:08:22,262 - INFO - Dataset max severity: 5
+2025-05-06 22:08:26,596 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-05-06 22:08:38,669 - INFO - Model trained successfully
+2025-05-06 22:08:38,710 - WARNING -  * Debugger is active!
+2025-05-06 22:08:38,720 - INFO -  * Debugger PIN: 362-580-284
+2025-05-06 22:08:45,706 - ERROR - Error in evaluate_routes: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
+2025-05-06 22:08:45,707 - INFO - 127.0.0.1 - - [06/May/2025 22:08:45] "[35m[1mPOST /evaluate_routes HTTP/1.1[0m" 500 -
+2025-05-06 22:09:00,344 - INFO - Received request: source=[28.646023502746846, 77.15933689698863], destination=[28.625364, 77.225475], time_category=Morning
+2025-05-06 22:09:00,344 - INFO - Fetching direct routes from OSRM: http://router.project-osrm.org/route/v1/driving/77.15933689698863,28.646023502746846;77.225475,28.625364?alternatives=true&steps=true&geometries=geojson&overview=full&alternatives=3
+2025-05-06 22:09:00,864 - INFO - Fetching waypoint 1 routes: http://router.project-osrm.org/route/v1/driving/77.15933689698863,28.646023502746846;77.16457998029013,28.63172167971655?alternatives=true&steps=true&geometries=geojson&overview=full&alternatives=1 and http://router.project-osrm.org/route/v1/driving/77.16457998029013,28.63172167971655;77.225475,28.625364?alternatives=true&steps=true&geometries=geojson&overview=full&alternatives=1
+2025-05-06 22:09:01,867 - INFO - Fetching waypoint 2 routes: http://router.project-osrm.org/route/v1/driving/77.15933689698863,28.646023502746846;77.1296892908327,28.664384222316595?alternatives=true&steps=true&geometries=geojson&overview=full&alternatives=1 and http://router.project-osrm.org/route/v1/driving/77.1296892908327,28.664384222316595;77.225475,28.625364?alternatives=true&steps=true&geometries=geojson&overview=full&alternatives=1
+2025-05-06 22:09:02,864 - INFO - Fetching waypoint 3 routes: http://router.project-osrm.org/route/v1/driving/77.15933689698863,28.646023502746846;77.13611288084212,28.665888928275358?alternatives=true&steps=true&geometries=geojson&overview=full&alternatives=1 and http://router.project-osrm.org/route/v1/driving/77.13611288084212,28.665888928275358;77.225475,28.625364?alternatives=true&steps=true&geometries=geojson&overview=full&alternatives=1
+2025-05-06 22:09:04,150 - INFO - Generated 4 unique routes (target 6–7)
+2025-05-06 22:09:05,199 - INFO - Dynamic max_crimes_per_route: 3237, max_total_severity: 11209
+2025-05-06 22:09:07,462 - INFO - Raw safety scores: [np.float64(11.16), np.float64(43.27), 10, 10]
+2025-05-06 22:09:07,462 - INFO - Returning 4 ranked routes
+2025-05-06 22:09:07,525 - INFO - 127.0.0.1 - - [06/May/2025 22:09:07] "POST /evaluate_routes HTTP/1.1" 200 -
+2025-06-09 21:12:06,001 - INFO - Dataset max severity: 5
+2025-06-09 21:12:10,043 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-09 21:12:21,791 - INFO - Model trained successfully
+2025-06-09 21:12:22,417 - INFO - Dataset max severity: 5
+2025-06-09 21:12:28,047 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-09 21:12:40,489 - INFO - Model trained successfully
+2025-06-09 21:12:41,489 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2025-06-09 21:12:41,489 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-09 21:12:41,491 - INFO -  * Restarting with stat
+2025-06-09 21:12:43,552 - INFO - Dataset max severity: 5
+2025-06-09 21:12:47,753 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-09 21:12:59,648 - INFO - Model trained successfully
+2025-06-09 21:13:00,340 - INFO - Dataset max severity: 5
+2025-06-09 21:13:04,720 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-09 21:13:16,714 - INFO - Model trained successfully
+2025-06-09 21:13:16,762 - WARNING -  * Debugger is active!
+2025-06-09 21:13:16,775 - INFO -  * Debugger PIN: 494-583-110
+2025-06-09 21:16:08,511 - INFO - Dataset max severity: 5
+2025-06-09 21:16:12,502 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-09 21:16:23,989 - INFO - Model trained successfully
+2025-06-09 21:16:24,571 - INFO - Dataset max severity: 5
+2025-06-09 21:16:28,682 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-09 21:18:50,302 - INFO - Dataset max severity: 5
+2025-06-09 21:18:54,348 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-09 21:19:06,010 - INFO - Model trained successfully
+2025-06-09 21:19:06,589 - INFO - Dataset max severity: 5
+2025-06-09 21:19:10,928 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-09 21:19:22,707 - INFO - Model trained successfully
+2025-06-09 21:19:22,759 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2025-06-09 21:19:22,759 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-09 21:19:22,760 - INFO -  * Restarting with stat
+2025-06-09 21:19:24,668 - INFO - Dataset max severity: 5
+2025-06-09 21:19:28,747 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-09 21:19:40,454 - INFO - Model trained successfully
+2025-06-09 21:19:41,032 - INFO - Dataset max severity: 5
+2025-06-09 21:19:45,143 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-09 21:19:56,786 - INFO - Model trained successfully
+2025-06-09 21:19:56,828 - WARNING -  * Debugger is active!
+2025-06-09 21:19:56,840 - INFO -  * Debugger PIN: 494-583-110
+2025-06-09 21:25:47,188 - INFO - Dataset max severity: 5
+2025-06-09 21:25:51,827 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-09 21:26:03,625 - INFO - Model trained successfully
+2025-06-09 21:26:04,252 - INFO - Dataset max severity: 5
+2025-06-09 21:26:08,458 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-09 21:26:20,065 - INFO - Model trained successfully
+2025-06-09 21:26:20,135 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2025-06-09 21:26:20,135 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-09 21:26:20,136 - INFO -  * Restarting with stat
+2025-06-09 21:26:22,105 - INFO - Dataset max severity: 5
+2025-06-09 21:26:26,371 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-09 21:26:37,881 - INFO - Model trained successfully
+2025-06-09 21:26:38,462 - INFO - Dataset max severity: 5
+2025-06-09 21:26:42,585 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-09 21:26:55,125 - INFO - Model trained successfully
+2025-06-09 21:26:55,172 - WARNING -  * Debugger is active!
+2025-06-09 21:26:55,186 - INFO -  * Debugger PIN: 494-583-110
+2025-06-10 21:54:16,483 - INFO - Dataset max severity: 5
+2025-06-10 21:54:21,828 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-10 21:54:36,006 - INFO - Model trained successfully
+2025-06-10 21:54:36,719 - INFO - Dataset max severity: 5
+2025-06-10 21:54:42,085 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-10 21:54:56,059 - INFO - Model trained successfully
+2025-06-10 21:54:56,148 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2025-06-10 21:54:56,149 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-10 21:54:56,150 - INFO -  * Restarting with stat
+2025-06-10 21:54:58,857 - INFO - Dataset max severity: 5
+2025-06-10 21:55:04,639 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-10 21:55:19,547 - INFO - Model trained successfully
+2025-06-10 21:55:20,430 - INFO - Dataset max severity: 5
+2025-06-10 21:55:26,848 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-10 21:55:41,117 - INFO - Model trained successfully
+2025-06-10 21:55:41,179 - WARNING -  * Debugger is active!
+2025-06-10 21:55:41,198 - INFO -  * Debugger PIN: 494-583-110
+2025-06-10 21:57:11,948 - INFO - Dataset max severity: 5
+2025-06-10 21:57:17,132 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-10 21:57:30,805 - INFO - Model trained successfully
+2025-06-10 21:57:31,511 - INFO - Dataset max severity: 5
+2025-06-10 21:57:36,619 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-10 21:57:50,237 - INFO - Model trained successfully
+2025-06-10 21:57:50,308 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2025-06-10 21:57:50,308 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-10 21:57:50,310 - INFO -  * Restarting with stat
+2025-06-10 21:57:52,660 - INFO - Dataset max severity: 5
+2025-06-10 21:57:57,962 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-10 21:58:11,772 - INFO - Model trained successfully
+2025-06-10 21:58:12,470 - INFO - Dataset max severity: 5
+2025-06-10 21:58:17,739 - INFO - Loaded crime data: 509425 records, 921 clusters found
+2025-06-10 21:58:31,592 - INFO - Model trained successfully
+2025-06-10 21:58:31,647 - WARNING -  * Debugger is active!
+2025-06-10 21:58:31,661 - INFO -  * Debugger PIN: 494-583-110
