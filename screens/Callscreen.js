@@ -1,20 +1,19 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, Image, Platform, ScrollView, Linking, ActivityIndicator, RefreshControl, Modal, TextInput
+  View, Text, TouchableOpacity, StyleSheet, Image, Platform, ScrollView, Linking, ActivityIndicator, RefreshControl, Modal, TextInput, Alert, Switch
 } from 'react-native';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import * as IntentLauncher from 'expo-intent-launcher';
 import { Picker } from '@react-native-picker/picker';
-import { Switch } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const PersonalSafetyScreen = ({ navigation, route }) => {
+const PersonalSafetyScreen = ({ navigation }) => {
   const [isLocationOn, setIsLocationOn] = useState(true);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [contacts, setContacts] = useState(route.params?.contacts || []);
+  const [contacts, setContacts] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [shareModalVisible, setShareModalVisible] = useState(false);
   const [selectedReason, setSelectedReason] = useState('');
   const [customReason, setCustomReason] = useState('');
   const [selectedDuration, setSelectedDuration] = useState('');
@@ -24,15 +23,53 @@ const PersonalSafetyScreen = ({ navigation, route }) => {
 
   const isMounted = useRef(true);
 
+  const loadContacts = async () => {
+    try {
+      const stored = await AsyncStorage.getItem('emergencyContacts');
+      console.log('Raw AsyncStorage data for emergencyContacts:', stored);
+      let loadedContacts = stored ? JSON.parse(stored) : [];
+      loadedContacts = Array.isArray(loadedContacts) ? loadedContacts : [];
+      
+      loadedContacts = loadedContacts
+        .filter(contact => contact?.id && contact?.name && contact?.mobile)
+        .reduce((acc, contact) => {
+          if (!acc.find(c => c.id === contact.id)) {
+            acc.push(contact);
+          }
+          return acc;
+        }, []);
+
+      console.log('Processed contacts from AsyncStorage:', loadedContacts);
+      
+      if (isMounted.current) {
+        setContacts(loadedContacts);
+        setSelectedContacts(loadedContacts.map(contact => ({ ...contact, selected: false })));
+        console.log('Updated state - contacts:', loadedContacts);
+        console.log('Updated state - selectedContacts:', loadedContacts.map(contact => ({ ...contact, selected: false })));
+      }
+    } catch (error) {
+      console.error('Error loading contacts from AsyncStorage:', error);
+      if (isMounted.current) {
+        setContacts([]);
+        setSelectedContacts([]);
+      }
+    }
+  };
+
   useEffect(() => {
+    isMounted.current = true;
+    loadContacts();
+
     const unsubscribe = navigation.addListener('focus', () => {
-      const updatedContacts = route.params?.contacts || [];
-      setContacts(updatedContacts);
-      setSelectedContacts(updatedContacts.map(contact => ({ ...contact, selected: true })));
+      console.log('PersonalSafetyScreen focused');
+      loadContacts();
     });
 
-    return unsubscribe;
-  }, [navigation, route]);
+    return () => {
+      isMounted.current = false;
+      unsubscribe();
+    };
+  }, [navigation]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -116,15 +153,19 @@ const PersonalSafetyScreen = ({ navigation, route }) => {
 
   const makeEmergencyCall = () => {
     const phoneNumber = 'tel:112';
-    Linking.canOpenURL(phoneNumber)
-      .then((supported) => {
-        if (supported) {
-          return Linking.openURL(phoneNumber);
-        } else {
-          console.log("Can't make emergency call");
-        }
+    
+    Linking.openURL(phoneNumber)
+      .then(() => {
+        console.log('Call initiated successfully');
       })
-      .catch((err) => console.error('An error occurred', err));
+      .catch((error) => {
+        console.error('Call failed:', error);
+        Alert.alert(
+          'Emergency Call',
+          'Unable to make call automatically. Please dial 112 manually.',
+          [{ text: 'OK' }]
+        );
+      });
   };
 
   const onRefresh = useCallback(() => {
@@ -144,41 +185,49 @@ const PersonalSafetyScreen = ({ navigation, route }) => {
     }
   };
 
+  const debugAsyncStorage = async () => {
+    try {
+      const stored = await AsyncStorage.getItem('emergencyContacts');
+      console.log('Debug - AsyncStorage emergencyContacts:', stored);
+      Alert.alert('AsyncStorage Contents', stored || 'No contacts found');
+    } catch (error) {
+      console.error('Error debugging AsyncStorage:', error);
+      Alert.alert('Error', 'Failed to read AsyncStorage');
+    }
+  };
+
   const handleNext = () => {
     if (!isFormValid) return;
-    if (step === 1) {
-      setStep(2);
-      setModalVisible(false);
-      setShareModalVisible(true);
+    if (contacts.length === 0) {
+      Alert.alert('No Contacts', 'Please add at least one emergency contact before starting a safety check.', [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Add Contact', onPress: () => navigation.navigate('EmergencyContacts', { contacts }) }
+      ]);
+      return;
     }
+    setStep(2);
   };
 
   const handleBack = () => {
-    if (step === 2) {
-      setStep(1);
-      setModalVisible(true);
-      setShareModalVisible(false);
-    } else {
-      setModalVisible(false);
-    }
-  };
-
-  const handleShareBack = () => {
-    setShareModalVisible(false);
-    setModalVisible(true);
     setStep(1);
   };
 
-  const handleShareConfirm = () => {
+  const handleConfirm = () => {
+    const selectedCount = selectedContacts.filter(contact => contact.selected).length;
+    if (selectedCount === 0) {
+      Alert.alert('Error', 'Please select at least one contact to share with.');
+      return;
+    }
+
     const finalReason = selectedReason === 'Other' ? customReason : selectedReason;
     const contactsToShare = selectedContacts.filter(contact => contact.selected);
     console.log('Starting location sharing with:', { contacts: contactsToShare, reason: finalReason, duration: selectedDuration });
-    setShareModalVisible(false);
+    setModalVisible(false);
     setStep(1);
     setSelectedReason('');
     setCustomReason('');
     setSelectedDuration('');
-    navigation.navigate('LocationSharing', { contacts: contactsToShare, reason: finalReason, duration: selectedDuration });
+    navigation.navigate('LiveSharing', { contacts: contactsToShare, reason: finalReason, duration: selectedDuration });
   };
 
   const toggleContactSelection = (index) => {
@@ -211,10 +260,10 @@ const PersonalSafetyScreen = ({ navigation, route }) => {
           <View style={styles.buttonRow}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('emergencysharing', { contacts })}
+              onPress={() => navigation.navigate('EmergencyContacts', { contacts })}
             >
               <Ionicons name="warning" size={24} color="#ff4444" style={styles.icon} />
-              <Text style={styles.buttonText}>Emergency Sharing</Text>
+              <Text style={styles.buttonText}>Emergency Contacts</Text>
               <Ionicons name="chevron-forward" size={24} color="#666" />
             </TouchableOpacity>
             <TouchableOpacity
@@ -262,14 +311,20 @@ const PersonalSafetyScreen = ({ navigation, route }) => {
             animationType="slide"
             transparent={true}
             visible={modalVisible}
-            onRequestClose={() => setModalVisible(false)}
+            onRequestClose={() => {
+              setModalVisible(false);
+              setStep(1);
+              setSelectedReason('');
+              setCustomReason('');
+              setSelectedDuration('');
+            }}
           >
             <View style={styles.modalOverlay}>
               <View style={styles.modalContainer}>
                 <ScrollView contentContainerStyle={styles.modalScrollContent}>
                   <View style={styles.modalHeader}>
                     <Ionicons name="shield-checkmark" size={40} color="#ffcc00" style={styles.modalIcon} />
-                    <Text style={styles.modalTitle}>Start a Safety Check</Text>
+                    <Text style={styles.modalTitle}>Safety Check</Text>
                     <Text style={styles.stepText}>Step {step} of 2</Text>
                   </View>
 
@@ -352,32 +407,39 @@ const PersonalSafetyScreen = ({ navigation, route }) => {
                   ) : (
                     <>
                       <Text style={styles.modalDescription}>
-                        If you don’t respond at the time of your safety check, Emergency Sharing starts.{' '}
-                        <Text style={styles.linkText}>Learn more about Emergency Sharing</Text>
+                        Select at least one contact to share your location with.{' '}
+                        <Text style={styles.linkText}>Learn more about sharing</Text>
                       </Text>
 
                       <View style={styles.contactsContainer}>
-                        {contacts.map((contact, index) => (
-                          <View key={index} style={styles.contactItem}>
-                            <Image
-                              source={{ uri: contact.photo || 'https://via.placeholder.com/40' }}
-                              style={styles.contactImage}
-                            />
-                            <Text style={styles.contactName}>{contact.name}</Text>
-                            <Switch
-                              trackColor={{ false: '#767577', true: '#81b0ff' }}
-                              thumbColor={'#f4f3f4'}
-                              ios_backgroundColor="#3e3e3e"
-                              value={selectedContacts[index]?.selected || false}
-                              onValueChange={() => toggleContactSelection(index)}
-                            />
-                          </View>
-                        ))}
+                        {selectedContacts.length === 0 ? (
+                          <Text style={styles.noContactsText}>No emergency contacts added. Please add contacts first.</Text>
+                        ) : (
+                          selectedContacts.map((contact, index) => (
+                            <TouchableOpacity
+                              key={contact.id}
+                              style={styles.contactItem}
+                              onPress={() => toggleContactSelection(index)}
+                            >
+                              <View style={styles.checkbox}>
+                                {contact.selected && <Ionicons name="checkmark" size={20} color="#fff" />}
+                              </View>
+                              <Image
+                                source={{ uri: contact.photo || 'https://via.placeholder.com/40' }}
+                                style={styles.contactImage}
+                              />
+                              <View style={styles.contactInfo}>
+                                <Text style={styles.contactName}>{contact.name}</Text>
+                                <Text style={styles.contactNumber}>{contact.mobile}</Text>
+                              </View>
+                            </TouchableOpacity>
+                          ))
+                        )}
                       </View>
 
                       <View style={styles.notifyContainer}>
                         <Text style={styles.notifyText}>
-                          Notify contacts when you start a safety check
+                          Notify selected contacts when sharing starts
                         </Text>
                         <Switch
                           trackColor={{ false: '#767577', true: '#81b0ff' }}
@@ -393,94 +455,31 @@ const PersonalSafetyScreen = ({ navigation, route }) => {
                   <View style={styles.modalButtonContainer}>
                     <TouchableOpacity
                       style={styles.cancelButton}
-                      onPress={handleBack}
+                      onPress={() => {
+                        if (step === 2) {
+                          handleBack();
+                        } else {
+                          setModalVisible(false);
+                          setStep(1);
+                          setSelectedReason('');
+                          setCustomReason('');
+                          setSelectedDuration('');
+                        }
+                      }}
                     >
                       <Text style={styles.cancelButtonText}>{step === 2 ? 'Back' : 'Cancel'}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={[
                         styles.nextButton,
-                        !isFormValid && step === 1 && styles.nextButtonDisabled
+                        (step === 1 && !isFormValid) || (step === 2 && selectedContacts.every(contact => !contact.selected))
+                          ? styles.nextButtonDisabled
+                          : null
                       ]}
-                      onPress={handleNext}
-                      disabled={!isFormValid && step === 1}
+                      onPress={step === 1 ? handleNext : handleConfirm}
+                      disabled={(step === 1 && !isFormValid) || (step === 2 && selectedContacts.every(contact => !contact.selected))}
                     >
                       <Text style={styles.nextButtonText}>{step === 1 ? 'Next' : 'Confirm'}</Text>
-                    </TouchableOpacity>
-                  </View>
-                </ScrollView>
-              </View>
-            </View>
-          </Modal>
-
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={shareModalVisible}
-            onRequestClose={() => setShareModalVisible(false)}
-          >
-            <View style={styles.modalOverlay}>
-              <View style={styles.modalContainer}>
-                <ScrollView contentContainerStyle={styles.modalScrollContent}>
-                  <View style={styles.modalHeader}>
-                    <Ionicons name="share-social-outline" size={40} color="#ffcc00" style={styles.modalIcon} />
-                    <Text style={styles.modalTitle}>Share Location</Text>
-                    <Text style={styles.stepText}>Step 2 of 2</Text>
-                  </View>
-
-                  <Text style={styles.modalDescription}>
-                    Select contacts to share your location with.{' '}
-                    <Text style={styles.linkText}>Learn more about sharing</Text>
-                  </Text>
-
-                  <View style={styles.contactsContainer}>
-                    {selectedContacts.map((contact, index) => (
-                      <View key={index} style={styles.contactItem}>
-                        <Image
-                          source={{ uri: contact.photo || 'https://via.placeholder.com/40' }}
-                          style={styles.contactImage}
-                        />
-                        <Text style={styles.contactName}>{contact.name}</Text>
-                        <Switch
-                          trackColor={{ false: '#767577', true: '#81b0ff' }}
-                          thumbColor={'#f4f3f4'}
-                          ios_backgroundColor="#3e3e3e"
-                          value={contact.selected}
-                          onValueChange={() => toggleContactSelection(index)}
-                        />
-                      </View>
-                    ))}
-                  </View>
-
-                  <View style={styles.notifyContainer}>
-                    <Text style={styles.notifyText}>
-                      Notify selected contacts when sharing starts
-                    </Text>
-                    <Switch
-                      trackColor={{ false: '#767577', true: '#81b0ff' }}
-                      thumbColor={'#f4f3f4'}
-                      ios_backgroundColor="#3e3e3e"
-                      value={true}
-                      onValueChange={() => {}}
-                    />
-                  </View>
-
-                  <View style={styles.modalButtonContainer}>
-                    <TouchableOpacity
-                      style={styles.cancelButton}
-                      onPress={handleShareBack}
-                    >
-                      <Text style={styles.cancelButtonText}>Back</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[
-                        styles.nextButton,
-                        selectedContacts.every(contact => !contact.selected) && styles.nextButtonDisabled
-                      ]}
-                      onPress={handleShareConfirm}
-                      disabled={selectedContacts.every(contact => !contact.selected)}
-                    >
-                      <Text style={styles.nextButtonText}>Start Sharing</Text>
                     </TouchableOpacity>
                   </View>
                 </ScrollView>
@@ -549,7 +548,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.3,
-    shadowRadius: 4, // Fixed mark4 to 4
+    shadowRadius: 4,
   },
   icon: {
     marginRight: 10,
@@ -558,6 +557,18 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: '500',
+  },
+  debugButton: {
+    backgroundColor: '#ffcc00',
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  debugButtonText: {
+    color: '#333',
+    fontSize: 16,
+    fontWeight: '600',
   },
   warningContainer: {
     marginBottom: 20,
@@ -784,6 +795,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: '#fafafa',
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderWidth: 2,
+    borderColor: '#1E90FF',
+    borderRadius: 4,
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
   },
   contactImage: {
     width: 40,
@@ -791,10 +816,23 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginRight: 10,
   },
-  contactName: {
+  contactInfo: {
     flex: 1,
+  },
+  contactName: {
     fontSize: 16,
+    fontWeight: '500',
     color: '#000',
+  },
+  contactNumber: {
+    fontSize: 14,
+    color: '#666',
+  },
+  noContactsText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginVertical: 20,
   },
   notifyContainer: {
     flexDirection: 'row',
