@@ -466,6 +466,7 @@ async function getSafeRoutes() {
 
     try {
         const response = await axios.post('http://127.0.0.1:5000/evaluate_routes', {
+            //  https://efac-2404-7c80-34-2c3e-98ec-34f3-a243-1a1d.ngrok-free.app/evaluate_routes
             source,
             destination,
             current_time: currentTime,
