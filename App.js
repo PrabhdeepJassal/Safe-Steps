@@ -21,6 +21,7 @@ import EmergencySharing from './screens/emergency/emergencysharing';
 import NavigationScreen from './screens/navigation/navigationscreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LiveSharingScreen from './screens/emergency/livesharing';
+import usernavigation from './screens/navigation/usernavigation';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -95,6 +96,7 @@ const RootStack = () => {
       <Stack.Screen name="emergencyactivescreen" component={EmergencyActiveScreen} options={{ headerShown: false }} />
       <Stack.Screen name="authorityno" component={authorityno} options={{ headerShown: false }} />
       <Stack.Screen name="NavigationScreen" component={NavigationScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="usernavigation" component={usernavigation} options={{ headerShown: false }} />
       <Stack.Screen name="LiveSharing" component={LiveSharingScreen} options={{ headerShown: false }} />
       <Stack.Screen name="CallSignScreen" component={CallSignScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Main" component={TabNavigatorWrapper} options={{ headerShown: false }} />
