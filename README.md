@@ -1,9 +1,9 @@
-**Safe Steps**
+# Safe Steps
 
-**Project Overview**
+## Project Overview
 Safe Steps is a mobile application designed to enhance safety for women and tourists by providing secure travel route recommendations. Leveraging advanced crime data analysis, GPS navigation, and machine learning, the app identifies the safest paths between locations, offers real-time safety features, and empowers users with emergency response tools. The project integrates historical crime data with predictive modeling to flag high-risk areas and ensure informed travel decisions.
 
-**Features**
+## Features
 1. **GPS-Based Navigation and Maps**:
    - Interactive city maps powered by OpenStreetMap (OSRM for routing) and Google Maps API (for visualization).
    - Real-time route rendering with safety overlays highlighting crime-prone areas.
@@ -24,7 +24,7 @@ Safe Steps is a mobile application designed to enhance safety for women and tour
 7. **Crime Hotspot Detection**:
    - Identifies high-severity crime clusters using DBSCAN (~100m radius) for proactive risk avoidance.
 
-**Technical Architecture**
+## Technical Architecture
 **Backend**
 - **Framework**: Flask (Python) with CORS for cross-origin frontend compatibility.
 - **Routing Service**: OSRM (OpenStreetMap-based) for generating direct and alternative routes.
@@ -62,9 +62,9 @@ Safe Steps is a mobile application designed to enhance safety for women and tour
 - **Compliance**: Adheres to GDPR and CCPA for data privacy.
 - **API Security**: Input validation and error handling in Flask endpoints.
 
-**Requirements**
+## Requirements
 
-**Technical Requirements**
+### **Technical Requirements**
 - **Frontend**:
   - React Native v0.73+ (with Expo for development).
   - Libraries: `react-native-maps`, `axios` for API calls, `react-native-firebase` for notifications.
@@ -89,7 +89,7 @@ Safe Steps is a mobile application designed to enhance safety for women and tour
   - Docker for containerizing backend services.
   - Git for version control.
 
-**Non-Technical Requirements**
+### **Non-Technical Requirements**
 - **User Interface (UI/UX)**:
   - Clean, intuitive navigation with minimal learning curve.
   - Accessibility: Screen reader support, adjustable font sizes, and high-contrast modes.
@@ -103,15 +103,15 @@ Safe Steps is a mobile application designed to enhance safety for women and tour
   - 99.9% uptime for backend services.
   - Graceful error handling for API failures or missing crime data.
 
-**Installation & Setup**
-**Prerequisites**
+## Installation & Setup
+### Prerequisites
 - Node.js v18+ and npm v9+.
 - Python 3.9+ with pip.
 - MongoDB 6.0+ (local or cloud-based).
 - Docker (optional for OSRM or backend deployment).
 - API Keys: Google Maps, Firebase, Twilio.
 
-**Steps**
+### Steps
 1. **Clone the Repository**:
    ```sh
    git clone https://github.com/your-repo/safe-steps.git
@@ -161,7 +161,7 @@ Safe Steps is a mobile application designed to enhance safety for women and tour
      ```
    - Or use the public OSRM server (default).
 
-**Testing**
+## Testing
 - **Unit Tests**: Run backend tests with `pytest` in the `backend/tests` directory.
 - **Integration Tests**: Test API endpoints using Postman or cURL.
 - **Frontend Tests**: Use Jest and React Native Testing Library.
@@ -182,21 +182,21 @@ Safe Steps is a mobile application designed to enhance safety for women and tour
 6. **Visualization**: The frontend displays routes on a map, with the safest route highlighted and crime hotspots marked.
 7. **Emergency Features**: Users can trigger alerts or enable periodic check-ins during travel.
 
-**Future Enhancements**
+## Future Enhancements
 - **Real-Time Crime Data**: Integrate live crime feeds from public APIs or police databases.
 - **Crowdsourced Safety Reports**: Allow users to report unsafe areas for community-driven insights.
 - **Advanced ML Models**: Experiment with deep learning (e.g., LSTMs) for better crime prediction.
 - **Offline Mode**: Cache maps and routes for areas with poor connectivity.
 - **Multi-Modal Routing**: Support walking, cycling, and public transport routes.
 
-**Contributors**
+## Contributors
 - **Prabhdeep Singh**: Backend development, ML model training.
 - **Shamandeep Singh**: Frontend development, map integration.
 - **Nupur**: UI/UX design, accessibility features.
 - **Purva**: Data preprocessing, crime analysis.
 
-**License**
+## License
 This project is licensed under the NO-SHARING SOFTWARE LICENSE. See the [LICENSE](LICENSE) file for details.
 
-**Contact**
-For inquiries, please reach out to the project maintainers via GitHub issues or email (to be added).
+## Contact
+For inquiries, please reach out to the project maintainers via GitHub issues or email (safestepssafetyapp@gmail.com).
