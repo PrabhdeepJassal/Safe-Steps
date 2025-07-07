@@ -62,6 +62,11 @@ export default function MapScreen() {
   const suggestionsOpacity = useRef(new Animated.Value(0)).current;
   const [routeCardScales, setRouteCardScales] = useState([]);
 
+  // Double-tap tracking
+  const [lastTapTime, setLastTapTime] = useState(0);
+  const [lastTapRouteId, setLastTapRouteId] = useState(null);
+  const DOUBLE_TAP_DELAY = 300; // milliseconds
+
   useEffect(() => {
     getCurrentLocation();
   }, []);
@@ -194,7 +199,7 @@ export default function MapScreen() {
         destination: [destinationCoords.latitude, destinationCoords.longitude],
         time_category: getTimeCategory()
       };
-      const response = await fetch('https://8e2b-2404-7c80-34-40f8-6d28-477a-6045-eaba.ngrok-free.app/evaluate_routes', {
+      const response = await fetch('https://1753-2404-7c80-34-2db0-f974-12f9-37b4-c072.ngrok-free.app/evaluate_routes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
         body: JSON.stringify(requestBody),
@@ -213,7 +218,7 @@ export default function MapScreen() {
       }
       const transformedRoutes = routesArray.map((route, index) => {
         const parsedCoordinates = parseCoordinates(route.coordinates || route.path || route.route_coordinates);
-        const isRecommended = route.recommended || (index === 0 && !routesArray.some(r => r.recommended)); // Fallback to highest safety score if no recommended flag
+        const isRecommended = route.recommended || (index === 0 && !routesArray.some(r => r.recommended));
         return {
           id: index + 1,
           title: route.route_name || route.name || `Route ${index + 1}`,
@@ -230,7 +235,6 @@ export default function MapScreen() {
           ...route
         };
       });
-      // Sort routes to place recommended route at the top
       const sortedRoutes = transformedRoutes.sort((a, b) => (b.recommended ? 1 : 0) - (a.recommended ? 1 : 0));
       if (sortedRoutes.length > 0) {
         setRoutes(sortedRoutes);
@@ -378,8 +382,25 @@ export default function MapScreen() {
   };
 
   const selectRoute = (route, index) => {
+    const currentTime = new Date().getTime();
+    
+    // Check if it's a double-tap
+    if (
+      lastTapRouteId === route.id &&
+      currentTime - lastTapTime < DOUBLE_TAP_DELAY
+    ) {
+      // Double-tap detected - navigate to navigation screen
+      startNavigation(route);
+      return;
+    }
+    
+    // Single tap - toggle route selection
+    setLastTapTime(currentTime);
+    setLastTapRouteId(route.id);
+    
     const newActiveRoute = route.id === activeRoute ? null : route.id;
     setActiveRoute(newActiveRoute);
+    
     Animated.sequence([
       Animated.timing(routeCardScales[index], { toValue: 0.95, duration: 100, useNativeDriver: true }),
       Animated.spring(routeCardScales[index], { toValue: 1, friction: 8, tension: 40, useNativeDriver: true }),
@@ -387,9 +408,8 @@ export default function MapScreen() {
   };
 
   const startNavigation = (route) => {
-    if (!route) route = routes.find(r => r.id === activeRoute) || routes[0];
     if (!route) {
-      console.error('No route available for navigation');
+      console.error('No route selected for navigation');
       return;
     }
     navigation.navigate('usernavigation', { route, destination: selectedDestination, userLocation });
@@ -500,6 +520,7 @@ export default function MapScreen() {
             )}
           </View>
           <Text style={styles.routeDetails}>{route.time} • {route.distance}</Text>
+          <Text style={styles.doubleTapHint}>Double-tap to navigate</Text>
           {route.safetyScore && (
             <View style={styles.safetyScoreContainer}>
               <Text style={styles.safetyScoreText}>
@@ -589,13 +610,6 @@ export default function MapScreen() {
             {routes.map((route, index) => (
               <View key={route.id}>{renderRouteCard(route, index)}</View>
             ))}
-            <TouchableOpacity
-              style={styles.startButton}
-              onPress={() => startNavigation(routes.find(r => r.id === activeRoute) || routes[0])}
-            >
-              <Ionicons name="navigate" size={20} color="#fff" />
-              <Text style={styles.startButtonText}>Start Navigation</Text>
-            </TouchableOpacity>
           </ScrollView>
         )}
       </Animated.View>
@@ -688,8 +702,6 @@ const styles = StyleSheet.create({
   routeTags: { flexDirection: 'row', flexWrap: 'wrap' },
   routeTag: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#f0f0f0', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 12, marginRight: 8, marginTop: 5 },
   routeTagText: { fontSize: 12, color: '#444', marginLeft: 4 },
-  startButton: { backgroundColor: '#4285F4', borderRadius: 12, paddingVertical: 15, marginTop: 15, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', elevation: 3 },
-  startButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold', marginLeft: 10 },
   loadingRoutesContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 40 },
   loadingRoutesText: { fontSize: 16, fontWeight: '500', color: '#333', marginTop: 15, textAlign: 'center' },
   loadingSubText: { fontSize: 14, color: '#666', marginTop: 5, textAlign: 'center' },
