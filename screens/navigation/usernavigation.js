@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Animated, Alert } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Alert } from 'react-native';
 import MapView, { Polyline, Marker } from 'react-native-maps';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -12,13 +12,15 @@ export default function NavigationScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const { route: selectedRoute, destination, userLocation: initialUserLocation } = route.params;
+  
   const mapRef = useRef(null);
-
+  
   // State management
   const [userLocation, setUserLocation] = useState(initialUserLocation);
   const [currentHeading, setCurrentHeading] = useState(0);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
-  const [isNavigating, setIsNavigating] = useState(true);
+  const [isNavigating, setIsNavigating] = useState(false);
+  const [navigationStarted, setNavigationStarted] = useState(false);
   const [distanceRemaining, setDistanceRemaining] = useState(selectedRoute.distance || '0 km');
   const [timeRemaining, setTimeRemaining] = useState(selectedRoute.time || '0 min');
   const [currentSpeed, setCurrentSpeed] = useState(0);
@@ -26,27 +28,24 @@ export default function NavigationScreen() {
   const [nextTurnInstruction, setNextTurnInstruction] = useState('Continue straight');
   const [isLocationPermissionGranted, setIsLocationPermissionGranted] = useState(false);
   const [locationSubscription, setLocationSubscription] = useState(null);
-  const [followUser, setFollowUser] = useState(true);
+  const [followUser, setFollowUser] = useState(false);
   const [traveledCoordinates, setTraveledCoordinates] = useState([]);
   const [currentRouteIndex, setCurrentRouteIndex] = useState(0);
 
-  const DELHI_REGION = {
-    latitude: 28.6139,
-    longitude: 77.2090,
-    latitudeDelta: 0.15,
-    longitudeDelta: 0.15,
+  // Different map regions for different modes
+  const OVERVIEW_REGION = {
+    latitude: initialUserLocation?.latitude || 28.6139,
+    longitude: initialUserLocation?.longitude || 77.2090,
+    latitudeDelta: 0.02,
+    longitudeDelta: 0.02,
   };
 
-  const createAnimatedValue = (initialValue) => {
-    try {
-      return new Animated.Value(initialValue);
-    } catch (e) {
-      console.error('Failed to create Animated.Value:', e);
-      return { setValue: () => {}, interpolate: () => '0' };
-    }
+  const NAVIGATION_REGION = {
+    latitude: initialUserLocation?.latitude || 28.6139,
+    longitude: initialUserLocation?.longitude || 77.2090,
+    latitudeDelta: 0.002,
+    longitudeDelta: 0.002,
   };
-
-  const infoOpacity = useRef(createAnimatedValue(1)).current;
 
   // Calculate distance between two coordinates (in km)
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -54,8 +53,8 @@ export default function NavigationScreen() {
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
     const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
@@ -65,7 +64,7 @@ export default function NavigationScreen() {
     const dLon = (lon2 - lon1) * Math.PI / 180;
     const y = Math.sin(dLon) * Math.cos(lat2 * Math.PI / 180);
     const x = Math.cos(lat1 * Math.PI / 180) * Math.sin(lat2 * Math.PI / 180) -
-              Math.sin(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.cos(dLon);
+      Math.sin(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.cos(dLon);
     const bearing = Math.atan2(y, x) * 180 / Math.PI;
     return (bearing + 360) % 360;
   };
@@ -73,8 +72,10 @@ export default function NavigationScreen() {
   // Find closest point on route
   const findClosestPointOnRoute = (userLat, userLon, routeCoords) => {
     if (!routeCoords || routeCoords.length === 0) return null;
+    
     let minDistance = Infinity;
     let closestIndex = 0;
+    
     routeCoords.forEach((coord, index) => {
       const distance = calculateDistance(userLat, userLon, coord.latitude, coord.longitude);
       if (distance < minDistance) {
@@ -82,6 +83,7 @@ export default function NavigationScreen() {
         closestIndex = index;
       }
     });
+    
     return { index: closestIndex, distance: minDistance };
   };
 
@@ -100,14 +102,17 @@ export default function NavigationScreen() {
   // Update route based on current location
   const updateRouteProgress = useCallback((currentLocation) => {
     if (!routeCoordinates || routeCoordinates.length === 0) {
-      console.log('No route coordinates available');
       return;
     }
+
     const { latitude, longitude } = currentLocation;
     const closestPoint = findClosestPointOnRoute(latitude, longitude, routeCoordinates);
+    
     if (closestPoint) {
       setCurrentRouteIndex(closestPoint.index);
       setTraveledCoordinates(prev => [...prev, currentLocation].slice(-100));
+
+      // Calculate remaining distance
       let remainingDistance = 0;
       for (let i = closestPoint.index; i < routeCoordinates.length - 1; i++) {
         const coord1 = routeCoordinates[i];
@@ -118,6 +123,8 @@ export default function NavigationScreen() {
         );
       }
       setDistanceRemaining(`${remainingDistance.toFixed(1)} km`);
+
+      // Calculate next turn
       if (closestPoint.index < routeCoordinates.length - 5) {
         const nextCoord = routeCoordinates[closestPoint.index + 5];
         const distanceToNext = calculateDistance(
@@ -125,11 +132,14 @@ export default function NavigationScreen() {
           nextCoord.latitude, nextCoord.longitude
         );
         setNextTurnDistance(distanceToNext);
+
+        // Determine turn instruction
         const currentBearing = calculateBearing(
           latitude, longitude,
           routeCoordinates[closestPoint.index + 1].latitude,
           routeCoordinates[closestPoint.index + 1].longitude
         );
+
         if (closestPoint.index + 2 < routeCoordinates.length) {
           const nextBearing = calculateBearing(
             routeCoordinates[closestPoint.index + 1].latitude,
@@ -137,6 +147,7 @@ export default function NavigationScreen() {
             routeCoordinates[closestPoint.index + 2].latitude,
             routeCoordinates[closestPoint.index + 2].longitude
           );
+
           const bearingDiff = Math.abs(nextBearing - currentBearing);
           if (bearingDiff > 30 && bearingDiff < 150) {
             setNextTurnInstruction(bearingDiff > 90 ? 'Turn right' : 'Turn left');
@@ -148,25 +159,128 @@ export default function NavigationScreen() {
     }
   }, [routeCoordinates]);
 
-  // Animate to user location
+  // Enhanced animation for navigation mode
   const animateToUserLocation = useCallback((location, heading = null) => {
-    if (!mapRef.current || !followUser) return;
-    const region = {
-      latitude: location.latitude,
-      longitude: location.longitude,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    };
-    mapRef.current.animateToRegion(region, 1000);
-    if (heading !== null && mapRef.current.animateCamera) {
-      mapRef.current.animateCamera({
-        center: { latitude: location.latitude, longitude: location.longitude },
-        zoom: 18,
-        heading: heading,
-        pitch: 45,
-      }, 1000);
+    if (!mapRef.current) return;
+
+    if (navigationStarted) {
+      // Navigation mode - close follow with rotation
+      const region = {
+        latitude: location.latitude,
+        longitude: location.longitude,
+        latitudeDelta: 0.003,
+        longitudeDelta: 0.003,
+      };
+      
+      mapRef.current.animateToRegion(region, 300); // Reduced animation time
+      
+      // Apply camera with heading if available - this will keep camera overhead
+      if (mapRef.current.animateCamera) {
+        mapRef.current.animateCamera({
+          center: { 
+            latitude: location.latitude, 
+            longitude: location.longitude 
+          },
+          zoom: 18,
+          heading: heading || 0, // Use current heading or 0
+          pitch: 0, // Change this to 0 for overhead view, keep 60 for 3D view
+        }, 300); // Reduced animation time for smoother following
+      }
+    } else if (followUser) {
+      // Normal follow mode
+      const region = {
+        latitude: location.latitude,
+        longitude: location.longitude,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
+      };
+      
+      mapRef.current.animateToRegion(region, 500);
     }
-  }, [followUser]);
+  }, [navigationStarted, followUser]);
+
+  // Get actual route from routing service (example with mock data)
+  const getActualRoute = async (start, end) => {
+    try {
+      const response = await fetch(`https://router.project-osrm.org/route/v1/driving/${start.longitude},${start.latitude};${end.longitude},${end.latitude}?overview=full&geometries=geojson`);
+      const data = await response.json();
+      
+      if (data.routes && data.routes.length > 0) {
+        const route = data.routes[0];
+        const coordinates = route.geometry.coordinates.map(coord => ({
+          latitude: coord[1],
+          longitude: coord[0]
+        }));
+        return coordinates;
+      }
+    } catch (error) {
+      // Silently handle error
+    }
+    
+    // Fallback to more realistic curved route
+    return generateRealisticRoute(start, end);
+  };
+
+  // Generate more realistic route with curves (fallback)
+  const generateRealisticRoute = (start, end) => {
+    const coordinates = [];
+    const steps = 20;
+    
+    for (let i = 0; i <= steps; i++) {
+      const progress = i / steps;
+      
+      // Add some realistic curves to simulate roads
+      const lat = start.latitude + (end.latitude - start.latitude) * progress + 
+                 Math.sin(progress * Math.PI * 2) * 0.001;
+      const lng = start.longitude + (end.longitude - start.longitude) * progress + 
+                 Math.cos(progress * Math.PI * 3) * 0.001;
+      
+      coordinates.push({
+        latitude: lat,
+        longitude: lng,
+      });
+    }
+    
+    return coordinates;
+  };
+
+  // Start navigation function
+  const startNavigation = () => {
+    setNavigationStarted(true);
+    setIsNavigating(true);
+    setFollowUser(true);
+    
+    // Animate to close view with current location
+    if (userLocation) {
+      animateToUserLocation(userLocation, currentHeading);
+    }
+    
+    // Start location tracking if not already started
+    if (!locationSubscription) {
+      startLocationTracking();
+    }
+  };
+
+  // Stop navigation function
+  const stopNavigation = () => {
+    setNavigationStarted(false);
+    setIsNavigating(false);
+    setFollowUser(false);
+    stopLocationTracking();
+    
+    // Return to overview mode
+    if (mapRef.current) {
+      mapRef.current.animateToRegion(OVERVIEW_REGION, 1000);
+    }
+  };
+
+  // Exit navigation completely
+  const exitNavigation = () => {
+    setIsNavigating(false);
+    setNavigationStarted(false);
+    stopLocationTracking();
+    navigation.goBack();
+  };
 
   // Request location permissions
   const requestLocationPermission = async () => {
@@ -179,7 +293,6 @@ export default function NavigationScreen() {
       setIsLocationPermissionGranted(true);
       return true;
     } catch (error) {
-      console.error('Error requesting location permission:', error);
       Alert.alert('Error', 'Failed to request location permission');
       return false;
     }
@@ -189,6 +302,7 @@ export default function NavigationScreen() {
   const startLocationTracking = async () => {
     const hasPermission = await requestLocationPermission();
     if (!hasPermission) return;
+
     try {
       const subscription = await Location.watchPositionAsync(
         {
@@ -201,16 +315,23 @@ export default function NavigationScreen() {
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
           };
+          
           setUserLocation(newLocation);
           setCurrentSpeed(location.coords.speed || 0);
           setCurrentHeading(location.coords.heading || 0);
+          
           updateRouteProgress(newLocation);
+          
+          // Only animate to user location if navigation is started
+          // Only animate to user location if navigation is started
+        if (navigationStarted || followUser) { // Add followUser condition
           animateToUserLocation(newLocation, location.coords.heading);
+          }
         }
       );
+      
       setLocationSubscription(subscription);
     } catch (error) {
-      console.error('Error starting location tracking:', error);
       Alert.alert('Location Error', 'Failed to start location tracking');
     }
   };
@@ -223,73 +344,60 @@ export default function NavigationScreen() {
     }
   };
 
-  // Generate sample route coordinates if none provided
-  const generateSampleRoute = (start, end) => {
-    const coordinates = [];
-    const steps = 20;
-    
-    for (let i = 0; i <= steps; i++) {
-      const lat = start.latitude + (end.latitude - start.latitude) * (i / steps);
-      const lng = start.longitude + (end.longitude - start.longitude) * (i / steps);
-      coordinates.push({
-        latitude: lat,
-        longitude: lng,
-      });
+  // Toggle follow user
+  const toggleFollowUser = () => {
+    if (navigationStarted) {
+      // In navigation mode, this becomes a recenter button
+      if (userLocation) {
+        animateToUserLocation(userLocation, currentHeading);
+      }
+    } else {
+      setFollowUser(!followUser);
+      if (!followUser && userLocation) {
+        animateToUserLocation(userLocation, currentHeading);
+      }
     }
-    
-    return coordinates;
   };
 
-  // Validate and set route coordinates
+  // Initialize route coordinates
   useEffect(() => {
-    console.log('Selected route:', selectedRoute);
-    
-    if (selectedRoute.coordinates && Array.isArray(selectedRoute.coordinates) && selectedRoute.coordinates.length > 0) {
-      const formattedCoords = selectedRoute.coordinates.map(coord => ({
-        latitude: coord.lat || coord.latitude,
-        longitude: coord.lng || coord.longitude,
-      })).filter(coord => coord.latitude != null && coord.longitude != null);
-      
-      if (formattedCoords.length > 0) {
-        setRouteCoordinates(formattedCoords);
-        // console.log('Formatted Route Coordinates:', formattedCoords);
+    const initializeRoute = async () => {
+      if (selectedRoute.coordinates && Array.isArray(selectedRoute.coordinates) && selectedRoute.coordinates.length > 0) {
+        const formattedCoords = selectedRoute.coordinates.map(coord => ({
+          latitude: coord.lat || coord.latitude,
+          longitude: coord.lng || coord.longitude,
+        })).filter(coord => coord.latitude != null && coord.longitude != null);
+        
+        if (formattedCoords.length > 0) {
+          setRouteCoordinates(formattedCoords);
+        } else {
+          if (userLocation && destination && destination.coordinates) {
+            const destCoord = {
+              latitude: destination.coordinates.lat || destination.coordinates.latitude,
+              longitude: destination.coordinates.lng || destination.coordinates.longitude,
+            };
+            const actualRoute = await getActualRoute(userLocation, destCoord);
+            setRouteCoordinates(actualRoute);
+          }
+        }
       } else {
-        console.warn('No valid coordinates after formatting');
-        // Generate sample route if no valid coordinates
         if (userLocation && destination && destination.coordinates) {
           const destCoord = {
             latitude: destination.coordinates.lat || destination.coordinates.latitude,
             longitude: destination.coordinates.lng || destination.coordinates.longitude,
           };
-          const sampleRoute = generateSampleRoute(userLocation, destCoord);
-          setRouteCoordinates(sampleRoute);
-          // console.log('Generated sample route:', sampleRoute);
+          const actualRoute = await getActualRoute(userLocation, destCoord);
+          setRouteCoordinates(actualRoute);
+        } else {
+          const defaultStart = { latitude: 28.6139, longitude: 77.2090 };
+          const defaultEnd = { latitude: 28.6179, longitude: 77.2130 };
+          const defaultRoute = await getActualRoute(defaultStart, defaultEnd);
+          setRouteCoordinates(defaultRoute);
         }
       }
-    } else {
-      console.warn('Invalid or empty route coordinates, generating sample route');
-      // Generate sample route if no coordinates provided
-      if (userLocation && destination && destination.coordinates) {
-        const destCoord = {
-          latitude: destination.coordinates.lat || destination.coordinates.latitude,
-          longitude: destination.coordinates.lng || destination.coordinates.longitude,
-        };
-        const sampleRoute = generateSampleRoute(userLocation, destCoord);
-        setRouteCoordinates(sampleRoute);
-        // console.log('Generated sample route:', sampleRoute);
-      } else {
-        // Default Delhi route for testing
-        const defaultRoute = [
-          { latitude: 28.6139, longitude: 77.2090 },
-          { latitude: 28.6149, longitude: 77.2100 },
-          { latitude: 28.6159, longitude: 77.2110 },
-          { latitude: 28.6169, longitude: 77.2120 },
-          { latitude: 28.6179, longitude: 77.2130 },
-        ];
-        setRouteCoordinates(defaultRoute);
-        // console.log('Using default route:', defaultRoute);
-      }
-    }
+    };
+
+    initializeRoute();
   }, [selectedRoute.coordinates, userLocation, destination]);
 
   // Check if arrived at destination
@@ -299,10 +407,12 @@ export default function NavigationScreen() {
         latitude: destination.coordinates.lat || destination.coordinates.latitude,
         longitude: destination.coordinates.lng || destination.coordinates.longitude,
       };
+      
       const distanceToDestination = calculateDistance(
         userLocation.latitude, userLocation.longitude,
         destCoord.latitude, destCoord.longitude
       );
+      
       if (distanceToDestination < 0.05) {
         Alert.alert(
           'Destination Reached',
@@ -313,120 +423,77 @@ export default function NavigationScreen() {
     }
   }, [userLocation, destination, navigation]);
 
-  // Initialize navigation
-  useEffect(() => {
-    const initializeNavigation = async () => {
-      await startLocationTracking();
-      
-      // Fit map to show route after a delay to ensure coordinates are set
-      setTimeout(() => {
-        if (routeCoordinates.length > 0 && mapRef.current) {
-          const allCoordinates = [...routeCoordinates];
-          if (userLocation) allCoordinates.unshift(userLocation);
-          if (destination && destination.coordinates) {
-            const destCoord = {
-              latitude: destination.coordinates.lat || destination.coordinates.latitude,
-              longitude: destination.coordinates.lng || destination.coordinates.longitude,
-            };
-            allCoordinates.push(destCoord);
-          }
-          
-          // console.log('Fitting map to coordinates:', allCoordinates);
-          mapRef.current.fitToCoordinates(allCoordinates, {
-            edgePadding: { top: 100, right: 50, bottom: 300, left: 50 },
-            animated: true,
-          });
-        }
-      }, 1000);
-      
-      Animated.timing(infoOpacity, { toValue: 1, duration: 300, useNativeDriver: true }).start();
-    };
-    
-    initializeNavigation();
-    return () => stopLocationTracking();
-  }, [routeCoordinates]);
-
-  const stopNavigation = () => {
-    setIsNavigating(false);
-    stopLocationTracking();
-    Animated.timing(infoOpacity, { toValue: 0, duration: 200, useNativeDriver: true }).start(() => {
-      navigation.goBack();
-    });
-  };
-
-  const toggleFollowUser = () => {
-    setFollowUser(!followUser);
-    if (!followUser && userLocation) {
-      animateToUserLocation(userLocation, currentHeading);
-    }
-  };
-
-  const recenterMap = () => {
-    if (userLocation && mapRef.current) {
-      animateToUserLocation(userLocation, currentHeading);
-    }
-  };
-
-  // console.log('Rendering with route coordinates:', routeCoordinates.length);
-
   return (
     <View style={styles.container}>
       <MapView
         ref={mapRef}
         style={styles.map}
-        initialRegion={DELHI_REGION}
-        showsUserLocation={true}
-        followsUserLocation={followUser}
+        initialRegion={OVERVIEW_REGION}
+        showsUserLocation={!navigationStarted} // Hide default dot during navigation
+        followsUserLocation={false} // We handle this manually
         showsMyLocationButton={false}
         userLocationPriority="high"
         userLocationUpdateInterval={1000}
-        onRegionChangeComplete={() => setFollowUser(false)}
+        onRegionChangeComplete={() => {
+          if (navigationStarted) {
+            // In navigation mode, user can still pan but we don't disable follow
+          } else {
+            setFollowUser(false);
+          }
+        }}
         mapType="standard"
         showsTraffic={false}
         showsBuildings={true}
         showsPointsOfInterest={true}
+        zoomEnabled={true}
+        scrollEnabled={true}
+        rotateEnabled={navigationStarted} // Enable rotation only in navigation mode
+        pitchEnabled={navigationStarted} // Enable pitch only in navigation mode
       >
         {/* Main route polyline */}
         {routeCoordinates.length > 1 && (
           <Polyline
             coordinates={routeCoordinates}
             strokeColor="#007AFF"
-            strokeWidth={8}
+            strokeWidth={10}
             strokeOpacity={1}
-            lineDashPattern={[0]}
             lineJoin="round"
             lineCap="round"
+            geodesic={true}
+            zIndex={2}
           />
         )}
-        
+
         {/* Traveled route (different color) */}
         {getTraveledRouteCoordinates().length > 1 && (
           <Polyline
             coordinates={getTraveledRouteCoordinates()}
             strokeColor="#34C759"
-            strokeWidth={8}
+            strokeWidth={10}
             strokeOpacity={1}
-            lineDashPattern={[0]}
             lineJoin="round"
             lineCap="round"
+            geodesic={true}
+            zIndex={3}
           />
         )}
-        
-        {/* Remaining route (original color but slightly transparent) */}
+
+        {/* Remaining route (original color with gradient effect) */}
         {getRemainingRouteCoordinates().length > 1 && (
           <Polyline
             coordinates={getRemainingRouteCoordinates()}
-            strokeColor="#007AFF"
-            strokeWidth={8}
-            strokeOpacity={0.7}
-            lineDashPattern={[0]}
+            strokeColors={['#007AFF', '#66B2FF']}
+            strokeWidth={10}
+            strokeOpacity={0.8}
             lineJoin="round"
             lineCap="round"
+            geodesic={true}
+            zIndex={1}
           />
         )}
-        
-        {/* Start marker */}
-        {userLocation && (
+
+        {/* Start marker - only show when not navigating */}
+        {!navigationStarted && userLocation && (
           <Marker
             coordinate={userLocation}
             title="Your Location"
@@ -434,7 +501,21 @@ export default function NavigationScreen() {
             pinColor="#34C759"
           />
         )}
-        
+
+        {/* Custom navigation cursor - only show during navigation */}
+        {navigationStarted && userLocation && (
+          <Marker
+            coordinate={userLocation}
+            anchor={{ x: 0.5, y: 0.5 }}
+            rotation={currentHeading} // This makes it rotate with direction
+            zIndex={4}
+          >
+            <View style={styles.navigationCursor}>
+              <Ionicons name="navigation" size={20} color="#007AFF" />
+            </View>
+          </Marker>
+        )}
+
         {/* Destination marker */}
         {destination && destination.coordinates && (
           <Marker
@@ -448,42 +529,54 @@ export default function NavigationScreen() {
           />
         )}
       </MapView>
-      
+
+      {/* Control buttons */}
       <View style={styles.controlButtons}>
-        <TouchableOpacity style={styles.controlButton} onPress={recenterMap}>
-          <Ionicons name="locate" size={24} color={followUser ? "#007AFF" : "#666"} />
+        <TouchableOpacity style={styles.controlButton} onPress={toggleFollowUser}>
+          <Ionicons 
+            name={navigationStarted ? "navigate" : "locate"} 
+            size={24} 
+            color={followUser || navigationStarted ? "#007AFF" : "#666"} 
+          />
         </TouchableOpacity>
       </View>
-      
+
+      {/* Navigation UI */}
       <View style={styles.overlayContainer}>
-        <Animated.View style={[styles.navInfoContainer, { opacity: infoOpacity }]}>
+        <View style={styles.navInfoContainer}>
           <View style={styles.navHeader}>
-            <Text style={styles.navTitle}>Navigating to {destination?.name}</Text>
-            <TouchableOpacity style={styles.stopButton} onPress={stopNavigation}>
+            <Text style={styles.navTitle}>
+              {navigationStarted ? 'Navigating to' : 'Route to'} {destination?.name}
+            </Text>
+            <TouchableOpacity style={styles.stopButton} onPress={exitNavigation}>
               <Ionicons name="close" size={20} color="#fff" />
-              <Text style={styles.stopButtonText}>Stop</Text>
+              <Text style={styles.stopButtonText}>Exit</Text>
             </TouchableOpacity>
           </View>
-          
-          <View style={styles.turnInstruction}>
-            <View style={styles.turnInstructionIcon}>
-              <Ionicons
-                name={
-                  nextTurnInstruction.includes('right') ? 'arrow-forward' :
-                  nextTurnInstruction.includes('left') ? 'arrow-back' : 'arrow-up'
-                }
-                size={24}
-                color="#007AFF"
-              />
+
+          {/* Turn instruction - only show when navigating */}
+          {navigationStarted && (
+            <View style={styles.turnInstruction}>
+              <View style={styles.turnInstructionIcon}>
+                <Ionicons
+                  name={
+                    nextTurnInstruction.includes('right') ? 'arrow-forward' :
+                    nextTurnInstruction.includes('left') ? 'arrow-back' : 'arrow-up'
+                  }
+                  size={24}
+                  color="#007AFF"
+                />
+              </View>
+              <View style={styles.turnInstructionContent}>
+                <Text style={styles.turnInstructionText}>{nextTurnInstruction}</Text>
+                {nextTurnDistance && (
+                  <Text style={styles.turnDistance}>in {nextTurnDistance.toFixed(1)} km</Text>
+                )}
+              </View>
             </View>
-            <View style={styles.turnInstructionContent}>
-              <Text style={styles.turnInstructionText}>{nextTurnInstruction}</Text>
-              {nextTurnDistance && (
-                <Text style={styles.turnDistance}>in {nextTurnDistance.toFixed(1)} km</Text>
-              )}
-            </View>
-          </View>
-          
+          )}
+
+          {/* Route details */}
           <View style={styles.navDetails}>
             <View style={[styles.routeIndicator, { backgroundColor: '#007AFF' }]} />
             <View style={styles.routeInfo}>
@@ -491,6 +584,8 @@ export default function NavigationScreen() {
               <Text style={styles.routeDetails}>
                 {distanceRemaining} • {timeRemaining}
               </Text>
+              
+              {/* Safety Score */}
               <View style={styles.safetyScoreContainer}>
                 <Text style={styles.safetyScoreText}>Safety Score: {selectedRoute.safetyScore || 0}/5</Text>
                 <View style={styles.safetyStars}>
@@ -504,15 +599,19 @@ export default function NavigationScreen() {
                   ))}
                 </View>
               </View>
+              
+              {/* Route extra info */}
               <View style={styles.routeExtraInfo}>
                 <Text style={styles.routeEta}>ETA: {selectedRoute.eta || 'N/A'}</Text>
                 <View style={styles.routeTags}>
-                  <View style={styles.routeTag}>
-                    <Ionicons name="speedometer-outline" size={12} color="#444" />
-                    <Text style={styles.routeTagText}>
-                      {(currentSpeed * 3.6).toFixed(0)} km/h
-                    </Text>
-                  </View>
+                  {navigationStarted && (
+                    <View style={styles.routeTag}>
+                      <Ionicons name="speedometer-outline" size={12} color="#444" />
+                      <Text style={styles.routeTagText}>
+                        {(currentSpeed * 3.6).toFixed(0)} km/h
+                      </Text>
+                    </View>
+                  )}
                   <View style={styles.routeTag}>
                     <Ionicons name="car-outline" size={12} color="#444" />
                     <Text style={styles.routeTagText}>{selectedRoute.traffic || 'Low Traffic'}</Text>
@@ -525,7 +624,20 @@ export default function NavigationScreen() {
               </View>
             </View>
           </View>
-        </Animated.View>
+
+          {/* Start/Stop Navigation Button */}
+          {!navigationStarted ? (
+            <TouchableOpacity style={styles.startButton} onPress={startNavigation}>
+              <Ionicons name="play" size={20} color="#fff" />
+              <Text style={styles.startButtonText}>Start Navigation</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.stopNavigationButton} onPress={stopNavigation}>
+              <Ionicons name="stop" size={20} color="#fff" />
+              <Text style={styles.stopNavigationButtonText}>Stop Navigation</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </View>
   );
@@ -567,6 +679,21 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+  },
+  navigationCursor: {
+    width: 30,
+    height: 30,
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#007AFF',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
   },
   overlayContainer: {
     ...StyleSheet.absoluteFillObject,
@@ -652,6 +779,7 @@ const styles = StyleSheet.create({
   navDetails: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 15,
   },
   routeIndicator: {
     width: 8,
@@ -715,5 +843,35 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#444',
     marginLeft: 4,
+  },
+  startButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#007AFF',
+    paddingVertical: 15,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  startButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 8,
+  },
+  stopNavigationButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ff6b6b',
+    paddingVertical: 15,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  stopNavigationButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 8,
   },
 });

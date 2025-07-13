@@ -51,6 +51,7 @@ export default function MapScreen() {
   const [routeError, setRouteError] = useState(null);
   const [routes, setRoutes] = useState([]);
   const [mapRoutes, setMapRoutes] = useState([]);
+  const [routeCardScales, setRouteCardScales] = useState([]);
 
   const searchTimeoutRef = useRef(null);
   const drawerTranslateY = useRef(new Animated.Value(DRAWER_MIN_HEIGHT)).current;
@@ -60,7 +61,6 @@ export default function MapScreen() {
   const searchBarScale = useRef(new Animated.Value(1)).current;
   const backdropOpacity = useRef(new Animated.Value(0)).current;
   const suggestionsOpacity = useRef(new Animated.Value(0)).current;
-  const [routeCardScales, setRouteCardScales] = useState([]);
 
   // Double-tap tracking
   const [lastTapTime, setLastTapTime] = useState(0);
@@ -167,67 +167,158 @@ export default function MapScreen() {
     return eta.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
   };
 
-  const parseCoordinates = (coordinates) => {
-    if (!coordinates) return [];
-    try {
-      if (Array.isArray(coordinates)) {
-        return coordinates.map(coord => {
-          if (Array.isArray(coord) && coord.length >= 2) {
-            return { latitude: parseFloat(coord[0]), longitude: parseFloat(coord[1]) };
-          } else if (coord.latitude !== undefined && coord.longitude !== undefined) {
-            return { latitude: parseFloat(coord.latitude), longitude: parseFloat(coord.longitude) };
-          } else if (coord.lat !== undefined && coord.lng !== undefined) {
-            return { latitude: parseFloat(coord.lat), longitude: parseFloat(coord.lng) };
-          }
-          return null;
-        }).filter(coord => coord && !isNaN(coord.latitude) && !isNaN(coord.longitude));
-      }
-      if (typeof coordinates === 'string') return parseCoordinates(JSON.parse(coordinates));
+  // FIXED: Better coordinate parsing with detailed logging
+  const parseCoordinates = (coordinates, routeId) => {
+    console.log(`Parsing coordinates for route ${routeId}:`, coordinates);
+    
+    if (!coordinates) {
+      console.warn(`No coordinates provided for route ${routeId}`);
       return [];
+    }
+
+    try {
+      let coords = coordinates;
+      
+      // If coordinates is a string, try to parse it
+      if (typeof coordinates === 'string') {
+        try {
+          coords = JSON.parse(coordinates);
+        } catch (e) {
+          //console.error(`Failed to parse coordinate string for route ${routeId}:`, e);
+          return [];
+        }
+      }
+
+      // Handle different coordinate formats
+      if (Array.isArray(coords)) {
+        const parsedCoords = coords.map((coord, index) => {
+          let lat, lng;
+          
+          // Handle different coordinate formats
+          if (Array.isArray(coord)) {
+            // Format: [[lat, lng], [lat, lng], ...]
+            if (coord.length >= 2) {
+              lat = parseFloat(coord[0]);
+              lng = parseFloat(coord[1]);
+            }
+          } else if (typeof coord === 'object' && coord !== null) {
+            // Format: [{latitude: x, longitude: y}, ...] or [{lat: x, lng: y}, ...]
+            lat = parseFloat(coord.latitude || coord.lat);
+            lng = parseFloat(coord.longitude || coord.lng);
+          }
+          
+          // Validate coordinates
+          if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+            return { latitude: lat, longitude: lng };
+          } else {
+            //console.warn(`Invalid coordinate at index ${index} for route ${routeId}:`, coord);
+            return null;
+          }
+        }).filter(coord => coord !== null);
+        
+        //console.log(`Successfully parsed ${parsedCoords.length} coordinates for route ${routeId}`);
+        return parsedCoords;
+      }
+      
+      //console.warn(`Unexpected coordinate format for route ${routeId}:`, typeof coords);
+      return [];
+      
     } catch (error) {
-      console.error('Error parsing coordinates:', error);
+      //console.error(`Error parsing coordinates for route ${routeId}:`, error);
       return [];
     }
   };
 
+  // FIXED: Enhanced route fetching with better error handling and logging
   const fetchRoutesFromML = async (sourceCoords, destinationCoords) => {
     try {
       setIsLoadingRoutes(true);
       setRouteError(null);
+      
       const requestBody = {
         source: [sourceCoords.latitude, sourceCoords.longitude],
         destination: [destinationCoords.latitude, destinationCoords.longitude],
         time_category: getTimeCategory()
       };
-      const response = await fetch('https://1753-2404-7c80-34-2db0-f974-12f9-37b4-c072.ngrok-free.app/evaluate_routes', {
+      
+      console.log('Sending request to ML model:', requestBody);
+      
+      const response = await fetch('https://d1d30c500834.ngrok-free.app/evaluate_routes', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+        headers: { 
+          'Content-Type': 'application/json', 
+          'ngrok-skip-browser-warning': 'true' 
+        },
         body: JSON.stringify(requestBody),
       });
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const data = await response.json();
-      let routesArray = [];
-      if (data.routes && Array.isArray(data.routes)) routesArray = data.routes;
-      else if (Array.isArray(data)) routesArray = data;
-      else if (data.route_options && Array.isArray(data.route_options)) routesArray = data.route_options;
-      else if (data.predictions && Array.isArray(data.predictions)) routesArray = data.predictions;
-      else {
-        const possibleArrays = Object.values(data).filter(val => Array.isArray(val));
-        if (possibleArrays.length > 0) routesArray = possibleArrays[0];
-        else throw new Error('No route array found in ML model response');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+      
+      const data = await response.json();
+      //console.log('ML model response:', data);
+      
+      // Extract routes array from response
+      let routesArray = [];
+      if (data.routes && Array.isArray(data.routes)) {
+        routesArray = data.routes;
+      } else if (Array.isArray(data)) {
+        routesArray = data;
+      } else if (data.route_options && Array.isArray(data.route_options)) {
+        routesArray = data.route_options;
+      } else if (data.predictions && Array.isArray(data.predictions)) {
+        routesArray = data.predictions;
+      } else {
+        // Look for any array in the response
+        const possibleArrays = Object.values(data).filter(val => Array.isArray(val));
+        if (possibleArrays.length > 0) {
+          routesArray = possibleArrays[0];
+        } else {
+          throw new Error('No route array found in ML model response');
+        }
+      }
+      
+      console.log(`Found ${routesArray.length} routes from ML model`);
+      
+      // Transform routes with enhanced coordinate parsing
       const transformedRoutes = routesArray.map((route, index) => {
-        const parsedCoordinates = parseCoordinates(route.coordinates || route.path || route.route_coordinates);
+        const routeId = index + 1;
+        
+        // Try multiple coordinate field names
+        const coordinateFields = ['coordinates', 'path', 'route_coordinates', 'waypoints', 'points'];
+        let routeCoordinates = [];
+        
+        for (const field of coordinateFields) {
+          if (route[field]) {
+            routeCoordinates = parseCoordinates(route[field], routeId);
+            if (routeCoordinates.length > 0) {
+              //console.log(`Used field '${field}' for route ${routeId} coordinates`);
+              break;
+            }
+          }
+        }
+        
+        if (routeCoordinates.length === 0) {
+          console.warn(`No valid coordinates found for route ${routeId}`);
+          // Create a fallback route with just source and destination
+          routeCoordinates = [
+            { latitude: sourceCoords.latitude, longitude: sourceCoords.longitude },
+            { latitude: destinationCoords.latitude, longitude: destinationCoords.longitude }
+          ];
+        }
+        
         const isRecommended = route.recommended || (index === 0 && !routesArray.some(r => r.recommended));
+        
         return {
-          id: index + 1,
-          title: route.route_name || route.name || `Route ${index + 1}`,
+          id: routeId,
+          title: route.route_name || route.name || `Route ${routeId}`,
           time: formatTime(route.estimated_time || route.duration || route.time),
           distance: formatDistance(route.distance),
-          color: getRouteColor(route.safety_score || route.safety || 3, isRecommended),
+          color: index === 0 ? '#00ff00' : getRouteColor(route.safety_score || route.safety || 3, isRecommended && index !== 0),
           eta: calculateETA(route.estimated_time || route.duration || route.time),
           safetyScore: route.safety_score || route.safety || 3,
-          coordinates: parsedCoordinates,
+          coordinates: routeCoordinates,
           traffic: route.traffic_level || route.traffic || 'moderate',
           toll: route.toll_cost || route.toll || 0,
           severity: route.severity_level || route.severity || 3,
@@ -235,16 +326,30 @@ export default function MapScreen() {
           ...route
         };
       });
+      
+      // Sort routes with recommended first
       const sortedRoutes = transformedRoutes.sort((a, b) => (b.recommended ? 1 : 0) - (a.recommended ? 1 : 0));
-      if (sortedRoutes.length > 0) {
-        setRoutes(sortedRoutes);
-        setMapRoutes(sortedRoutes.filter(route => route.coordinates && route.coordinates.length > 0));
-        setRouteCardScales(sortedRoutes.map(() => new Animated.Value(1)));
+      
+      // Filter routes that have valid coordinates
+      const validRoutes = sortedRoutes.filter(route => route.coordinates && route.coordinates.length > 0);
+      
+      if (validRoutes.length > 0) {
+        console.log(`Setting ${validRoutes.length} valid routes`);
+        setRoutes(validRoutes);
+        setMapRoutes(validRoutes);
+        setRouteCardScales(validRoutes.map(() => new Animated.Value(1)));
+        
+        // Log coordinate summary for debugging
+        validRoutes.forEach(route => {
+          console.log(`Route ${route.id}: ${route.coordinates.length} coordinates`);
+        });
       } else {
+        console.warn('No valid routes with coordinates found');
         setRoutes([]);
         setMapRoutes([]);
         setRouteCardScales([]);
       }
+      
     } catch (error) {
       console.error('Error fetching routes from ML model:', error);
       setRouteError(`Failed to fetch routes: ${error.message}`);
@@ -342,6 +447,19 @@ export default function MapScreen() {
     }, 300);
   };
 
+  const clearSearch = () => {
+    setSearchQuery('');
+    setShowSuggestions(false);
+    setSuggestions([]);
+    setSelectedDestination(null);
+    setMapRoutes([]);
+    setActiveRoute(null);
+    if (showDrawer) {
+      setShowDrawer(false);
+      Animated.timing(drawerOpacity, { toValue: 0, duration: 200, useNativeDriver: true }).start(() => animateDrawerTo(DRAWER_MIN_HEIGHT));
+    }
+  };
+
   const handleSuggestionSelect = async (suggestion) => {
     setSearchQuery(suggestion.name);
     setSelectedDestination(suggestion);
@@ -401,6 +519,9 @@ export default function MapScreen() {
     const newActiveRoute = route.id === activeRoute ? null : route.id;
     setActiveRoute(newActiveRoute);
     
+    // Update map to show only the selected route or all routes if deselected
+    setMapRoutes(newActiveRoute ? [routes.find(r => r.id === newActiveRoute)] : routes.filter(r => r.coordinates && r.coordinates.length > 0));
+    
     Animated.sequence([
       Animated.timing(routeCardScales[index], { toValue: 0.95, duration: 100, useNativeDriver: true }),
       Animated.spring(routeCardScales[index], { toValue: 1, friction: 8, tension: 40, useNativeDriver: true }),
@@ -455,7 +576,13 @@ export default function MapScreen() {
             onFocus={handleSearchFocus}
             onBlur={handleSearchBlur}
           />
-          <Ionicons name="mic" size={20} color="#666" />
+          {searchQuery.length > 0 ? (
+            <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
+              <Ionicons name="close" size={20} color="#666" />
+            </TouchableOpacity>
+          ) : (
+            <Ionicons name="mic" size={20} color="#666" />
+          )}
         </View>
       </Animated.View>
       {showSuggestions && (
@@ -631,7 +758,7 @@ export default function MapScreen() {
             key={index}
             coordinates={route.coordinates}
             strokeColor={route.color}
-            strokeWidth={4}
+            strokeWidth={activeRoute === route.id ? 6 : 4} // Highlight selected route with thicker line
           />
         ))}
         {selectedDestination && selectedDestination.coordinates && (
@@ -665,6 +792,7 @@ const styles = StyleSheet.create({
   searchBar: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 25, paddingHorizontal: 15, paddingVertical: 10, elevation: 5 },
   searchBarFocused: { elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 8 },
   searchInput: { flex: 1, marginHorizontal: 10, fontSize: 17.5, opacity: 0.6 },
+  clearButton: { padding: 5 },
   suggestionsContainer: { backgroundColor: '#fff', borderRadius: 12, marginTop: 8, elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 8, maxHeight: 250 },
   suggestionsList: { maxHeight: 250 },
   suggestionItem: { flexDirection: 'row', alignItems: 'center', padding: 15, borderBottomWidth: 1, borderBottomColor: '#f0f0f0' },
@@ -712,5 +840,5 @@ const styles = StyleSheet.create({
   safetyScoreContainer: { flexDirection: 'row', alignItems: 'center', marginTop: 5 },
   safetyScoreText: { fontSize: 13, color: '#666', marginRight: 8 },
   safetyStars: { flexDirection: 'row' },
-  drawerScrollContent: { paddingBottom: 20, flexGrow: 1 },
+  drawerScrollContent: { paddingBottom: 100, flexGrow: 1 },
 });
