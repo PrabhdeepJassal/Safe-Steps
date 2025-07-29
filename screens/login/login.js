@@ -10,11 +10,13 @@ import {
   Image,
   Platform,
   Animated,
+  Alert,
 } from 'react-native';
 import * as Font from 'expo-font';
+import { authAPI } from '../../utils/api';
 
 const LoginScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
+  const [emailPhone, setEmailPhone] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -50,11 +52,28 @@ const LoginScreen = ({ navigation }) => {
     });
   }, []);
 
-  const handleLogin = () => {
-    if (email && password) {
-      navigation.replace('Main');
-    } else {
-      alert('Please enter email and password');
+  const handleLogin = async () => {
+    if (!emailPhone || !password) {
+      Alert.alert('Error', 'Please enter email/phone and password');
+      return;
+    }
+    
+    try {
+      const data = await authAPI.login({
+        emailPhone,
+        password,
+      });
+
+      if (data.success) {
+        Alert.alert('Success', 'Login successful', [
+          { text: 'OK', onPress: () => navigation.replace('Main') }
+        ]);
+      } else {
+        Alert.alert('Error', data.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      Alert.alert('Error', error.message || 'Network error. Please check your connection.');
     }
   };
 
@@ -100,9 +119,9 @@ const LoginScreen = ({ navigation }) => {
             <View style={styles.formContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
+                placeholder="Email/Phone Number"
+                value={emailPhone}
+                onChangeText={setEmailPhone}
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
@@ -132,11 +151,18 @@ const LoginScreen = ({ navigation }) => {
               </TouchableOpacity>
 
               <Text style={styles.signupText}>
-                Don’t have an account?{' '}
+                Don't have an account?{' '}
                 <Text style={styles.signupLink} onPress={() => navigation.navigate('signup')}>
                   Sign Up
                 </Text>
               </Text>
+
+              <TouchableOpacity 
+                style={styles.skipButton}
+                onPress={() => navigation.replace('Main')}
+              >
+                <Text style={styles.skipButtonText}>Skip for now</Text>
+              </TouchableOpacity>
             </View>
           </View>
         )}
@@ -250,6 +276,21 @@ const styles = StyleSheet.create({
   signupLink: {
     color: '#007BFF',
     fontWeight: 'bold',
+  },
+  skipButton: {
+    width: '95%',
+    marginLeft: 10,
+    marginTop: 15,
+    backgroundColor: 'transparent',
+    paddingVertical: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    alignItems: 'center',
+  },
+  skipButtonText: {
+    color: '#666',
+    fontSize: 16,
   },
 });
 

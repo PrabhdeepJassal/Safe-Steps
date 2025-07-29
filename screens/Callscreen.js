@@ -6,7 +6,6 @@ import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import * as IntentLauncher from 'expo-intent-launcher';
 import { Picker } from '@react-native-picker/picker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PersonalSafetyScreen = ({ navigation }) => {
   const [isLocationOn, setIsLocationOn] = useState(true);
@@ -25,21 +24,8 @@ const PersonalSafetyScreen = ({ navigation }) => {
 
   const loadContacts = async () => {
     try {
-      const stored = await AsyncStorage.getItem('emergencyContacts');
-      console.log('Raw AsyncStorage data for emergencyContacts:', stored);
-      let loadedContacts = stored ? JSON.parse(stored) : [];
-      loadedContacts = Array.isArray(loadedContacts) ? loadedContacts : [];
-      
-      loadedContacts = loadedContacts
-        .filter(contact => contact?.id && contact?.name && contact?.mobile)
-        .reduce((acc, contact) => {
-          if (!acc.find(c => c.id === contact.id)) {
-            acc.push(contact);
-          }
-          return acc;
-        }, []);
-
-      console.log('Processed contacts from AsyncStorage:', loadedContacts);
+      // For now, using static contacts - replace with your data source
+      const loadedContacts = [];
       
       if (isMounted.current) {
         setContacts(loadedContacts);
@@ -48,7 +34,7 @@ const PersonalSafetyScreen = ({ navigation }) => {
         console.log('Updated state - selectedContacts:', loadedContacts.map(contact => ({ ...contact, selected: false })));
       }
     } catch (error) {
-      console.error('Error loading contacts from AsyncStorage:', error);
+      console.error('Error loading contacts:', error);
       if (isMounted.current) {
         setContacts([]);
         setSelectedContacts([]);
@@ -182,17 +168,6 @@ const PersonalSafetyScreen = ({ navigation }) => {
       IntentLauncher.startActivityAsync(IntentLauncher.ActivityAction.LOCATION_SOURCE_SETTINGS);
     } else {
       Linking.openURL('app-settings:');
-    }
-  };
-
-  const debugAsyncStorage = async () => {
-    try {
-      const stored = await AsyncStorage.getItem('emergencyContacts');
-      console.log('Debug - AsyncStorage emergencyContacts:', stored);
-      Alert.alert('AsyncStorage Contents', stored || 'No contacts found');
-    } catch (error) {
-      console.error('Error debugging AsyncStorage:', error);
-      Alert.alert('Error', 'Failed to read AsyncStorage');
     }
   };
 
@@ -557,18 +532,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: '500',
-  },
-  debugButton: {
-    backgroundColor: '#ffcc00',
-    padding: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  debugButtonText: {
-    color: '#333',
-    fontSize: 16,
-    fontWeight: '600',
   },
   warningContainer: {
     marginBottom: 20,
