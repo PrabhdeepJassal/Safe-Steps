@@ -10,6 +10,7 @@ import {
   Image,
   Alert,
 } from 'react-native';
+import { authAPI } from '../../utils/api';
 
 const SignUpScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -18,7 +19,7 @@ const SignUpScreen = ({ navigation }) => {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (!name || !emailPhone || !password) {
       Alert.alert('Error', 'Please fill all fields');
       return;
@@ -29,10 +30,25 @@ const SignUpScreen = ({ navigation }) => {
       return;
     }
     
-    // Proceed with account creation
-    Alert.alert('Success', 'Account created successfully', [
-      { text: 'OK', onPress: () => navigation.replace('Main') }
-    ]);
+    try {
+      const data = await authAPI.signup({
+        name,
+        emailPhone,
+        password,
+      });
+
+      if (data.success) {
+        const contactMethod = data.user.email ? 'email' : 'phone number';
+        Alert.alert('Success', `Account created successfully with ${contactMethod}: ${data.user.email || data.user.phone}`, [
+          { text: 'OK', onPress: () => navigation.replace('Main') }
+        ]);
+      } else {
+        Alert.alert('Error', data.message || 'Failed to create account');
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      Alert.alert('Error', error.message || 'Network error. Please check your connection.');
+    }
   };
 
   return (
@@ -111,7 +127,7 @@ const SignUpScreen = ({ navigation }) => {
           style={styles.createButton}
           onPress={handleSignUp}
         >
-          <Text style={styles.createButtonText}>Creat Account</Text>
+          <Text style={styles.createButtonText}>Create Account</Text>
         </TouchableOpacity>
 
         <View style={styles.loginContainer}>

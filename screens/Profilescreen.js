@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { launchImageLibrary } from 'react-native-image-picker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileScreen = ({ navigation, route }) => {
   // Simulate a user ID (in a real app, this would come from login/auth state)
@@ -23,10 +22,9 @@ const ProfileScreen = ({ navigation, route }) => {
   useEffect(() => {
     const loadProfilePicture = async () => {
       try {
-        const storedPicture = await AsyncStorage.getItem(`profilePicture_${userId}`);
-        if (storedPicture) {
-          setProfilePicture(storedPicture);
-        }
+        // For now, no persistent storage - starts fresh each time
+        // You can implement a different storage solution later
+        console.log('Profile picture will load from storage when implemented');
       } catch (error) {
         console.error('Error loading profile picture:', error);
       }
@@ -50,9 +48,9 @@ const ProfileScreen = ({ navigation, route }) => {
         const uri = response.assets[0].uri;
         setProfilePicture(uri);
 
-        // Save the image URI to AsyncStorage with the user ID
+        // Profile picture updated (no persistent storage for now)
         try {
-          await AsyncStorage.setItem(`profilePicture_${userId}`, uri);
+          console.log('Profile picture updated:', uri);
           Alert.alert('Success', 'Profile picture updated!');
         } catch (error) {
           console.error('Error saving profile picture:', error);

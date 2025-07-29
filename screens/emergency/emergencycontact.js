@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function EmergencyContactsScreen({ navigation, route }) {
   const [contacts, setContacts] = useState([]);
@@ -25,34 +24,16 @@ export default function EmergencyContactsScreen({ navigation, route }) {
   useEffect(() => {
     const loadContacts = async () => {
       try {
-        // Load stored contacts from AsyncStorage
-        const storedContacts = await AsyncStorage.getItem('emergencyContacts');
+        // For now, no persistent storage - using route params or starting fresh
         let parsedContacts = [];
-        if (storedContacts) {
-          try {
-            parsedContacts = JSON.parse(storedContacts);
-            if (!Array.isArray(parsedContacts)) {
-              console.warn('Stored contacts is not an array, resetting to empty array');
-              parsedContacts = [];
-            }
-          } catch (parseError) {
-            console.error('Error parsing stored contacts:', parseError);
-            parsedContacts = [];
-          }
-        }
 
         // Only use route.params.contacts if explicitly provided and not empty
         const initialContacts = Array.isArray(route.params?.contacts) && route.params.contacts.length > 0 
           ? route.params.contacts 
           : [];
 
-        // Merge contacts, prioritizing AsyncStorage to prevent overwriting
-        const mergedContacts = [
-          ...parsedContacts,
-          ...initialContacts.filter(
-            initial => !parsedContacts.some(stored => stored.id === initial.id)
-          ),
-        ].filter(contact => contact?.id && contact?.name && contact?.mobile);
+        // Use initial contacts for now (no persistent storage)
+        const mergedContacts = initialContacts.filter(contact => contact?.id && contact?.name && contact?.mobile);
 
         console.log('Loaded contacts:', mergedContacts);
         setContacts(mergedContacts);
@@ -68,11 +49,10 @@ export default function EmergencyContactsScreen({ navigation, route }) {
   useEffect(() => {
     const saveContacts = async () => {
       try {
-        // Only save if contacts array is not empty to prevent overwriting with []
+        // Only save to navigation params for now (no persistent storage)
         if (contacts.length > 0) {
-          await AsyncStorage.setItem('emergencyContacts', JSON.stringify(contacts));
           navigation.setParams({ contacts });
-          console.log('Saved contacts:', contacts);
+          console.log('Updated navigation with contacts:', contacts);
         } else {
           console.log('Skipped saving empty contacts array');
         }

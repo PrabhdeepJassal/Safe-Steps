@@ -243,11 +243,10 @@ export default function MapScreen() {
       
       console.log('Sending request to ML model:', requestBody);
       
-      const response = await fetch('https://d1d30c500834.ngrok-free.app/evaluate_routes', {
+      const response = await fetch('http://localhost:5000/evaluate_routes', {
         method: 'POST',
         headers: { 
-          'Content-Type': 'application/json', 
-          'ngrok-skip-browser-warning': 'true' 
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(requestBody),
       });
