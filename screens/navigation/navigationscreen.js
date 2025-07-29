@@ -1,3 +1,4 @@
+//maybe blank screen 
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -54,7 +55,6 @@ const NavigationScreen = () => {
             </View>
             <View style={styles.routeTag}>
               <Ionicons name="pricetag-outline" size={12} color="#444" />
-              <Text style={styles.routeTagText}>₹50 Toll</Text>
             </View>
           </View>
         </View>

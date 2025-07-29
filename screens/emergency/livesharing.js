@@ -1,40 +1,61 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Alert, Platform, PermissionsAndroid, Linking } from 'react-native';
+//this screen naviagtes from the callscreen (aka safetycheck procedure)
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Alert,
+  Platform,
+  Linking,
+  Animated,
+  Modal,        // Added
+  TextInput,    // Added
+  Vibration,    // Added
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as Battery from 'expo-battery';
-import SendSMS from 'react-native-sms';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Added
+
+const PIN_STORAGE_KEY = '@user_security_pin';
+const DEFAULT_PIN = '1234';
 
 const LiveSharingScreen = ({ navigation, route }) => {
   const { contacts, reason, duration } = route.params || {};
+
   const [timeLeft, setTimeLeft] = useState(0);
   const [isSharing, setIsSharing] = useState(true);
-  const [userLocation, setUserLocation] = useState({
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-  });
-  const [smsSent, setSmsSent] = useState(false);
+  const [userLocation, setUserLocation] = useState(null);
+  const [smsActionTaken, setSmsActionTaken] = useState(false);
 
-  // Convert duration to seconds
+  // --- Safety Check State ---
+  const [isSafetyModalVisible, setIsSafetyModalVisible] = useState(false);
+  const [pinInput, setPinInput] = useState('');
+  const [securityPin, setSecurityPin] = useState(DEFAULT_PIN);
+  const [countdown, setCountdown] = useState(30);
+  const countdownTimerRef = useRef(null);
+
+  // Animation values
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+
+  // --- Utility Functions ---
+
   const parseDurationToSeconds = (durationString) => {
-    console.log('Parsing duration:', durationString);
     if (!durationString) return 0;
     const parts = durationString.split(' ');
     const value = parseInt(parts[0], 10);
     if (isNaN(value)) return 0;
-    if (parts[1]?.includes('hour')) {
-      return value * 3600;
-    } else if (parts[1]?.includes('minute')) {
-      return value * 60;
-    }
+    if (parts[1]?.includes('hour')) return value * 3600;
+    if (parts[1]?.includes('minute')) return value * 60;
     return 0;
   };
 
-  // Format seconds to MM:SS or HH:MM:SS
   const formatTime = (seconds) => {
+    if (seconds < 0) seconds = 0;
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
@@ -44,186 +65,40 @@ const LiveSharingScreen = ({ navigation, route }) => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Sanitize phone number
-  const sanitizePhoneNumber = (number) => {
-    if (!number) return '';
-    const sanitized = number.replace(/[^0-9+]/g, '');
-    console.log('Sanitized phone number:', sanitized);
-    return sanitized;
-  };
-
-  // Send SMS to all contacts
-  const sendEmergencySMS = async () => {
-    try {
-      console.log('Starting sendEmergencySMS for contacts:', JSON.stringify(contacts));
-
-      // Validate contacts
-      if (!contacts || !Array.isArray(contacts) || contacts.length === 0) {
-        console.log('No valid contacts provided');
-        Alert.alert('No Contacts', 'No emergency contacts are available to send messages.');
-        return false;
-      }
-
-      // Request SMS permission on Android
-      let hasSMSPermission = true;
-      if (Platform.OS === 'android') {
-        console.log('Requesting SMS permission');
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.SEND_SMS,
-          {
-            title: 'SMS Permission',
-            message: 'This app needs SMS permission to send emergency messages.',
-            buttonNeutral: 'Ask Me Later',
-            buttonNegative: 'Cancel',
-            buttonPositive: 'OK',
-          }
-        );
-        hasSMSPermission = granted === PermissionsAndroid.RESULTS.GRANTED;
-        console.log('SMS permission status:', hasSMSPermission ? 'granted' : 'denied');
-        if (!hasSMSPermission) {
-          Alert.alert('Permission Denied', 'SMS permission is required to send emergency messages.');
-        }
-      }
-
-      // Get current location with timeout
-      console.log('Requesting location permission');
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Location permission denied');
-        Alert.alert('Permission Denied', 'Location permission is required to share your location.');
-        return false;
-      }
-      let location;
-      try {
-        location = await Location.getCurrentPositionAsync({ timeout: 10000 });
-        console.log('Location fetched:', JSON.stringify(location.coords));
-      } catch (error) {
-        console.error('Location fetch failed:', error.message);
-        Alert.alert('Error', 'Failed to get location. Using default location.');
-        location = { coords: { latitude: 37.78825, longitude: -122.4324 } };
-      }
-
-      // Update user location for map
-      setUserLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      });
-
-      // Get battery level
-      let batteryLevel = 0;
-      try {
-        batteryLevel = await Battery.getBatteryLevelAsync();
-        console.log('Battery level fetched:', batteryLevel);
-      } catch (error) {
-        console.error('Battery fetch failed:', error.message);
-        Alert.alert('Warning', 'Could not fetch battery level. Using 0%.');
-      }
-      const batteryPercentage = Math.round(batteryLevel * 100);
-
-      // Construct SMS message
-      const message = `Emergency: ${reason || 'No reason provided'}. My location is https://maps.google.com/?q=${location.coords.latitude},${location.coords.longitude}. Duration: ${duration || 'N/A'}. Battery: ${batteryPercentage}%.`;
-      console.log('SMS message constructed:', message);
-
-      // Send SMS to each contact
-      let allSent = true;
-      for (const contact of contacts) {
-        const phoneNumber = sanitizePhoneNumber(contact.mobile);
-        if (!phoneNumber || phoneNumber.length < 7) {
-          console.log(`Invalid phone number for ${contact.name}: ${phoneNumber}`);
-          Alert.alert('Error', `Invalid phone number for ${contact.name}.`);
-          allSent = false;
-          continue;
-        }
-        console.log(`Attempting to send SMS to ${contact.name}: ${phoneNumber}`);
-
-        // Try react-native-sms first
-        let smsSentSuccessfully = false;
-        if (hasSMSPermission) {
-          try {
-            await new Promise((resolve, reject) => {
-              SendSMS.send(
-                {
-                  body: message,
-                  recipients: [phoneNumber],
-                  successTypes: ['sent', 'queued'],
-                  allowAndroidSendWithoutReadPermission: true,
-                },
-                (completed, cancelled, error) => {
-                  if (completed) {
-                    console.log(`SMS sent to ${contact.name}`);
-                    smsSentSuccessfully = true;
-                    resolve();
-                  } else if (cancelled) {
-                    console.log(`SMS cancelled for ${contact.name}`);
-                    Alert.alert('Cancelled', `Message to ${contact.name} was cancelled.`);
-                    allSent = false;
-                    resolve();
-                  } else if (error) {
-                    console.error(`SMS error for ${contact.name}: ${error}`);
-                    Alert.alert('Error', `Failed to send message to ${contact.name}: ${error}`);
-                    allSent = false;
-                    resolve();
-                  }
-                }
-              );
-            });
-          } catch (error) {
-            console.error(`react-native-sms failed for ${contact.name}: ${error.message}`);
-            Alert.alert('Error', `react-native-sms failed for ${contact.name}: ${error.message}`);
-            allSent = false;
-          }
-        }
-
-        // Fallback to Linking if react-native-sms fails or no permission
-        if (!smsSentSuccessfully) {
-          console.log(`Falling back to Linking for ${contact.name}`);
-          try {
-            const smsUrl = Platform.OS === 'ios'
-              ? `sms:${phoneNumber}&body=${encodeURIComponent(message)}`
-              : `sms:${phoneNumber}?body=${encodeURIComponent(message)}`;
-            const supported = await Linking.canOpenURL(smsUrl);
-            if (supported) {
-              await Linking.openURL(smsUrl);
-              console.log(`Linking SMS opened for ${contact.name}`);
-            } else {
-              console.log(`SMS not supported for ${contact.name}`);
-              Alert.alert('Error', `Unable to send SMS to ${contact.name}. SMS app not available.`);
-              allSent = false;
-            }
-          } catch (error) {
-            console.error(`Linking SMS failed for ${contact.name}: ${error.message}`);
-            Alert.alert('Error', `Failed to open SMS app for ${contact.name}: ${error.message}`);
-            allSent = false;
-          }
-        }
-      }
-      return allSent;
-    } catch (error) {
-      console.error('Error in sendEmergencySMS:', error.message);
-      Alert.alert('Error', `Failed to send emergency messages: ${error.message}`);
-      return false;
-    }
-  };
+  // --- Core Logic ---
 
   useEffect(() => {
-    if (!duration || !isSharing || smsSent) {
-      console.log('Skipping SMS send: duration=', duration, 'isSharing=', isSharing, 'smsSent=', smsSent);
-      return;
-    }
+    // Start pulsing animation for the status icon
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1.2,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 1,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, [pulseAnim]);
+
+  // Timer countdown effect
+  useEffect(() => {
+    if (!isSharing) return;
 
     const totalSeconds = parseDurationToSeconds(duration);
-    console.log('Total seconds:', totalSeconds);
     setTimeLeft(totalSeconds);
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
-        if (prev <= 0) {
+        if (prev <= 1) {
           clearInterval(timer);
           setIsSharing(false);
           Alert.alert('Sharing Ended', 'The live sharing session has ended.', [
-            { text: 'OK', onPress: () => navigation.navigate('PersonalSafety') }
+            { text: 'OK', onPress: () => navigation.goBack() },
           ]);
           return 0;
         }
@@ -231,281 +106,512 @@ const LiveSharingScreen = ({ navigation, route }) => {
       });
     }, 1000);
 
-    // Send SMS when sharing starts
-    (async () => {
-      console.log('Checking contacts for SMS:', JSON.stringify(contacts));
-      if (contacts && Array.isArray(contacts) && contacts.length > 0) {
-        const success = await sendEmergencySMS();
-        if (success) {
-          setSmsSent(true);
-          console.log('All SMS sent successfully');
-          Alert.alert('Emergency Messages Sent', 'Messages have been sent to your emergency contacts.');
-        } else {
-          console.log('Some or all SMS failed to send');
-        }
-      } else {
-        console.log('No contacts provided');
-        Alert.alert('No Contacts', 'Please add emergency contacts to enable messaging.');
-      }
-    })();
-
     return () => clearInterval(timer);
-  }, [duration, isSharing, navigation, contacts, smsSent]);
+  }, [isSharing, duration, navigation]);
+
+  // Location tracking effect
+  useEffect(() => {
+    let locationSubscriber;
+
+    const startLocationTracking = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission Denied', 'Location permission is required to share your location.');
+        setIsSharing(false);
+        return;
+      }
+
+      locationSubscriber = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 5000, // 5 seconds
+          distanceInterval: 10, // 10 meters
+        },
+        (location) => {
+          setUserLocation({
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          });
+        }
+      );
+    };
+
+    if (isSharing) {
+      startLocationTracking();
+    }
+
+    return () => {
+      if (locationSubscriber) {
+        locationSubscriber.remove();
+      }
+    };
+  }, [isSharing]);
+
+  // --- Safety Check Logic (NEW) ---
+
+  // Load PIN from storage
+  useEffect(() => {
+    const loadPin = async () => {
+      try {
+        const storedPin = await AsyncStorage.getItem(PIN_STORAGE_KEY);
+        if (storedPin) {
+          setSecurityPin(storedPin);
+        }
+      } catch (error) {
+        console.error("Failed to load PIN from storage", error);
+      }
+    };
+    loadPin();
+  }, []);
+
+  // Periodic timer to trigger the safety modal
+  useEffect(() => {
+    let safetyTimer;
+    if (isSharing) {
+      // Show modal every 5 minutes (300000 ms)
+      safetyTimer = setInterval(() => {
+        setIsSafetyModalVisible(true);
+      }, 10000); 
+    }
+    return () => {
+      if (safetyTimer) clearInterval(safetyTimer);
+    };
+  }, [isSharing]);
+  
+  // Countdown and vibration effect for the modal
+  useEffect(() => {
+    if (isSafetyModalVisible) {
+      Vibration.vibrate(500); 
+      setCountdown(30);
+      
+      countdownTimerRef.current = setInterval(() => {
+        setCountdown(prev => {
+          const newCountdown = prev - 1;
+
+          if (newCountdown === 20 || newCountdown === 10) {
+            Vibration.vibrate([0, 300, 200, 300]);
+          }
+          if (newCountdown === 5) {
+            Vibration.vibrate([0, 500, 100, 500, 100, 500, 100, 500, 100, 500]);
+          }
+          if (newCountdown <= 0) {
+            clearInterval(countdownTimerRef.current);
+            Vibration.cancel(); 
+            handlePinSubmit(true); // Timer finished, trigger emergency action
+            return 0;
+          }
+          return newCountdown;
+        });
+      }, 1000);
+    } else {
+      if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+      Vibration.cancel();
+    }
+    
+    return () => {
+      if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+      Vibration.cancel();
+    };
+  }, [isSafetyModalVisible]);
+
+
+  const handleCallForHelp = () => {
+    setIsSafetyModalVisible(false);
+    Linking.openURL('tel:112').catch(err => Alert.alert("Couldn't make the call", err.message));
+  };
+
+  const handlePinSubmit = (isTimerExpired = false) => {
+    if (isTimerExpired) {
+        setIsSafetyModalVisible(false);
+        sendEmergencySMS(); // Call the SMS function
+        Alert.alert("Emergency Alert Sent", "Your location has been sent to your emergency contacts.");
+        return;
+    }
+
+    if (pinInput === securityPin) {
+      setIsSafetyModalVisible(false);
+      setPinInput('');
+    } else {
+      Alert.alert('Incorrect PIN', 'Please try again.');
+      setPinInput('');
+    }
+  };
+
+
+  /**
+   * Prepares and opens the user's default SMS app with a pre-filled message.
+   */
+  const sendEmergencySMS = async () => {
+    if (!contacts || contacts.length === 0) {
+      Alert.alert('No Contacts', 'No emergency contacts are available to send messages.');
+      return;
+    }
+    if (smsActionTaken) {
+        Alert.alert('Already Sent', 'You have already initiated the emergency message process.');
+        return;
+    }
+
+    // 1. Get Location
+    let location = userLocation;
+    if (!location) {
+        try {
+            const freshLocation = await Location.getCurrentPositionAsync({ timeout: 5000 });
+            location = { latitude: freshLocation.coords.latitude, longitude: freshLocation.coords.longitude };
+            setUserLocation(location);
+        } catch (error) {
+            Alert.alert('Location Error', 'Could not fetch current location. Please try again.');
+            return;
+        }
+    }
+    
+    // 2. Get Battery Level
+    const batteryLevel = await Battery.getBatteryLevelAsync();
+    const batteryPercentage = Math.round(batteryLevel * 100);
+
+    // 3. Construct Message
+    const mapsLink = `http://maps.google.com/maps?q=${location.latitude},${location.longitude}`;
+    const message = `EMERGENCY ALERT: This is an automated safety check alert. I may be in trouble.\n\nReason: '${reason || 'Feeling unsafe'}'.\nMy current location: ${mapsLink}\n\nMy battery is at ${batteryPercentage}%. This check-in was set for ${duration || 'a set duration'}.`;
+
+
+    // 4. Get all phone numbers
+    const recipients = contacts.map(c => c.mobile.replace(/[^0-9]/g, '')).join(',');
+
+    // 5. Create the SMS URL
+    const separator = Platform.OS === 'ios' ? '&' : '?';
+    const url = `sms:${recipients}${separator}body=${encodeURIComponent(message)}`;
+
+    // 6. Open the SMS app
+    try {
+        await Linking.openURL(url);
+        setSmsActionTaken(true); // Mark that the user has taken the SMS action
+    } catch (error) {
+        Alert.alert('SMS Error', 'Could not open your messaging app. Please send the message manually.');
+    }
+  };
+
 
   const handleStopSharing = () => {
-    Alert.alert(
-      'Stop Sharing',
-      'Are you sure you want to stop sharing your location?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Stop',
-          style: 'destructive',
-          onPress: () => {
-            setIsSharing(false);
-            setTimeLeft(0);
-            navigation.goBack(); // Go back to previous screen instead of pushing
-          },
+    Alert.alert('Stop Sharing', 'Are you sure you want to stop sharing your location?', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Stop', style: 'destructive', onPress: () => {
+          setIsSharing(false);
+          navigation.goBack();
         },
-      ]
-    );
+      },
+    ]);
   };
-  
+
   const handleExtendDuration = () => {
-    Alert.alert(
-      'Extend Duration',
-      'Extend the sharing duration by 30 minutes?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Extend',
-          onPress: () => {
-            setTimeLeft((prev) => prev + 30 * 60);
-          },
-        },
-      ]
-    );
+    setTimeLeft((prev) => prev + 30 * 60);
+    Alert.alert('Duration Extended', '30 minutes have been added to your sharing session.');
   };
 
-  return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.scrollContent}
-      accessibilityLabel="Live Sharing Screen"
-      accessibilityHint="View and manage live location sharing"
-    >
-      <View style={styles.headerContainer}>
-      <TouchableOpacity
-  onPress={() => navigation.goBack()}
-  accessibilityLabel="Go back to Personal Safety"
-  accessibilityHint="Navigates back to the Personal Safety screen"
->
-  <Ionicons name="arrow-back" size={28} color="#000" />
-</TouchableOpacity>
+  // --- Render Functions ---
 
-        <Text style={styles.header}>Live Sharing</Text>
-        <Ionicons name="share-social" size={28} color="#1E90FF" />
+  const renderHeader = () => (
+    <View style={styles.headerContainer}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Ionicons name="arrow-back" size={26} color="#333" />
+      </TouchableOpacity>
+      <Text style={styles.headerTitle}>Live Sharing</Text>
+      <TouchableOpacity onPress={sendEmergencySMS} style={styles.smsButton}>
+        <Ionicons name="chatbubble-ellipses-outline" size={26} color="#333" />
+      </TouchableOpacity>
+    </View>
+  );
+
+  const renderStatusCard = () => (
+    <View style={styles.statusCard}>
+      <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
+        <Ionicons name="pulse" size={32} color="#FFFFFF" />
+      </Animated.View>
+      <View style={styles.statusTextContainer}>
+        <Text style={styles.statusTitle}>{isSharing ? 'Sharing is Active' : 'Sharing Ended'}</Text>
+        <Text style={styles.statusSubtitle}>Your location is visible to selected contacts.</Text>
       </View>
+    </View>
+  );
 
-      <View style={styles.statusContainer}>
-        <Ionicons
-          name={isSharing ? "location" : "location-outline"}
-          size={28}
-          color={isSharing ? "#FF4D4F" : "#666"}
-          style={styles.statusIcon}
-          accessibilityLabel={isSharing ? "Location sharing active" : "Location sharing stopped"}
-        />
-        <Text style={styles.statusText}>
-          {isSharing ? 'Sharing in Progress' : 'Sharing Stopped'}
-        </Text>
-      </View>
-
-      <View style={styles.infoContainer}>
-        <View style={styles.infoRow}>
-          <Ionicons name="information-circle" size={20} color="#1E90FF" style={styles.infoIcon} />
-          <Text style={styles.infoText}>{reason || 'No reason provided'} • {duration || 'N/A'}</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Ionicons name="time" size={20} color="#FF4D4F" style={styles.infoIcon} />
-          <Text style={styles.timerText}>Time Left: {formatTime(timeLeft)}</Text>
+  const renderDetailsCard = () => (
+    <View style={styles.detailsCard}>
+      <View style={styles.detailRow}>
+        <Ionicons name="timer-outline" size={24} color="#FF4D4F" style={styles.detailIcon} />
+        <View>
+          <Text style={styles.detailLabel}>Time Left</Text>
+          <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
         </View>
       </View>
+      <View style={styles.detailRow}>
+        <Ionicons name="information-circle-outline" size={24} color="#1E90FF" style={styles.detailIcon} />
+        <View>
+          <Text style={styles.detailLabel}>Reason</Text>
+          <Text style={styles.detailValue}>{reason || 'Not specified'}</Text>
+        </View>
+      </View>
+    </View>
+  );
 
-      <View style={styles.mapContainer}>
+  const renderMap = () => (
+    <View style={styles.mapContainer}>
+      {userLocation ? (
         <MapView
           style={styles.map}
-          region={userLocation}
-          showsUserLocation={true}
-          followsUserLocation={isSharing}
-          accessibilityLabel="Live location map"
-          accessibilityHint="Shows your current location on a map"
+          region={{
+            latitude: userLocation.latitude,
+            longitude: userLocation.longitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+          }}
+          showsUserLocation={false} // We use a custom marker
+          scrollEnabled={false}
+          zoomEnabled={false}
         >
-          <Marker coordinate={userLocation} title="Your Location" />
+          <Marker coordinate={userLocation} title="Your Location">
+            <View style={styles.marker}>
+              <View style={styles.markerDot} />
+            </View>
+          </Marker>
         </MapView>
-      </View>
+      ) : (
+        <View style={styles.mapPlaceholder}>
+            <Text style={styles.mapPlaceholderText}>Getting your location...</Text>
+        </View>
+      )}
+    </View>
+  );
 
-      <Text style={styles.sectionTitle}>
-        <Ionicons name="people" size={20} color="#666" style={styles.sectionIcon} />
-        Sharing with
-      </Text>
-      {contacts && Array.isArray(contacts) && contacts.length > 0 ? (
+  const renderContacts = () => (
+    <View>
+      <Text style={styles.sectionTitle}>Sharing With</Text>
+      {contacts && contacts.length > 0 ? (
         contacts.map((contact) => (
           <View key={contact.id} style={styles.contactItem}>
-            <Image
-              source={{ uri: contact.photo || 'https://via.placeholder.com/40' }}
-              style={styles.contactImage}
-              accessibilityLabel={`Profile picture of ${contact.name}`}
-            />
+            <Image source={{ uri: contact.photo || `https://ui-avatars.com/api/?name=${contact.name.replace(' ','+')}&background=random` }} style={styles.contactImage} />
             <View style={styles.contactInfo}>
               <Text style={styles.contactName}>{contact.name}</Text>
               <Text style={styles.contactNumber}>{contact.mobile}</Text>
             </View>
-            <Ionicons name="person-circle" size={24} color="#1E90FF" />
+            <Ionicons name="checkmark-circle" size={24} color="#4CAF50" />
           </View>
         ))
       ) : (
-        <Text style={styles.noContactsText}>No contacts selected.</Text>
+        <Text style={styles.noContactsText}>No contacts were selected.</Text>
       )}
+    </View>
+  );
 
-      <View style={styles.buttonContainer}>
+  return (
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {renderHeader()}
+        {renderStatusCard()}
+        {renderDetailsCard()}
+        {renderMap()}
+        {renderContacts()}
+      </ScrollView>
+      <View style={styles.footer}>
         <TouchableOpacity
-          style={[styles.actionButton, styles.stopButton, !isSharing && styles.disabledButton]}
-          onPress={handleStopSharing}
-          disabled={!isSharing}
-          accessibilityLabel="Stop sharing location"
-          accessibilityHint="Ends the live location sharing session"
-        >
-          <Ionicons name="stop-circle" size={20} color="#fff" style={styles.buttonIcon} />
-          <Text style={styles.buttonText}>Stop Sharing</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.actionButton, styles.extendButton, !isSharing && styles.disabledButton]}
+          style={[styles.actionButton, styles.extendButton]}
           onPress={handleExtendDuration}
           disabled={!isSharing}
-          accessibilityLabel="Extend sharing duration"
-          accessibilityHint="Extends the location sharing duration by 30 minutes"
         >
-          <Ionicons name="time-outline" size={20} color="#fff" style={styles.buttonIcon} />
-          <Text style={styles.buttonText}>Extend Duration</Text>
+          <Ionicons name="add-circle-outline" size={22} color="#1E90FF" style={styles.buttonIcon} />
+          <Text style={[styles.buttonText, styles.extendButtonText]}>Extend by 30 min</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.actionButton, styles.stopButton]}
+          onPress={handleStopSharing}
+          disabled={!isSharing}
+        >
+          <Ionicons name="stop-circle-outline" size={22} color="#FFFFFF" style={styles.buttonIcon} />
+          <Text style={[styles.buttonText, styles.stopButtonText]}>Stop Sharing</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+      
+      {/* --- Safety Check Modal --- */}
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={isSafetyModalVisible}
+        onRequestClose={() => { Alert.alert("Action Required", "Please confirm your status or call for help."); }}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={styles.timerContainer}>
+                <Text style={styles.modalTimerText}>{countdown}</Text>
+            </View>
+            <Text style={styles.modalTitle}>Safety Check</Text>
+            <Text style={styles.modalMessage}>Are you okay? Please confirm your status.</Text>
+            
+            <TouchableOpacity style={styles.helpButton} onPress={handleCallForHelp}>
+              <Ionicons name="call-outline" size={20} color="#fff" />
+              <Text style={styles.helpButtonText}>Call for Help</Text>
+            </TouchableOpacity>
+
+            <Text style={styles.pinPrompt}>If you are safe, enter your PIN to dismiss.</Text>
+            
+            <TextInput
+              style={styles.pinInput}
+              placeholder="* * * *"
+              placeholderTextColor="#a0a0a0"
+              keyboardType="numeric"
+              maxLength={4}
+              value={pinInput}
+              onChangeText={setPinInput}
+              secureTextEntry={true}
+            />
+            
+            <TouchableOpacity style={styles.dismissButton} onPress={() => handlePinSubmit(false)}>
+              <Ionicons name="shield-checkmark-outline" size={20} color="#fff" />
+              <Text style={styles.dismissButtonText}>I'm Safe</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  // --- Existing Styles ---
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
-    paddingHorizontal: 20,
-    paddingTop: Platform.OS === 'ios' ? 50 : 40,
+    backgroundColor: '#F7F8FA',
   },
   scrollContent: {
-    paddingBottom: 40,
+    paddingHorizontal: 20,
+    paddingBottom: 120, // Space for the footer
   },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    justifyContent: 'space-between',
+    paddingTop: Platform.OS === 'android' ? 40 : 50,
+    paddingBottom: 15,
   },
-  header: {
-    fontSize: 26,
-    fontWeight: '700',
+  backButton: {
+    padding: 5,
+  },
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
     color: '#1A1A1A',
-    marginLeft: 10,
-    flex: 1,
   },
-  statusContainer: {
+  smsButton: {
+    padding: 5,
+  },
+  statusCard: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#4CAF50',
+    padding: 20,
+    borderRadius: 16,
     marginBottom: 20,
-    backgroundColor: '#FFFFFF',
-    padding: 15,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowColor: '#4CAF50',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
-  statusIcon: {
-    marginRight: 10,
+  statusTextContainer: {
+    marginLeft: 15,
   },
-  statusText: {
+  statusTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#1A1A1A',
+    fontWeight: 'bold',
+    color: '#FFFFFF',
   },
-  infoContainer: {
+  statusSubtitle: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    opacity: 0.9,
+  },
+  detailsCard: {
     backgroundColor: '#FFFFFF',
     padding: 20,
-    borderRadius: 12,
+    borderRadius: 16,
     marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#E8ECEF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  infoRow: {
     flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  detailRow: {
     alignItems: 'center',
-    marginBottom: 10,
   },
-  infoIcon: {
-    marginRight: 10,
+  detailIcon: {
+    marginBottom: 8,
   },
-  infoText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
+  detailLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 2,
   },
   timerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FF4D4F',
+  },
+  detailValue: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#FF4D4F',
+    color: '#333',
   },
   mapContainer: {
     height: 250,
-    borderRadius: 12,
+    borderRadius: 16,
     overflow: 'hidden',
     marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#E8ECEF',
+    backgroundColor: '#E9EEF3',
   },
   map: {
     ...StyleSheet.absoluteFillObject,
   },
+  mapPlaceholder: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+  },
+  mapPlaceholderText:{
+      color: '#666',
+      fontSize: 16,
+  },
+  marker: {
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  markerDot: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: 'rgba(30, 144, 255, 0.9)',
+    borderWidth: 3,
+    borderColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#666',
-    marginBottom: 10,
-  },
-  sectionIcon: {
-    marginRight: 8,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 15,
   },
   contactItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-    padding: 15,
+    padding: 12,
     borderRadius: 12,
     backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E8ECEF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
   },
   contactImage: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     marginRight: 12,
   },
   contactInfo: {
@@ -514,7 +620,7 @@ const styles = StyleSheet.create({
   contactName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: '#333',
   },
   contactNumber: {
     fontSize: 14,
@@ -526,10 +632,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 20,
   },
-  buttonContainer: {
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    paddingBottom: Platform.OS === 'ios' ? 30 : 20,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#E9EEF3',
   },
   actionButton: {
     flex: 1,
@@ -537,25 +652,127 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 14,
-    borderRadius: 25,
+    borderRadius: 12,
     marginHorizontal: 8,
   },
   stopButton: {
     backgroundColor: '#FF4D4F',
   },
   extendButton: {
-    backgroundColor: '#1E90FF',
-  },
-  disabledButton: {
-    backgroundColor: '#B0B0B0',
+    backgroundColor: '#E9F4FF',
   },
   buttonIcon: {
     marginRight: 8,
   },
   buttonText: {
-    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: 'bold',
+  },
+  stopButtonText: {
+    color: '#FFFFFF',
+  },
+  extendButtonText: {
+    color: '#1E90FF',
+  },
+
+  // --- Styles for Safety Check Modal (NEW) ---
+  modalContainer: { 
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: 'rgba(0, 0, 0, 0.7)' 
+  },
+  modalContent: { 
+    width: '85%', 
+    maxWidth: 350, 
+    backgroundColor: 'white', 
+    borderRadius: 20, 
+    padding: 25, 
+    alignItems: 'center', 
+    elevation: 10, 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 5 }, 
+    shadowOpacity: 0.3, 
+    shadowRadius: 10 
+  },
+  timerContainer: { 
+    width: 60, 
+    height: 60, 
+    borderRadius: 30, 
+    backgroundColor: '#FF3B30', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    marginBottom: 15, 
+    borderWidth: 3, 
+    borderColor: 'white', 
+    elevation: 5 
+  },
+  modalTimerText: { 
+    color: 'white', 
+    fontSize: 24, 
+    fontWeight: 'bold' 
+  },
+  modalTitle: { 
+    fontSize: 22, 
+    fontWeight: 'bold', 
+    color: '#333', 
+    marginBottom: 8, 
+    textAlign: 'center' 
+  },
+  modalMessage: { 
+    fontSize: 16, 
+    color: '#555', 
+    textAlign: 'center', 
+    marginBottom: 25 
+  },
+  helpButton: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    backgroundColor: '#FF3B30', 
+    paddingVertical: 14, 
+    borderRadius: 12, 
+    marginBottom: 20, 
+    width: '100%' 
+  },
+  helpButtonText: { 
+    color: 'white', 
+    fontSize: 16, 
+    fontWeight: '600', 
+    marginLeft: 10 
+  },
+  pinPrompt: { 
+    fontSize: 14, 
+    color: '#666', 
+    textAlign: 'center', 
+    marginBottom: 15 
+  },
+  pinInput: { 
+    width: '80%', 
+    height: 55, 
+    borderColor: '#ddd', 
+    borderWidth: 1, 
+    borderRadius: 12, 
+    textAlign: 'center', 
+    fontSize: 24, 
+    letterSpacing: 15, 
+    marginBottom: 20, 
+    backgroundColor: '#f9f9f9' 
+  },
+  dismissButton: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    backgroundColor: '#34C759', 
+    paddingVertical: 14, 
+    borderRadius: 12, 
+    width: '100%' 
+  },
+  dismissButtonText: { 
+    color: 'white', 
+    fontSize: 16, 
+    fontWeight: '600', 
+    marginLeft: 10 
   },
 });
 

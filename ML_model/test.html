@@ -465,8 +465,8 @@ async function getSafeRoutes() {
     clearCrimeMarkers();
 
     try {
-        const response = await axios.post('https://dc17d4c45f12.ngrok-free.app/evaluate_routes', {
-            //  https://efac-2404-7c80-34-2c3e-98ec-34f3-a243-1a1d.ngrok-free.app/evaluate_routes
+        const response = await axios.post('http://localhost:5000/evaluate_routes', {
+
             source,
             destination,
             current_time: currentTime,

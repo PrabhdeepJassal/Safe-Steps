@@ -22,6 +22,10 @@ import NavigationScreen from './screens/navigation/navigationscreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LiveSharingScreen from './screens/emergency/livesharing';
 import usernavigation from './screens/navigation/usernavigation';
+import securitypin from './screens/securitypin';
+import emergencyrecord from './screens/recordscreen';
+import auditscreen from './screens/audit/auditscreen';
+import audithistory from './screens/audit/audithistoryscreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -99,6 +103,10 @@ const RootStack = () => {
       <Stack.Screen name="usernavigation" component={usernavigation} options={{ headerShown: false }} />
       <Stack.Screen name="LiveSharing" component={LiveSharingScreen} options={{ headerShown: false }} />
       <Stack.Screen name="CallSignScreen" component={CallSignScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="securitypin" component={securitypin} options={{ headerShown: false }} />
+      <Stack.Screen name="emergencyrecord" component={emergencyrecord} options={{ headerShown: false }} />
+      <Stack.Screen name="auditscreen" component={auditscreen} options={{ headerShown: false }} />
+      <Stack.Screen name="audithistory" component={audithistory} options={{ headerShown: false }} />
       <Stack.Screen name="Main" component={TabNavigatorWrapper} options={{ headerShown: false }} />
     </Stack.Navigator>
   );

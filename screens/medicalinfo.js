@@ -318,9 +318,10 @@ const styles = StyleSheet.create({
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start', // Changed from space-between
     paddingHorizontal: 16,
-    paddingVertical: 20,
+    paddingTop: 40, // Changed from paddingVertical: 20
+    paddingBottom: 10,
   },
   titleContainer: {
     paddingHorizontal: 25,
