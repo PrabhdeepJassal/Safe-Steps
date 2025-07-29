@@ -1,7 +1,16 @@
 # Safe Steps
 
 ## Project Overview
-Safe Steps is a mobile application designed to enhance safety for women and tourists by providing secure travel route recommendations. Leveraging advanced crime data analysis, GPS navigation, and machine learning, the app identifies the safest paths between locations, offers real-time safety features, and empowers users with emergency response tools. The project integrates historical crime data with predictive modeling to flag high-risk areas and ensure informed travel decisions.
+Safe Steps- **Logging**: Python's logging module for debugging and monitoring.
+
+**Authentication Backend (Node.js/Express)**
+- **Database**: MongoDB Atlas with Mongoose ODM for user data persistence.
+- **User Schema**: Supports email, phone (both unique), and bcrypt-hashed passwords.
+- **Authentication**: Flexible login system accepting both email and phone numbers.
+- **Security**: Password hashing with bcrypt, input validation, and secure data handling.
+- **Development Tools**: User management endpoints and comprehensive logging.
+
+**Frontend** a mobile application designed to enhance safety for women and tourists by providing secure travel route recommendations. Leveraging advanced crime data analysis, GPS navigation, and machine learning, the app identifies the safest paths between locations, offers real-time safety features, and empowers users with emergency response tools. The project integrates historical crime data with predictive modeling to flag high-risk areas and ensure informed travel decisions.
 
 ## Features
 1. **GPS-Based Navigation and Maps**:
@@ -23,6 +32,11 @@ Safe Steps is a mobile application designed to enhance safety for women and tour
    - Adjusts safety scores based on time of day (Morning, Afternoon, Evening, Night) using dynamic multipliers (e.g., 0.7 for Night).
 7. **Crime Hotspot Detection**:
    - Identifies high-severity crime clusters using DBSCAN (~100m radius) for proactive risk avoidance.
+8. **User Authentication & Profile Management**:
+   - Secure user registration and login with email or phone number support.
+   - Password encryption using bcrypt for enhanced security.
+   - User profile management with personal information and emergency contacts.
+   - Optional "Skip" functionality allowing users to explore the app without creating an account.
 
 ## Technical Architecture
 **Backend**
@@ -37,6 +51,9 @@ Safe Steps is a mobile application designed to enhance safety for women and tour
 - **API Endpoints**:
   - `/evaluate_routes` (POST): Accepts source, destination, and time category; returns ranked routes with safety scores.
   - `/load_crime_data` (POST): Loads and processes crime data from CSV files.
+  - `/api/auth/signup` (POST): User registration with email/phone and password.
+  - `/api/auth/login` (POST): User authentication supporting both email and phone login.
+  - `/api/auth/users` (GET): Development endpoint to view registered users.
 - **Logging**: Python’s logging module for debugging and monitoring.
 
 **Frontend**
@@ -118,23 +135,36 @@ Safe Steps is a mobile application designed to enhance safety for women and tour
    cd safe-steps
    ```
 2. **Backend Setup**:
-   - Install dependencies:
+   - **ML Service** (Python/Flask):
+     ```sh
+     cd ML_model
+     pip install -r requirements.txt
+     ```
+   - **Authentication Service** (Node.js/Express):
      ```sh
      cd backend
-     pip install -r requirements.txt
+     npm install
      ```
    - Create a `.env` file in the backend directory:
      ```sh
-     MONGO_URI=mongodb://localhost:27017/safe_steps
+     MONGO_URI=mongodb+srv://your-username:your-password@cluster0.mongodb.net/safe_steps
+     PORT=3000
+     ```
      OSRM_BASE_URL=http://router.project-osrm.org/route/v1/driving/
      TWILIO_SID=your_twilio_sid
      TWILIO_AUTH_TOKEN=your_twilio_auth_token
      FIREBASE_CONFIG=your_firebase_config_json
      ```
-   - Place crime data (`2021-2024_DELHI_DATA.csv`) in the backend directory.
-   - Start the Flask server:
+   - Place crime data (`2021-2024_DELHI_DATA.csv`) in the ML_model directory.
+   - Start the ML service:
      ```sh
-     python app.py
+     cd ML_model
+     python model.py
+     ```
+   - Start the authentication service:
+     ```sh
+     cd backend
+     npm start
      ```
 3. **Frontend Setup**:
    - Install dependencies:
@@ -152,14 +182,69 @@ Safe Steps is a mobile application designed to enhance safety for women and tour
      npm run android  # or npm run ios
      ```
 4. **Database Setup**:
-   - Ensure MongoDB is running.
-   - Initialize collections for users and crime data (handled automatically by backend).
+   - **MongoDB Atlas** (Recommended):
+     - Create a free MongoDB Atlas account at mongodb.com
+     - Create a cluster and database named `safe_steps`
+     - Add your IP address to the whitelist
+     - Create a database user with read/write permissions
+     - Copy the connection string to your `.env` file
+   - **Local MongoDB** (Alternative):
+     ```sh
+     # Ensure MongoDB is running locally
+     mongod
+     ```
+   - Initialize collections for users and crime data (handled automatically by backend)
+   - **User Collection Schema**:
+     ```javascript
+     {
+       _id: ObjectId,
+       email: String (unique),
+       phone: String (unique), 
+       password: String (hashed),
+       createdAt: Date
+     }
+     ```
 5. **OSRM Setup (Optional)**:
    - Run OSRM server locally using Docker:
      ```sh
      docker run -t -i -p 5000:5000 osrm/osrm-backend osrm-routed --algorithm mld
      ```
    - Or use the public OSRM server (default).
+
+## API Usage
+
+### Authentication Endpoints
+
+#### User Signup
+```bash
+POST http://localhost:3000/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "phone": "+1234567890",
+  "password": "securePassword123"
+}
+```
+
+#### User Login
+```bash
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "emailPhone": "user@example.com",  // or phone number
+  "password": "securePassword123"
+}
+```
+
+#### Development: View All Users
+```bash
+GET http://localhost:3000/api/auth/users
+```
+
+### ML Service Endpoints
+The ML service runs on port 5000 and provides route safety analysis.
 
 ## Testing
 - **Unit Tests**: Run backend tests with `pytest` in the `backend/tests` directory.
