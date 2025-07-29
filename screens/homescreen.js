@@ -1,8 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, ScrollView, Image, StyleSheet, TouchableOpacity, StatusBar, Platform, RefreshControl } from 'react-native';
+// --- MODIFIED: Added Dimensions ---
+import { View, Text, TextInput, ScrollView, Image, StyleSheet, TouchableOpacity, StatusBar, Platform, RefreshControl, Linking, Dimensions } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+
+// --- Videos to be displayed in the tutorials section ---
+const tutorialVideos = [
+  {
+    title: 'How to Do CPR',
+    channel: 'St John Ambulance',
+    videoId: 'n5QJ6x_Gz_Y',
+  },
+  {
+    title: 'The Heimlich Maneuver',
+    channel: 'Heimlich Heroes',
+    videoId: '7CgtIgSy3cI',
+  },
+  {
+    title: 'How to Use a Fire Extinguisher',
+    channel: 'National Fire Protection Association',
+    videoId: 'lUojO12S_rA',
+  },
+];
 
 // Skeleton Placeholder Component
 const SkeletonPlaceholder = ({ style }) => (
@@ -77,6 +97,18 @@ const HomeScreen = ({ navigation }) => {
     }, 2000);
   };
 
+  // Function to open YouTube links
+  const openVideo = (videoId) => {
+    const url = `https://www.youtube.com/watch?v=${videoId}`;
+    Linking.canOpenURL(url).then(supported => {
+      if (supported) {
+        Linking.openURL(url);
+      } else {
+        console.log(`Don't know how to open URI: ${url}`);
+      }
+    });
+  };
+
   return (
     <View style={styles.fullScreenContainer}>
       <ScrollView 
@@ -119,35 +151,26 @@ const HomeScreen = ({ navigation }) => {
               <>
                 <SkeletonPlaceholder style={styles.tutorialCard} />
                 <SkeletonPlaceholder style={styles.tutorialCard} />
+                <SkeletonPlaceholder style={styles.tutorialCard} />
               </>
             ) : (
-              <>
-                <TouchableOpacity style={styles.tutorialCard}>
+              tutorialVideos.map((video, index) => (
+                <TouchableOpacity key={index} style={styles.tutorialCard} onPress={() => openVideo(video.videoId)}>
                   <Image 
-                    source={{ uri: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg' }} 
+                    source={{ uri: `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg` }} 
                     style={styles.tutorialImage} 
                   />
                   <View style={styles.cardContent}>
-                    <Text style={styles.tutorialName}>Travel Safety Tips</Text>
-                    <Text style={styles.tutorialChannel}>Safety First Channel</Text>
+                    <Text style={styles.tutorialName}>{video.title}</Text>
+                    <Text style={styles.tutorialChannel}>{video.channel}</Text>
                   </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.tutorialCard}>
-                  <Image 
-                    source={{ uri: 'https://img.youtube.com/vi/9bZkp7q19f0/maxresdefault.jpg' }} 
-                    style={styles.tutorialImage} 
-                  />
-                  <View style={styles.cardContent}>
-                    <Text style={styles.tutorialName}>Emergency Preparedness</Text>
-                    <Text style={styles.tutorialChannel}>Travel Guide Hub</Text>
-                  </View>
-                </TouchableOpacity>
-              </>
+              ))
             )}
           </ScrollView>
         </View>
 
-        {/* Navigation Buttons Section */}
+        {/* --- MODIFIED: Navigation Buttons Section --- */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.quickActionsContainer}>
@@ -155,22 +178,22 @@ const HomeScreen = ({ navigation }) => {
               style={styles.actionButton} 
               onPress={() => navigation.navigate('authorityno')}
             >
-              <Ionicons name="man-outline" size={30} color="#fff" />
+              <Ionicons name="man-outline" size={styles.actionIcon.size} color="#fff" />
               <Text style={styles.actionText}>Authorities</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.actionButton} 
               onPress={() => navigation.navigate('SOS')}
             >
-              <Ionicons name="alert-outline" size={30} color="#fff" />
+              <Ionicons name="alert-outline" size={styles.actionIcon.size} color="#fff" />
               <Text style={styles.actionText}>SOS</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.actionButton} 
-              onPress={() => navigation.navigate('Profile')}
+              onPress={() => navigation.navigate('emergencyrecord')}
             >
-              <Ionicons name="person-outline" size={30} color="#fff" />
-              <Text style={styles.actionText}>Profile</Text>
+              <Ionicons name="camera-outline" size={styles.actionIcon.size} color="#fff" />
+              <Text style={styles.actionText}>Emergency      Record</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -179,7 +202,16 @@ const HomeScreen = ({ navigation }) => {
   );
 };
 
-// Updated Styles
+// --- NEW: Calculate dynamic dimensions ---
+const { width } = Dimensions.get('window');
+const sectionPadding = 20 * 2;
+const gapBetweenButtons = 15;
+const numberOfButtons = 3;
+const totalGaps = gapBetweenButtons * (numberOfButtons - 1);
+
+const buttonSize = (width - sectionPadding - totalGaps) / numberOfButtons;
+
+// --- MODIFIED: Updated Styles ---
 const styles = StyleSheet.create({
   fullScreenContainer: {
     flex: 1,
@@ -198,7 +230,7 @@ const styles = StyleSheet.create({
   banner: {
     backgroundColor: '#000',
     padding: 20,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 50 : 20,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 50 : 60,
     paddingBottom: 60,
   },
   headerTitle: {
@@ -214,21 +246,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 10,
+    borderRadius: 12,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
     elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   searchInput: {
     flex: 1,
     fontSize: 17.5,
-    paddingVertical: 8,
-    opacity: 0.6,
+    paddingVertical: 10,
+    color: '#333',
   },
   firstSection: {
     marginTop: 20,
   },
   section: {
-    padding: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
   sectionTitle: {
     fontSize: 24,
@@ -238,60 +276,75 @@ const styles = StyleSheet.create({
   },
   tutorialCard: {
     width: 250,
-    backgroundColor: '#ddd',
+    backgroundColor: '#f0f0f0',
     borderRadius: 12,
     marginRight: 15,
     overflow: 'hidden',
-    height: 180,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
   },
   tutorialImage: {
     width: '100%',
-    height: 150,
+    height: 125,
+    backgroundColor: '#e0e0e0',
   },
   cardContent: {
-    padding: 10,
+    padding: 12,
   },
   tutorialName: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
   },
   tutorialChannel: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#666',
+    marginTop: 4,
   },
   skeletonBase: {
     backgroundColor: '#e0e0e0',
-    borderRadius: 8,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
   skeletonGradient: {
-    flex: 1,
-    height: '100%',
-    borderRadius: 8,
+    ...StyleSheet.absoluteFillObject,
   },
   headerSkeleton: {
     width: '80%',
     height: 35,
     borderRadius: 6,
   },
+  // --- MODIFIED: Styles for Quick Actions ---
   quickActionsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between', // Changed from space-around
     marginTop: 10,
     marginBottom: 100,
   },
   actionButton: {
     backgroundColor: '#000',
-    padding: 15,
     borderRadius: 12,
     alignItems: 'center',
-    width: 100,
+    justifyContent: 'center', // Center content vertically
     elevation: 3,
+    // --- DYNAMIC SIZE ---
+    width: buttonSize,
+    height: buttonSize, // Making it a square
+  },
+  actionIcon: {
+    // --- DYNAMIC SIZE ---
+    size: buttonSize / 3, // Icon size proportional to button size
   },
   actionText: {
     color: '#fff',
-    fontSize: 14,
     marginTop: 5,
     fontWeight: 'bold',
+    textAlign: 'center', // Ensure text is centered
+    // --- DYNAMIC FONT SIZE ---
+    fontSize: buttonSize / 8.5, // Font size proportional to button size
   },
 });
 

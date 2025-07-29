@@ -1,3 +1,4 @@
+//maybe blank testing screen
 import React, { useState } from 'react';
 import {
   View,
@@ -69,7 +70,7 @@ const EmergencySharing = ({ navigation, route }) => {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
-            <Text style={styles.header}>Personal Safety</Text>
+            <Text style={styles.header}>my Safety</Text>
 
             <View style={styles.iconContainer}>
               <Ionicons name="location" size={24} color="#ff4444" />
