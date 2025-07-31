@@ -1,24 +1,32 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 
 const UserSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  age: { type: Number },
-  bloodType: { type: String },
-  medicalConditions: { type: String }
-});
-
-UserSchema.pre('save', async function(next) {
-  if (this.isModified('password')) {
-    this.password = await bcrypt.hash(this.password, 10);
+  email: { 
+    type: String, 
+    unique: true, 
+    sparse: true,  // Allows multiple documents without email
+    lowercase: true 
+  },
+  phone: { 
+    type: String, 
+    unique: true, 
+    sparse: true   // Allows multiple documents without phone
+  },
+  password: { 
+    type: String, 
+    required: true 
   }
-  next();
+}, {
+  timestamps: true
 });
 
-UserSchema.methods.comparePassword = async function(password) {
-  return await bcrypt.compare(password, this.password);
-};
+// Ensure at least one of email or phone is provided
+UserSchema.pre('validate', function(next) {
+  if (!this.email && !this.phone) {
+    next(new Error('Either email or phone number is required'));
+  } else {
+    next();
+  }
+});
 
 module.exports = mongoose.model('User', UserSchema);

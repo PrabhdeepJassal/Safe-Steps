@@ -50,12 +50,40 @@ const LoginScreen = ({ navigation }) => {
     });
   }, []);
 
-  const handleLogin = () => {
-    if (email && password) {
-      navigation.replace('Main');
-    } else {
-      alert('Please enter email and password');
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert('Please enter email/phone and password');
+      return;
     }
+
+    try {
+      const response = await fetch('http://localhost:3000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          emailPhone: email,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('Login successful!');
+        navigation.replace('Main');
+      } else {
+        alert(data.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Network error. Please try again.');
+    }
+  };
+
+  const handleSkip = () => {
+    navigation.replace('Main');
   };
 
   if (!fontsLoaded) {
@@ -100,7 +128,7 @@ const LoginScreen = ({ navigation }) => {
             <View style={styles.formContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Email"
+                placeholder="Email or Phone"
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
@@ -131,8 +159,12 @@ const LoginScreen = ({ navigation }) => {
                 <Text style={styles.loginButtonText}>Log In</Text>
               </TouchableOpacity>
 
+              <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
+                <Text style={styles.skipButtonText}>Skip</Text>
+              </TouchableOpacity>
+
               <Text style={styles.signupText}>
-                Don’t have an account?{' '}
+                Don't have an account?{' '}
                 <Text style={styles.signupLink} onPress={() => navigation.navigate('signup')}>
                   Sign Up
                 </Text>
@@ -236,10 +268,24 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 10,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 15,
   },
   loginButtonText: {
     color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  skipButton: {
+    width: '95%',
+    marginLeft: 10,
+    backgroundColor: '#f0f0f0',
+    paddingVertical: 16,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  skipButtonText: {
+    color: '#333333',
     fontSize: 16,
     fontWeight: 'bold',
   },
