@@ -1,35 +1,154 @@
-// backend/routes/auth.js
-// THIS IS THE FILE YOU NEED TO FIX.
-// Replace the entire contents of this file with the code below.
-
 const express = require('express');
-const router = express.Router(); // Create a router object
+const bcrypt = require('bcrypt');
+const User = require('../models/User');
+const router = express.Router();
 
-// --- TODO: Add your route logic here ---
-
-// Example: A route for user registration
-// It will be accessible at POST /api/auth/register
-router.post('/register', (req, res) => {
-  // Logic to handle user registration would go here
-  // For now, we'll just send a success message
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ msg: 'Please enter all fields' });
+// User signup route
+router.post('/signup', async (req, res) => {
+  try {
+    const { email, phone, password } = req.body;
+    
+    console.log('Signup request received:', { email, phone, password: '***' });
+    
+    // Validation
+    if (!password || password.length < 6) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Password must be at least 6 characters long' 
+      });
+    }
+    
+    if (!email && !phone) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Either email or phone number is required' 
+      });
+    }
+    
+    // Check if user already exists
+    const existingUser = await User.findOne({
+      $or: [
+        email ? { email: email.toLowerCase() } : null,
+        phone ? { phone } : null
+      ].filter(Boolean)
+    });
+    
+    if (existingUser) {
+      const field = existingUser.email === email?.toLowerCase() ? 'Email' : 'Phone number';
+      return res.status(400).json({ 
+        success: false, 
+        message: `${field} already registered` 
+      });
+    }
+    
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Create new user
+    const newUser = new User({
+      email: email ? email.toLowerCase() : undefined,
+      phone: phone || undefined,
+      password: hashedPassword
+    });
+    
+    await newUser.save();
+    console.log('User created successfully:', newUser._id);
+    
+    res.status(201).json({ 
+      success: true, 
+      message: 'User registered successfully',
+      user: {
+        id: newUser._id,
+        email: newUser.email,
+        phone: newUser.phone
+      }
+    });
+    
+  } catch (error) {
+    console.error('Signup error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error during registration' 
+    });
   }
-  res.status(201).json({ msg: 'User registered successfully (placeholder)' });
 });
 
-// Example: A route for user login
-// It will be accessible at POST /api/auth/login
-router.post('/login', (req, res) => {
-  // Logic to handle user login would go here
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ msg: 'Please enter all fields' });
+// User login route
+router.post('/login', async (req, res) => {
+  try {
+    const { emailPhone, password } = req.body;
+    
+    console.log('Login request received:', { emailPhone, password: '***' });
+    
+    if (!emailPhone || !password) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Email/phone and password are required' 
+      });
+    }
+    
+    // Find user by email or phone
+    const user = await User.findOne({
+      $or: [
+        { email: emailPhone.toLowerCase() },
+        { phone: emailPhone }
+      ]
+    });
+    
+    if (!user) {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Invalid credentials' 
+      });
+    }
+    
+    // Check password
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    
+    if (!isValidPassword) {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Invalid credentials' 
+      });
+    }
+    
+    console.log('User logged in successfully:', user._id);
+    
+    res.json({ 
+      success: true, 
+      message: 'Login successful',
+      user: {
+        id: user._id,
+        email: user.email,
+        phone: user.phone
+      }
+    });
+    
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error during login' 
+    });
   }
-  res.status(200).json({ token: 'fake-jwt-token', msg: 'Login successful (placeholder)' });
 });
 
+// Development route to view all users
+router.get('/users', async (req, res) => {
+  try {
+    const users = await User.find({}, { password: 0 }); // Exclude passwords
+    res.json({ 
+      success: true, 
+      users,
+      count: users.length 
+    });
+  } catch (error) {
+    console.error('Users fetch error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error' 
+    });
+  }
+});
 
-// This line is essential. It makes the router available to other files (like server.js).
 module.exports = router;
