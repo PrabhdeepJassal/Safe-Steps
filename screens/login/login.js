@@ -12,6 +12,8 @@ import {
   Animated,
 } from 'react-native';
 import * as Font from 'expo-font';
+import { API_ENDPOINTS } from '../../config/api';
+import { testNetworkConnection } from '../../utils/networkTest';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -48,6 +50,9 @@ const LoginScreen = ({ navigation }) => {
     ]).start(() => {
       setAnimationComplete(true);
     });
+    
+    // Test network connection on component mount
+    testNetworkConnection();
   }, []);
 
   const handleLogin = async () => {
@@ -57,7 +62,7 @@ const LoginScreen = ({ navigation }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      const response = await fetch(API_ENDPOINTS.LOGIN, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

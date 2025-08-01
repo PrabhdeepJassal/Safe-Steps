@@ -10,6 +10,7 @@ import {
   Image,
   Alert,
 } from 'react-native';
+import { API_ENDPOINTS } from '../../config/api';
 
 const SignUpScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -18,7 +19,7 @@ const SignUpScreen = ({ navigation }) => {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (!name || !emailPhone || !password) {
       Alert.alert('Error', 'Please fill all fields');
       return;
@@ -28,11 +29,44 @@ const SignUpScreen = ({ navigation }) => {
       Alert.alert('Error', 'Please accept the Terms of Service and Privacy Policy');
       return;
     }
-    
-    // Proceed with account creation
-    Alert.alert('Success', 'Account created successfully', [
-      { text: 'OK', onPress: () => navigation.replace('Main') }
-    ]);
+
+    if (password.length < 6) {
+      Alert.alert('Error', 'Password must be at least 6 characters long');
+      return;
+    }
+
+    try {
+      // Determine if emailPhone is an email or phone number
+      const isEmail = emailPhone.includes('@');
+      const requestBody = {
+        password: password,
+        ...(isEmail ? { email: emailPhone } : { phone: emailPhone })
+      };
+
+      console.log('Sending signup request:', { ...requestBody, password: '***' });
+
+      const response = await fetch(API_ENDPOINTS.SIGNUP, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await response.json();
+      console.log('Signup response:', data);
+
+      if (data.success) {
+        Alert.alert('Success', 'Account created successfully!', [
+          { text: 'OK', onPress: () => navigation.replace('Main') }
+        ]);
+      } else {
+        Alert.alert('Error', data.message || 'Failed to create account');
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      Alert.alert('Error', 'Network error. Please check your connection and try again.');
+    }
   };
 
   return (

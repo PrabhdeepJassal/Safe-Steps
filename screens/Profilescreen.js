@@ -9,6 +9,7 @@ import {
   Alert,
   Platform,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -107,53 +108,60 @@ const ProfileScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>My Profile</Text>
-        <TouchableOpacity style={styles.avatarContainer} onPress={handleSelectPicture}>
-          {profilePicture ? (
-            <Image source={{ uri: profilePicture }} style={styles.avatar} />
-          ) : (
-            <View style={styles.avatarPlaceholder}>
-              <Ionicons name="person-circle-outline" size={80} color="#666666" />
-              <Text style={styles.avatarText}>Add Photo</Text>
-            </View>
-          )}
-        </TouchableOpacity>
-      </View>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>My Profile</Text>
+          <TouchableOpacity style={styles.avatarContainer} onPress={handleSelectPicture}>
+            {profilePicture ? (
+              <Image source={{ uri: profilePicture }} style={styles.avatar} />
+            ) : (
+              <View style={styles.avatarPlaceholder}>
+                <Ionicons name="person-circle-outline" size={80} color="#666666" />
+                <Text style={styles.avatarText}>Add Photo</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.formContainer}>
-        <Text style={styles.sectionTitle}>Personal Details</Text>
-        {/* These inputs are placeholders. In a real app, they would be populated with user data. */}
-        <TextInput style={styles.input} placeholder="Name" placeholderTextColor="#888888" editable={false} />
-        <TextInput style={styles.input} placeholder="Address" placeholderTextColor="#888888" editable={false} />
-        <TextInput style={styles.input} placeholder="Phone Number" placeholderTextColor="#888888" editable={false} />
+        <View style={styles.formContainer}>
+          <Text style={styles.sectionTitle}>Personal Details</Text>
+          {/* These inputs are placeholders. In a real app, they would be populated with user data. */}
+          <TextInput style={styles.input} placeholder="Name" placeholderTextColor="#888888" editable={false} />
+          <TextInput style={styles.input} placeholder="Address" placeholderTextColor="#888888" editable={false} />
+          <TextInput style={styles.input} placeholder="Phone Number" placeholderTextColor="#888888" editable={false} />
 
-        <Text style={[styles.sectionTitle, { marginTop: 20 }]}>Emergency & Security</Text>
-        
-        <TouchableOpacity style={styles.infoButton} onPress={() => navigation.navigate('medicalinfo')}>
-          <Ionicons name="document-text-outline" size={20} color="#888888" style={styles.icon} />
-          <Text style={styles.infoText}>Medical Information</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.infoButton} onPress={() => navigation.navigate('emergencycontact')}>
-          <Ionicons name="call-outline" size={20} color="#888888" style={styles.icon} />
-          <Text style={styles.infoText}>Emergency Contacts</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.infoButton} onPress={() => navigation.navigate('securitypin')}>
-          <Ionicons name="settings-outline" size={20} color="#888888" style={styles.icon} />
-          <Text style={styles.infoText}>Security PIN</Text>
-        </TouchableOpacity>
+          <Text style={[styles.sectionTitle, { marginTop: 20 }]}>Emergency & Security</Text>
+          
+          <TouchableOpacity style={styles.infoButton} onPress={() => navigation.navigate('medicalinfo')}>
+            <Ionicons name="document-text-outline" size={20} color="#888888" style={styles.icon} />
+            <Text style={styles.infoText}>Medical Information</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.infoButton} onPress={() => navigation.navigate('emergencycontact')}>
+            <Ionicons name="call-outline" size={20} color="#888888" style={styles.icon} />
+            <Text style={styles.infoText}>Emergency Contacts</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.infoButton} onPress={() => navigation.navigate('securitypin')}>
+            <Ionicons name="settings-outline" size={20} color="#888888" style={styles.icon} />
+            <Text style={styles.infoText}>Security PIN</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity style={styles.infoButton} onPress={() => navigation.navigate('audithistory')}>
-          <Ionicons name="settings-outline" size={20} color="#888888" style={styles.icon} />
-          <Text style={styles.infoText}>Audit Screen History</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.infoButton} onPress={() => navigation.navigate('audithistory')}>
+            <Ionicons name="settings-outline" size={20} color="#888888" style={styles.icon} />
+            <Text style={styles.infoText}>Audit Screen History</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutButtonText}>Log Out</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Ionicons name="log-out-outline" size={20} color="#FFFFFF" style={styles.logoutIcon} />
+            <Text style={styles.logoutButtonText}>Log Out</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -162,7 +170,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
     paddingHorizontal: 20,
+    paddingBottom: 100,
   },
   headerContainer: {
     alignItems: 'center',
@@ -231,12 +245,25 @@ const styles = StyleSheet.create({
     color: '#333333',
   },
   logoutButton: {
-    backgroundColor: '#000000',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000000ff',
     paddingVertical: 16,
     borderRadius: 10,
-    alignItems: 'center',
     marginTop: 30,
     marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  logoutIcon: {
+    marginRight: 8,
   },
   logoutButtonText: {
     color: '#FFFFFF',
