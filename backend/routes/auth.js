@@ -1,14 +1,15 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const { sendWelcomeEmail, testEmailConnection } = require('../services/emailService');
 const router = express.Router();
 
 // User signup route
 router.post('/signup', async (req, res) => {
   try {
-    const { email, phone, password } = req.body;
+    const { name, email, phone, password } = req.body;
     
-    console.log('Signup request received:', { email, phone, password: '***' });
+    console.log('Signup request received:', { name, email, phone, password: '***' });
     
     // Validation
     if (!password || password.length < 6) {
@@ -46,6 +47,7 @@ router.post('/signup', async (req, res) => {
     
     // Create new user
     const newUser = new User({
+      name: name || undefined,
       email: email ? email.toLowerCase() : undefined,
       phone: phone || undefined,
       password: hashedPassword
@@ -54,11 +56,30 @@ router.post('/signup', async (req, res) => {
     await newUser.save();
     console.log('User created successfully:', newUser._id);
     
+    // Send welcome email if user provided an email
+    if (email) {
+      try {
+        console.log('Sending welcome email to:', email);
+        const emailResult = await sendWelcomeEmail(email);
+        
+        if (emailResult.success) {
+          console.log('Welcome email sent successfully to:', email);
+        } else {
+          console.log('Failed to send welcome email:', emailResult.error);
+          // Note: We don't fail the signup if email fails
+        }
+      } catch (emailError) {
+        console.error('Error sending welcome email:', emailError);
+        // Continue with successful signup even if email fails
+      }
+    }
+    
     res.status(201).json({ 
       success: true, 
-      message: 'User registered successfully',
+      message: email ? 'User registered successfully! Please check your email for a welcome message.' : 'User registered successfully!',
       user: {
         id: newUser._id,
+        name: newUser.name,
         email: newUser.email,
         phone: newUser.phone
       }
@@ -147,6 +168,54 @@ router.get('/users', async (req, res) => {
     res.status(500).json({ 
       success: false, 
       message: 'Server error' 
+    });
+  }
+});
+
+// Test email service
+router.get('/test-email', async (req, res) => {
+  try {
+    const isConnected = await testEmailConnection();
+    res.json({ 
+      success: true, 
+      emailServiceConnected: isConnected,
+      message: isConnected ? 'Email service is working!' : 'Email service connection failed'
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error testing email service',
+      error: error.message 
+    });
+  }
+});
+
+// Send test welcome email
+router.post('/test-welcome-email', async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email is required'
+      });
+    }
+    
+    const result = await sendWelcomeEmail(email);
+    
+    res.json({
+      success: result.success,
+      message: result.success ? 'Test welcome email sent successfully!' : 'Failed to send test email',
+      messageId: result.messageId,
+      error: result.error
+    });
+    
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error sending test email',
+      error: error.message
     });
   }
 });

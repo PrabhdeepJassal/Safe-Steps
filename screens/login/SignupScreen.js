@@ -39,6 +39,7 @@ const SignUpScreen = ({ navigation }) => {
       // Determine if emailPhone is an email or phone number
       const isEmail = emailPhone.includes('@');
       const requestBody = {
+        name: name,
         password: password,
         ...(isEmail ? { email: emailPhone } : { phone: emailPhone })
       };
