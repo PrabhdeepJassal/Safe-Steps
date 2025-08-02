@@ -183,7 +183,7 @@ const HomeScreen = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.actionButton} 
-              onPress={() => navigation.navigate('SOS')}
+              onPress={() => navigation.navigate('SOSactive')}
             >
               <Ionicons name="alert-outline" size={styles.actionIcon.size} color="#fff" />
               <Text style={styles.actionText}>SOS</Text>

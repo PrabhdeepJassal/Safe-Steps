@@ -26,6 +26,7 @@ import securitypin from './screens/securitypin';
 import emergencyrecord from './screens/recordscreen';
 import auditscreen from './screens/audit/auditscreen';
 import audithistory from './screens/audit/audithistoryscreen';
+import SOSActiveScreen from './screens/SOSscreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -107,6 +108,7 @@ const RootStack = () => {
       <Stack.Screen name="emergencyrecord" component={emergencyrecord} options={{ headerShown: false }} />
       <Stack.Screen name="auditscreen" component={auditscreen} options={{ headerShown: false }} />
       <Stack.Screen name="audithistory" component={audithistory} options={{ headerShown: false }} />
+      <Stack.Screen name="SOSactive" component={SOSActiveScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Main" component={TabNavigatorWrapper} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
