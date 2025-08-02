@@ -257,7 +257,7 @@ export default function MapScreen() {
       };
 
       // Replace with your actual API endpoint
-      const response = await fetch('https://3e0b545e2cf3.ngrok-free.app/evaluate_routes', {
+      const response = await fetch('https://kodiak-hot-cheetah.ngrok-free.app/evaluate_routes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
         body: JSON.stringify(requestBody),

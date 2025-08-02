@@ -26,5 +26,14 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+
+    <!-- 
+      ADD YOUR GOOGLE MAPS API KEY HERE
+      This meta-data tag tells the app which API key to use for Google Maps services.
+    -->
+    <meta-data
+      android:name="com.google.android.geo.API_KEY"
+      android:value="AIzaSyAd4x7RWh3YuLwsbWmClfWlKdQpS75raKo"/>
+      
   </application>
 </manifest>

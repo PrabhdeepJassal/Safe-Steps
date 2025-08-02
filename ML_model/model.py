@@ -393,4 +393,4 @@ def load_crime_data():
 if __name__ == '__main__':
     model = SafeRouteMLModel()
     model.load_crime_data(os.path.join(os.path.dirname(__file__), '2021-2024_DELHI_DATA.csv'))
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=8000, debug=False)
