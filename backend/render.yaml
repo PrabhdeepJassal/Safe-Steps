@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: safesteps-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        fromDatabase:
+          name: safesteps-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: PORT
+        value: 10000
+
+databases:
+  - name: safesteps-db
+    databaseName: safe_steps
+    plan: free

@@ -1,35 +1,16 @@
 // API Configuration
 import { Platform } from 'react-native';
 
-// Simple configuration - easier to debug
 const getApiUrl = () => {
   // Check if we're in development mode
   if (__DEV__) {
-    // For development, choose based on how you're testing:
-    
-    // Option 1: Android Emulator
-    if (Platform.OS === 'android') {
-      // Comment out this line and uncomment the IP line below if using Expo Go on physical device
-      // return 'http://10.0.2.2:3000';
-      
-      // For Expo Go on physical Android device, use your computer's IP:
-      return 'http://192.168.24.194:3000';
-    }
-    
-    // Option 2: iOS Simulator or physical iOS device with Expo Go
-    if (Platform.OS === 'ios') {
-      // For iOS simulator, use localhost
-      // return 'http://localhost:3000';
-      
-      // For Expo Go on physical iOS device, use your computer's IP:
-      return 'http://192.168.24.194:3000';
-    }
-    
-    // Default fallback - use your computer's IP for Expo Go
-    return 'http://192.168.24.194:3000';
+    // DEVELOPMENT: Local server
+    // Update this IP when you change networks
+    return 'http://192.168.29.111:3000';
   } else {
-    // Production mode
-    return 'https://your-production-server.com';
+    // PRODUCTION: Render deployed backend
+    // This URL works from anywhere in the world!
+    return 'https://safesteps-api.onrender.com';
   }
 };
 

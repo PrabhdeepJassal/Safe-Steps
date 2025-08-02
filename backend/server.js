@@ -13,6 +13,15 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 
+// Health check route
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    success: true, 
+    message: 'Safe Steps API is running!', 
+    timestamp: new Date().toISOString() 
+  });
+});
+
 // Database connection
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
