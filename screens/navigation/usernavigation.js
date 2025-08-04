@@ -1,4 +1,3 @@
-//this screen comes from the saferoutes screen when user enters destination and starts navigation
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Alert, Modal, TextInput, Linking, Vibration } from 'react-native';
 import MapView, { Polyline, Marker } from 'react-native-maps';
@@ -8,6 +7,7 @@ import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SMS from 'expo-sms';
 import * as Battery from 'expo-battery';
+import SafetyAuditScreen from '../audit/auditscreen';
 
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -40,6 +40,9 @@ export default function NavigationScreen() {
   const [traveledCoordinates, setTraveledCoordinates] = useState([]);
   const [currentRouteIndex, setCurrentRouteIndex] = useState(0);
   const [cameraFollowing, setCameraFollowing] = useState(false);
+  
+  // NEW State for the custom audit modal
+  const [isAuditModalVisible, setIsAuditModalVisible] = useState(false);
 
   // Safety check modal state
   const [isSafetyModalVisible, setIsSafetyModalVisible] = useState(false);
@@ -55,7 +58,7 @@ export default function NavigationScreen() {
         const batteryLevel = Math.round((await Battery.getBatteryLevelAsync()) * 100);
         const currentTime = new Date().toLocaleTimeString();
         const locationString = userLocation 
-            ? `https://www.google.com/maps/search/?api=1&query=${userLocation.latitude},${userLocation.longitude}`
+            ? `http://maps.google.com/?q=${userLocation.latitude},${userLocation.longitude}`
             : "Location not available";
 
         const message = `EMERGENCY ALERT: I might be in trouble.
@@ -72,10 +75,8 @@ Time: ${currentTime}`;
     }
   };
 
-  // --- MODIFIED VIBRATION LOGIC ---
   useEffect(() => {
     if (isSafetyModalVisible) {
-      // 1. Initial, single vibration when modal opens
       Vibration.vibrate(500); 
       setCountdown(30);
       
@@ -83,31 +84,28 @@ Time: ${currentTime}`;
         setCountdown(prev => {
           const newCountdown = prev - 1;
 
-          // 2. Double-pulse vibration at 20 and 10 seconds
           if (newCountdown === 20 || newCountdown === 10) {
-            Vibration.vibrate([0, 300, 200, 300]); // Vibrate, pause, vibrate
+            Vibration.vibrate([0, 300, 200, 300]);
           }
 
-          // 3. Continuous, urgent vibration for the last 5 seconds
           if (newCountdown === 5) {
-            Vibration.vibrate([0, 500, 100, 500, 100, 500, 100, 500, 100, 500]); // Rapid pulse for 5s
+            Vibration.vibrate([0, 500, 100, 500, 100, 500, 100, 500, 100, 500]);
           }
 
           if (newCountdown <= 0) {
             clearInterval(countdownTimerRef.current);
-            Vibration.cancel(); // Stop any ongoing vibration
-            handlePinSubmit(true); // Timer finished, trigger emergency action
+            Vibration.cancel();
+            handlePinSubmit(true);
             return 0;
           }
           return newCountdown;
         });
       }, 1000);
     } else {
-      // Cleanup when modal closes
       if (countdownTimerRef.current) {
         clearInterval(countdownTimerRef.current);
       }
-      Vibration.cancel(); // Ensure vibration stops if modal is closed early
+      Vibration.cancel();
     }
     
     return () => {
@@ -128,7 +126,7 @@ Time: ${currentTime}`;
         } else {
           Alert.alert(
             "Set a Security PIN",
-            "For your safety, please set a security PIN. A default PIN (1234) will be used until you set one.",
+            "A default PIN (1234) will be used until you set one.",
             [
               { text: "OK" },
               { text: "Set PIN Now", onPress: () => navigation.navigate('SecurityPin') }
@@ -262,24 +260,27 @@ Time: ${currentTime}`;
     return coordinates;
   };
 
+  // MODIFIED function to show the custom modal
   const promptForAudit = () => {
-    Alert.alert(
-      "Trip Ended",
-      "Would you like to complete a safety audit for this route?",
-      [
-        {
-          text: "No, Thanks",
-          onPress: () => navigation.goBack(),
-          style: "cancel"
-        },
-        { 
-          text: "Yes, Start Audit", 
-          onPress: () => navigation.navigate('auditscreen') 
-        }
-      ],
-      { cancelable: false }
-    );
+    setIsNavigating(false);
+    setNavigationStarted(false);
+    setIsAuditModalVisible(true);
   };
+
+  // NEW handlers for the custom modal buttons
+  const handleContinueToAudit = () => {
+    setIsAuditModalVisible(false);
+    navigation.navigate('auditscreen', {
+      source: initialUserLocation,
+      destination: destination,
+    });
+  };
+
+  const handleSkipAudit = () => {
+    setIsAuditModalVisible(false);
+    navigation.goBack();
+  };
+
 
   const startNavigation = () => {
     setNavigationStarted(true);
@@ -289,9 +290,6 @@ Time: ${currentTime}`;
   };
 
   const stopNavigation = () => {
-    setNavigationStarted(false);
-    setIsNavigating(false);
-    setCameraFollowing(false);
     promptForAudit();
   };
 
@@ -418,13 +416,10 @@ Time: ${currentTime}`;
       const destCoord = { latitude: destination.coordinates.lat || destination.coordinates.latitude, longitude: destination.coordinates.lng || destination.coordinates.longitude };
       const distanceToDestination = calculateDistance(userLocation.latitude, userLocation.longitude, destCoord.latitude, destCoord.longitude);
       if (distanceToDestination < 0.05) {
-        setNavigationStarted(false);
-        setIsNavigating(false);
-        setCameraFollowing(false);
         promptForAudit();
       }
     }
-  }, [userLocation, destination, navigation, isNavigating]);
+  }, [userLocation, destination, isNavigating]);
 
   useEffect(() => {
     let safetyTimer;
@@ -438,6 +433,36 @@ Time: ${currentTime}`;
     };
   }, [navigationStarted]);
 
+  // NEW Render function for the Audit Modal
+  const renderAuditModal = () => (
+    <Modal
+      transparent={true}
+      animationType="fade"
+      visible={isAuditModalVisible}
+      onRequestClose={handleSkipAudit}
+    >
+      <View style={styles.auditModalBackdrop}>
+        <View style={styles.auditModalContainer}>
+          <View style={styles.auditModalIconContainer}>
+            <Ionicons name="help" size={80} color="#c8a45c" style={styles.auditModalIcon} />
+          </View>
+          <Text style={styles.auditModalTitle}>Share Experience</Text>
+          <Text style={styles.auditModalDescription}>
+            Fill the Safety Audit and let others gain insights from your travel !!
+          </Text>
+          
+          {/* This is the corrected line */}
+          <TouchableOpacity style={styles.auditModalContinueButton} onPress={handleContinueToAudit}>
+            <Text style={styles.auditModalContinueButtonText}>Continue</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.auditModalSkipButton} onPress={handleSkipAudit}>
+            <Text style={styles.auditModalSkipButtonText}>Skip for now</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
 
   return (
     <View style={styles.container}>
@@ -553,6 +578,8 @@ Time: ${currentTime}`;
           </View>
         </View>
       </Modal>
+
+      {renderAuditModal()}
     </View>
   );
 }
@@ -604,4 +631,71 @@ const styles = StyleSheet.create({
   pinInput: { width: '80%', height: 55, borderColor: '#ddd', borderWidth: 1, borderRadius: 12, textAlign: 'center', fontSize: 24, letterSpacing: 15, marginBottom: 20, backgroundColor: '#f9f9f9' },
   dismissButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#34C759', paddingVertical: 14, borderRadius: 12, width: '100%' },
   dismissButtonText: { color: 'white', fontSize: 16, fontWeight: '600', marginLeft: 10 },
+  
+  // NEW Styles for the Audit Modal
+  auditModalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  auditModalContainer: {
+    width: SCREEN_WIDTH * 0.85,
+    backgroundColor: 'white',
+    borderRadius: 24,
+    padding: 25,
+    alignItems: 'center',
+    elevation: 20, // Make sure it's on top of other modals if they overlap
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  auditModalIconContainer: {
+    width: 120,
+    height: 120,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  auditModalIcon: {
+    fontWeight: 'bold',
+  },
+  auditModalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  auditModalDescription: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: 24,
+    marginBottom: 30,
+  },
+  auditModalContinueButton: {
+    width: '100%',
+    backgroundColor: '#212121',
+    paddingVertical: 16,
+    borderRadius: 16,
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  auditModalContinueButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  auditModalSkipButton: {
+    width: '100%',
+    padding: 10,
+    alignItems: 'center',
+  },
+  auditModalSkipButtonText: {
+    color: '#666',
+    fontSize: 16,
+    fontWeight: '500',
+  },
 });

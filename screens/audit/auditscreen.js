@@ -1,27 +1,32 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Alert, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get('window');
 const AUDIT_HISTORY_KEY = '@audit_history';
 
-// --- Reusable Hexagon Icon Component ---
-const HexagonIcon = ({ name, size = 28, isSelected, onPress }) => {
+// --- Reusable Icon Component (Corrected for Full Size Image and Tint Overlay) ---
+const HexagonIcon = ({ imageSource, isSelected, onPress }) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.hexagonContainer}>
-      <View style={[styles.hexagon, isSelected && styles.hexagonSelected]}>
-        <Ionicons 
-          name={name} 
-          size={size} 
-          color={isSelected ? '#333' : '#888'} 
+      <View style={[styles.iconContainer, isSelected && styles.iconContainerSelected]}>
+        <Image
+          source={imageSource}
+          // The image now fills the container and respects the rounded corners
+          style={styles.iconImage}
+          resizeMode="cover" // Ensures the image covers the area, maintaining aspect ratio
         />
+        {/* This is the tinted overlay that appears ONLY when selected */}
+        {isSelected && (
+          <View style={styles.selectionOverlay} />
+        )}
       </View>
     </TouchableOpacity>
   );
 };
 
-// --- Reusable Audit Section Component (Now a controlled component) ---
+// --- Reusable Audit Section Component ---
 const AuditSection = ({ title, description, options, selectedIndex, onSelect }) => {
   return (
     <View style={styles.sectionContainer}>
@@ -31,7 +36,7 @@ const AuditSection = ({ title, description, options, selectedIndex, onSelect }) 
         {options.map((option, index) => (
           <HexagonIcon
             key={index}
-            name={option.icon}
+            imageSource={option.icon}
             isSelected={selectedIndex === index}
             onPress={() => onSelect(index)}
           />
@@ -46,8 +51,6 @@ const AuditSection = ({ title, description, options, selectedIndex, onSelect }) 
 // --- Main Screen Component ---
 const SafetyAuditScreen = ({ navigation, route }) => {
   const { source, destination } = route.params || {};
-
-  // State to hold all selections, lifted up from child components
   const [selections, setSelections] = useState({});
 
   const handleSelect = (sectionTitle, optionIndex) => {
@@ -56,74 +59,70 @@ const SafetyAuditScreen = ({ navigation, route }) => {
       [sectionTitle]: optionIndex,
     }));
   };
-
+  
   const auditData = [
     {
       title: 'Lightning',
       description: 'Availability of enough light to see all around you.',
       options: [
-        { icon: 'flash-off-outline', label: 'Poor' },
-        { icon: 'bulb-outline', label: 'Adequate' },
-        { icon: 'sunny-outline', label: 'Excellent' },
+        { icon: require('../../assets/icons/auditicons/light1.png'), label: 'Poor' },
+        { icon: require('../../assets/icons/auditicons/light2.png'), label: 'Adequate' },
+        { icon: require('../../assets/icons/auditicons/light3.png'), label: 'Excellent' },
       ],
     },
     {
       title: 'Well-trodden',
       description: 'Either a pavement or a road with space to walk.',
       options: [
-        { icon: 'remove-circle-outline', label: 'No Path' },
-        { icon: 'footsteps-outline', label: 'Pavement' },
-        { icon: 'trail-sign-outline', label: 'Clear Road' },
+        { icon: require('../../assets/icons/auditicons/road1.png'), label: 'No Path' },
+        { icon: require('../../assets/icons/auditicons/road2.png'), label: 'Pavement' },
+        { icon: require('../../assets/icons/auditicons/road3.png'), label: 'Clear Road' },
       ],
     },
     {
       title: 'Visibility',
       description: 'Vandals, shops, building entrances, windows/balconies from where you can be seen.',
       options: [
-        { icon: 'eye-off-outline', label: 'Low' },
-        { icon: 'eye-outline', label: 'Moderate' },
-        { icon: 'scan-outline', label: 'High' },
+        { icon: require('../../assets/icons/auditicons/eye1.png'), label: 'Low' },
+        { icon: require('../../assets/icons/auditicons/eye2.png'), label: 'Moderate' },
+        { icon: require('../../assets/icons/auditicons/eye3.png'), label: 'High' },
       ],
     },
     {
       title: 'Openness',
       description: 'Ability to see and move in all directions.',
       options: [
-        { icon: 'contract-outline', label: 'Confined' },
-        { icon: 'expand-outline', label: 'Open' },
-        { icon: 'move-outline', label: 'Very Open' },
+        { icon: require('../../assets/icons/auditicons/open1.png'), label: 'Confined' },
+        { icon: require('../../assets/icons/auditicons/open2.png'), label: 'Open' },
+        { icon: require('../../assets/icons/auditicons/open3.png'), label: 'Very Open' },
       ],
     },
     {
       title: 'Connection',
       description: 'Internet connectivity.',
       options: [
-        { icon: 'wifi-outline', label: 'None' },
-        { icon: 'bar-chart-outline', label: 'Weak' },
-        { icon: 'cellular-outline', label: 'Strong' },
+        { icon: require('../../assets/icons/auditicons/wifi1.png'), label: 'None' },
+        { icon: require('../../assets/icons/auditicons/wifi2.png'), label: 'Weak' },
+        { icon: require('../../assets/icons/auditicons/wifi3.png'), label: 'Strong' },
       ],
     },
   ];
 
   const handleDone = async () => {
     try {
-      // 1. Get existing history from AsyncStorage
       const existingHistoryRaw = await AsyncStorage.getItem(AUDIT_HISTORY_KEY);
       const existingHistory = existingHistoryRaw ? JSON.parse(existingHistoryRaw) : [];
 
-      // 2. Format the selections into a readable object
       const formattedSelections = {};
       auditData.forEach(section => {
         const selectedIndex = selections[section.title];
         if (selectedIndex !== undefined) {
-          // Store the descriptive label for the selected option
           formattedSelections[section.title] = section.options[selectedIndex].label;
         } else {
           formattedSelections[section.title] = 'Not Rated';
         }
       });
 
-      // 3. Create the new history entry
       const newAuditEntry = {
         id: new Date().toISOString(),
         date: new Date().toISOString(),
@@ -132,7 +131,6 @@ const SafetyAuditScreen = ({ navigation, route }) => {
         audit: formattedSelections,
       };
 
-      // 4. Add the new entry to the history array and save it
       const updatedHistory = [...existingHistory, newAuditEntry];
       await AsyncStorage.setItem(AUDIT_HISTORY_KEY, JSON.stringify(updatedHistory));
 
@@ -152,7 +150,7 @@ const SafetyAuditScreen = ({ navigation, route }) => {
           <Ionicons name="arrow-back" size={24} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Safety Audit</Text>
-        <View style={{ width: 40 }} /> 
+        <View style={{ width: 40 }} />
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -209,7 +207,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingBottom: 100, // Space for the footer
+    paddingBottom: 100,
   },
   locationContainer: {
     flexDirection: 'row',
@@ -248,20 +246,33 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  hexagon: {
+  iconContainer: {
     width: 52,
     height: 52,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f0f2f5',
-    transform: [{ rotate: '90deg' }],
-    borderTopWidth: 2,
-    borderBottomWidth: 2,
+    borderRadius: 8,
+    borderWidth: 2,
     borderColor: '#e0e0e0',
+    // This is important to contain the image's rounded corners
+    overflow: 'hidden', 
   },
-  hexagonSelected: {
-    backgroundColor: '#c8e6c9', // A light green color for selection
-    borderColor: '#81c784',
+  iconContainerSelected: {
+    borderColor: '#81c784', // A green border for selection
+  },
+  iconImage: {
+    width: '100%',
+    height: '100%',
+  },
+  selectionOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    // A green tint with 50% opacity
+    backgroundColor: 'rgba(46, 204, 113, 0.5)',
   },
   divider: {
     height: 1,
@@ -273,7 +284,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     padding: 20,
-    paddingBottom: 30, // For safe area on iOS
+    paddingBottom: 30,
     backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
     borderTopColor: '#f0f0f0',

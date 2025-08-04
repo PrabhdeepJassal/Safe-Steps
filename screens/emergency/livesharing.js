@@ -171,7 +171,7 @@ const LiveSharingScreen = ({ navigation, route }) => {
       // Show modal every 5 minutes (300000 ms)
       safetyTimer = setInterval(() => {
         setIsSafetyModalVisible(true);
-      }, 10000); 
+      }, 300000); 
     }
     return () => {
       if (safetyTimer) clearInterval(safetyTimer);
