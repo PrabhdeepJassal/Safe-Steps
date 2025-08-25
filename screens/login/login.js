@@ -1,0 +1,311 @@
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+  StatusBar,
+  Image,
+  Platform,
+  Animated,
+} from 'react-native';
+import * as Font from 'expo-font';
+import { API_ENDPOINTS } from '../../config/api';
+import { testNetworkConnection } from '../../utils/networkTest';
+import { useAuth } from '../../screens/login/AuthContext'; // <--- IMPORT useAuth
+
+const LoginScreen = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isPasswordVisible, setPasswordVisible] = useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [animationComplete, setAnimationComplete] = useState(false);
+  const [fadeAnim] = useState(new Animated.Value(0));
+  const [translateYAnim] = useState(new Animated.Value(0));
+  const { login, loginAsGuest } = useAuth(); // <--- GET THE FUNCTIONS FROM CONTEXT
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        'Arsenal-Regular': require('../../assets/fonts/Arsenal/Arsenal-Bold.ttf'),
+        'Radley-Regular': require('../../assets/fonts/Radley/Radley-Regular.ttf'),
+      });
+      setFontsLoaded(true);
+    };
+    loadFonts();
+  }, []);
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateYAnim, {
+        toValue: -220,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setAnimationComplete(true);
+    });
+    
+    testNetworkConnection();
+  }, []);
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert('Please enter email/phone and password');
+      return;
+    }
+
+    try {
+      const response = await fetch(API_ENDPOINTS.LOGIN, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emailPhone: email, password: password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('Login successful!');
+        login(); // <--- SET AUTH STATUS TO 'loggedIn'
+        navigation.replace('Main');
+      } else {
+        alert(data.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Network error. Please try again.');
+    }
+  };
+
+  const handleSkip = () => {
+    loginAsGuest(); // <--- SET AUTH STATUS TO 'guest'
+    navigation.replace('Main');
+  };
+
+  if (!fontsLoaded) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading fonts...</Text>
+      </View>
+    );
+  }
+
+  return (
+    // ... your existing JSX for the LoginScreen ...
+    // No changes are needed in the return statement (JSX) part of this file.
+    // The rest of your LoginScreen code remains the same.
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" translucent={false} />
+      <View style={styles.innerContainer}>
+        <Animated.View 
+          style={[
+            styles.logoWrapper,
+            {
+              opacity: fadeAnim,
+              transform: [{ translateY: translateYAnim }],
+              position: 'absolute',
+              top: '50%',
+              alignSelf: 'center',
+              marginTop: -75,
+            },
+          ]}
+        >
+          <Image source={require('../../assets/images/toes.png')} style={styles.logo} />
+        </Animated.View>
+
+        {animationComplete && (
+          <View style={styles.contentContainer}>
+            <View style={styles.logoContainer}>
+              <Image 
+                source={{ uri: 'https://via.placeholder.com/250x150' }}
+                style={styles.logo} 
+              />
+              <Text style={styles.title}>Safe Steps</Text>
+              <Text style={styles.subtitle}>BECAUSE EVERY STEP MATTERS</Text>
+            </View>
+
+            <View style={styles.formContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Email or Phone"
+                placeholderTextColor="#808080"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={styles.passwordInput}
+                  placeholder="Password"
+                  placeholderTextColor="#808080"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={!isPasswordVisible}
+                  autoCapitalize="none"
+                />
+                <TouchableOpacity onPress={() => setPasswordVisible(!isPasswordVisible)}>
+                  <Text style={styles.eyeIcon}>👁️</Text>
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity 
+                style={styles.forgotPassword}
+                onPress={() => navigation.navigate('forgot')}
+              >
+                <Text style={styles.forgotPasswordText}>Forget Password?</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+                <Text style={styles.loginButtonText}>Log In</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
+                <Text style={styles.skipButtonText}>Skip</Text>
+              </TouchableOpacity>
+
+              <Text style={styles.signupText}>
+                Don't have an account?{' '}
+                <Text style={styles.signupLink} onPress={() => navigation.navigate('signup')}>
+                  Sign Up
+                </Text>
+              </Text>
+            </View>
+          </View>
+        )}
+      </View>
+    </SafeAreaView>
+  );
+};
+
+// ... your existing styles for LoginScreen ...
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  innerContainer: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+  },
+  contentContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  logoWrapper: {
+    borderRadius: 75,
+    backgroundColor: '#ffffff',
+    padding: 10,
+    zIndex: 1,
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+  },
+  title: {
+    fontFamily: 'Arsenal-Regular',
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  subtitle: {
+    fontFamily: 'Radley-Regular',
+    fontSize: 16,
+    color: '#666',
+  },
+  formContainer: {
+    width: '100%',
+    paddingHorizontal: 20,
+  },
+  input: {
+    height: 50,
+    width: '95%',
+    marginLeft: 10,
+    backgroundColor: '#F5F7FA',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    fontSize: 16,
+    marginBottom: 15,
+  },
+  passwordContainer: {
+    width: '95%',
+    marginLeft: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F7FA',
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    marginBottom: 15,
+  },
+  passwordInput: {
+    flex: 1,
+    paddingVertical: 16,
+    fontSize: 16,
+  },
+  eyeIcon: {
+    width: 20,
+    height: 20,
+    tintColor: '#888888',
+  },
+  forgotPassword: {
+    marginRight: 10,
+    alignSelf: 'flex-end',
+    marginBottom: 15,
+  },
+  forgotPasswordText: {
+    color: 'grey',
+  },
+  loginButton: {
+    width: '95%',
+    marginLeft: 10,
+    marginTop: 40,
+    backgroundColor: '#000000',
+    paddingVertical: 16,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  loginButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  skipButton: {
+    width: '95%',
+    marginLeft: 10,
+    backgroundColor: '#f0f0f0',
+    paddingVertical: 16,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  skipButtonText: {
+    color: '#333333',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  signupText: {
+    textAlign: 'center',
+    fontSize: 14,
+  },
+  signupLink: {
+    color: '#007BFF',
+    fontWeight: 'bold',
+  },
+});
+
+export default LoginScreen;
