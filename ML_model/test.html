@@ -465,7 +465,7 @@ async function getSafeRoutes() {
     clearCrimeMarkers();
 
     try {
-        const response = await axios.post('http://localhost:5000/evaluate_routes', {
+        const response = await axios.post('https://kodiak-hot-cheetah.ngrok-free.app/evaluate_routes', {
 
             source,
             destination,
