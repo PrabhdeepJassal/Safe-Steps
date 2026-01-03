@@ -1,6 +1,6 @@
 # Safe Steps
 <p align="center">
-  <img src="assets/logo.png" width="140" />
+  <img src="assets/logo.jpg" width="140" />
 </p>
 
 <h1 align="center">Safe Steps</h1>
