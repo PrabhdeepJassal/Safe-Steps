@@ -1,4 +1,13 @@
 # Safe Steps
+<p align="center">
+  <img src="assets/logo.png" width="140" />
+</p>
+
+<h1 align="center">Safe Steps</h1>
+
+<p align="center">
+  AI-powered safety navigation for women and tourists
+</p>
 
 ## Project Overview
 Safe Steps- **Logging**: Python's logging module for debugging and monitoring.
